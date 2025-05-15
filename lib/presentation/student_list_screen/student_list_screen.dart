@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:pg_managment/core/utils/appRichText.dart';
 import 'package:pg_managment/core/utils/app_fonts.dart';
 import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/size_utils.dart';
+import 'package:pg_managment/presentation/student_list_screen/student_list_model.dart';
+import 'package:pg_managment/routes/app_routes.dart';
+import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 import 'controller/student_list_screen_controller.dart';
 
 class StudentListScreen extends GetWidget<StudentListScreenController> {
@@ -33,41 +35,226 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
                 fontColor: ColorConstant.primaryWhite),
           ),
         ),
-        body: SafeArea(child:
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 16),
-          child: ListView.builder(
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: ColorConstant.primary)
-                ),
-                padding: const EdgeInsets.all(8),
-                margin: const EdgeInsets.only(bottom: 10),
-                child:  Column(crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppRichText(title: 'Name : ', value: 'Kishan'),
-                    vBox(5),
-                    Row(
-                      children: [
-                        Expanded(child: AppRichText(title: 'Roll no. : ', value: '4562')),
-                        Expanded(child: AppRichText(title: 'Year : ', value: '2022')),
-                      ],
+        body: SafeArea(
+          child: Obx(
+            () => controller.isLoading.value
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: ColorConstant.primary,
                     ),
-                    vBox(5),
+                  )
+                : Column(
+                    children: [
+                      vBox(10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
+                        child: CustomAppTextFormField(
+                          variant: TextFormFieldVariant.OutlineGray200,
+                          hintText: 'Search Student',
+                          onChanged: (value) {
+                            controller.searchStudent(value);
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              controller.studentListSearch.isEmpty == true
+                                  ? Center(
+                                      child: Text(
+                                        'Student Not found',
+                                        style: PMT.appStyle(
+                                            size: 16,
+                                            fontColor:
+                                                ColorConstant.primaryBlack),
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 16),
+                                      child: ListView.builder(
+                                        itemCount:
+                                            controller.studentListSearch.length,
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          Data? data = controller
+                                              .studentListSearch[index];
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                border: Border.all(
+                                                    color:
+                                                        ColorConstant.primary)),
+                                            padding: const EdgeInsets.all(8),
+                                            margin: const EdgeInsets.only(
+                                                bottom: 10),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                AppRichText(
+                                                    title: 'Name : ',
+                                                    value: data?.name ?? ''),
+                                                vBox(5),AppRichText(
+                                                    title: 'Student Id : ',
+                                                    value: '${data?.id ?? 0}'),
+                                                vBox(5),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                        child: AppRichText(
+                                                            title:
+                                                                'Room no. : ',
+                                                            value:
+                                                                data?.roomNo ??
+                                                                    '')),
+                                                    Expanded(
+                                                        child: AppRichText(
+                                                            title: 'Year : ',
+                                                            value:
+                                                                '${data?.year ?? ' '}')),
+                                                  ],
+                                                ),
+                                                vBox(5),
+                                                AppRichText(
+                                                    title: 'Deposit : ',
+                                                    value:
+                                                        '${data?.deposit ?? ' '}'),
+                                                vBox(5),
+                                                AppRichText(
+                                                    title: 'Mobile Nu. : ',
+                                                    value: data?.mobile ?? ''),
+                                                vBox(5),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                        child: IconButton(
+                                                            style: IconButton.styleFrom(
+                                                                backgroundColor:
+                                                                    ColorConstant
+                                                                        .primaryBlack
+                                                                        .withOpacity(
+                                                                            0.3)),
+                                                            onPressed: () {
+                                                              Get.toNamed(
+                                                                  AppRoutes
+                                                                      .addStudentScreenRoute,
+                                                                  arguments: {
+                                                                    "data":
+                                                                        data,
+                                                                    "isAddEdit":
+                                                                        2
+                                                                  });
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.view_list,
+                                                              color: ColorConstant
+                                                                  .primaryBlack,
+                                                            ))),
+                                                    hBox(10),
+                                                    Expanded(
+                                                        child: IconButton(
+                                                            style: IconButton.styleFrom(
+                                                                backgroundColor:
+                                                                    ColorConstant
+                                                                        .primary
+                                                                        .withOpacity(
+                                                                            0.3)),
+                                                            onPressed: () {
+                                                              Get.toNamed(
+                                                                  AppRoutes
+                                                                      .addStudentScreenRoute,
+                                                                  arguments: {
+                                                                    "data":
+                                                                        data,
+                                                                    "isAddEdit":
+                                                                        1
+                                                                  })?.then(
+                                                                  (value) {
+                                                                controller
+                                                                    .getStudentList();
+                                                              });
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.edit,
+                                                              color:
+                                                                  ColorConstant
+                                                                      .primary,
+                                                            ))),
+                                                    hBox(10),
+                                                    Expanded(
+                                                        child: IconButton(
+                                                            style: IconButton.styleFrom(
+                                                                backgroundColor:
+                                                                    ColorConstant
+                                                                        .green
+                                                                        .withOpacity(
+                                                                            0.3)),
+                                                            onPressed: () {
+                                                              Get.toNamed(
+                                                                  AppRoutes
+                                                                      .addUpdateDayDetailsScreenRoute,
+                                                                  arguments: {
+                                                                    'student_id':
+                                                                        data?.id ??
+                                                                            '',
+                                                                    'name':
+                                                                        data?.name ??
+                                                                            '',
+                                                                    'isAdd': 0,
+                                                                  });
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.add,
+                                                              color:
+                                                                  ColorConstant
+                                                                      .green,
+                                                            ))),
+                                                    hBox(10),
+                                                    Expanded(
+                                                        child: IconButton(
+                                                            style: IconButton.styleFrom(
+                                                                backgroundColor:
+                                                                    ColorConstant
+                                                                        .red
+                                                                        .withOpacity(
+                                                                            0.3)),
+                                                            onPressed: () {
+                                                              controller.showDeleteConfirmationDialog(context, () {
+                                                                controller
+                                                                    .deleteStudent(
+                                                                    '${data?.id ?? 0}');
+                                                              },);
 
-                    AppRichText(title: 'Deposit : ', value: '1000.00'), vBox(5),
-
-                    AppRichText(title: 'Mobile Nu. : ', value: '9023256219'),
-
-
-                  ],
-                ),
-              );
-            },
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.delete,
+                                                              color:
+                                                                  ColorConstant
+                                                                      .red,
+                                                            ))),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
           ),
-        )));
+        ));
   }
 }

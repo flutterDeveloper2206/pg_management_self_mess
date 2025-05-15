@@ -5,6 +5,7 @@ import 'package:pg_managment/core/utils/app_fonts.dart';
 import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/size_utils.dart';
 import 'package:pg_managment/routes/app_routes.dart';
+import 'package:pg_managment/widgets/bouncing_button.dart';
 import 'package:pg_managment/widgets/custom_elavated_button.dart';
 import '../../widgets/custom_app_text_form_field.dart';
 import 'controller/add_student_screen_controller.dart';
@@ -27,12 +28,18 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                 Icons.arrow_back_ios,
                 color: ColorConstant.primaryWhite,
               )),
-          title: Text(
-            'Add Student',
-            style: PMT.appStyle(
-                size: 20,
-                // fontWeight: FontWeight.w600,
-                fontColor: ColorConstant.primaryWhite),
+          title: Obx(
+            () => Text(
+              controller.isAddEdit.value == 2
+                  ? 'View Student Details'
+                  : controller.isAddEdit.value == 1
+                      ? 'Edit Student'
+                      : 'Add Student',
+              style: PMT.appStyle(
+                  size: 20,
+                  // fontWeight: FontWeight.w600,
+                  fontColor: ColorConstant.primaryWhite),
+            ),
           ),
         ),
         body: SafeArea(
@@ -43,92 +50,119 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                 children: [
                   vBox(20),
                   titleWidget(
+                      readOnly: controller.readOnly.value,
                       title: 'Name',
                       hintText: 'Enter Your Name',
                       controller: controller.nameController),
                   titleWidget(
+                      readOnly: controller.readOnly.value,
                       title: 'Hostel Name',
                       hintText: 'Enter Your Hostel Name',
                       controller: controller.hostelNameController),
                   titleWidget(
+                      readOnly: controller.readOnly.value,
                       title: 'Email',
                       hintText: 'Enter Your Email',
-                      controller: controller.hostelNameController),
+                      controller: controller.emailController),
                   Row(
                     children: [
                       Expanded(
                           child: titleWidget(
+                              readOnly: controller.readOnly.value,
                               title: 'Room No.',
                               hintText: 'Room No.',
-                              controller: controller.hostelNameController)),
+                              controller: controller.roomController)),
                       hBox(20),
                       Expanded(
                           child: titleWidget(
+                              readOnly: controller.readOnly.value,
                               title: 'Blood Group',
                               hintText: 'Blood Group',
-                              controller: controller.hostelNameController)),
+                              controller: controller.bloodController)),
                     ],
                   ),
                   titleWidget(
+                      readOnly: controller.readOnly.value,
                       title: 'Currently Pursuing',
                       hintText: 'Enter Your Currently Pursuing',
                       controller: controller.currentlyPursuingController),
                   titleWidget(
+                      readOnly: controller.readOnly.value,
                       title: 'Currently Studying Year',
+                      textInputType: TextInputType.number,
                       hintText: 'Enter Your Currently Studying Year',
                       controller: controller.currentlyStudyingYearController),
                   Row(
                     children: [
                       Expanded(
                           child: titleWidget(
+                              readOnly: true,
                               title: 'Date',
+                              onTap: () {
+                                controller.selectDate(context);
+                              },
                               textInputType: TextInputType.phone,
-
                               hintText: 'Date',
                               controller: controller.dateController)),
                       hBox(20),
                       Expanded(
                           child: titleWidget(
+                              readOnly: true,
                               title: 'Year',
+                              onTap: () {
+                                controller.selectYear(context);
+                              },
                               textInputType: TextInputType.phone,
-
                               hintText: 'Year',
                               controller: controller.yearController)),
                     ],
                   ),
                   titleWidget(
+                      readOnly: controller.readOnly.value,
                       title: 'Mobile Number',
                       textInputType: TextInputType.phone,
                       hintText: 'Enter Your Mobile Number',
                       controller: controller.mobileNumberController),
                   titleWidget(
+                      readOnly: controller.readOnly.value,
                       title: 'Alternative Mobile Number',
                       textInputType: TextInputType.phone,
                       hintText: 'Enter Your Alternative Mobile Number',
                       controller: controller.alternativeMobileNumberController),
                   titleWidget(
+                      readOnly: controller.readOnly.value,
                       title: 'Password',
                       hintText: 'Enter Your Password ',
                       controller: controller.passwordController),
                   titleWidget(
+                      readOnly: controller.readOnly.value,
                       title: 'Deposit',
                       textInputType: TextInputType.number,
                       hintText: 'Enter Deposit ',
                       controller: controller.depositController),
                   titleWidget(
+                      readOnly: controller.readOnly.value,
                       title: 'Address',
                       hintText: 'Enter Your Address ',
                       maxLine: 3,
                       controller: controller.addressController),
                   titleWidget(
+                      readOnly: controller.readOnly.value,
                       title: 'Advisor Guide',
                       hintText: 'Enter Your Advisor Guide ',
                       maxLine: 3,
                       controller: controller.guidController),
-                  AppElevatedButton(
-                    buttonName: 'Save',
-                    onPressed: () {},
-                  )
+                  controller.isAddEdit.value != 2
+                      ? AppElevatedButton(
+                          buttonName: controller.isAddEdit.value == 1
+                              ? 'Update '
+                              : 'Save',
+                          onPressed: () {
+                            controller.updateAddStudent(
+                                id: controller.model.value.id.toString());
+                          },
+                        )
+                      : SizedBox.shrink()
                 ],
               ),
             ),
@@ -140,8 +174,10 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
       {required String title,
       required String hintText,
       required TextEditingController controller,
-        TextInputType? textInputType,
-        int? maxLine}) {
+      TextInputType? textInputType,
+      bool? readOnly,
+      Function()? onTap,
+      int? maxLine}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -154,9 +190,11 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
         ),
         vBox(5),
         CustomAppTextFormField(
+          readOnly: readOnly,
           maxLines: maxLine,
           textInputType: textInputType,
           controller: controller,
+          onTap: onTap,
           variant: TextFormFieldVariant.OutlineGray200,
           hintText: hintText,
         ),

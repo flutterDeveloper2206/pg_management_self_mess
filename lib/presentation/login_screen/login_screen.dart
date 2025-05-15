@@ -47,9 +47,10 @@ class LoginScreen extends GetWidget<LoginScreenController> {
                   ),
                   vBox(10),
                   CustomAppTextFormField(
-
+                    controller: controller.emailController,
                     hintText: 'Enter Your Email',
-                  ), vBox(20),
+                  ),
+                  vBox(20),
                   Text(
                     'Password',
                     style: PMT.appStyle(
@@ -59,30 +60,33 @@ class LoginScreen extends GetWidget<LoginScreenController> {
                   ),
                   vBox(10),
                   Obx(
-                   () =>  CustomAppTextFormField(
-                     isObscureText: !controller.isShow.value,
+                    () => CustomAppTextFormField(
+                      isObscureText: !controller.isShow.value,
+                      controller: controller.passwordController,
                       suffix: InkWell(
                           onTap: () {
-                            controller.isShow.value=!controller.isShow.value;
+                            controller.isShow.value = !controller.isShow.value;
                           },
-                          child: Icon(controller.isShow.value?Icons.remove_red_eye:CupertinoIcons.eye_slash_fill)),
+                          child: Icon(controller.isShow.value
+                              ? Icons.remove_red_eye
+                              : CupertinoIcons.eye_slash_fill)),
                       hintText: 'Enter Your Password',
                     ),
                   ),
                   vBox(30),
                   AppElevatedButton(
                     buttonColor: ColorConstant.primaryBlack,
-
-                    buttonName: 'Login', onPressed: () {
-Get.toNamed(AppRoutes.dashboardScreenRoute);
-                  },),
-
+                    buttonName: 'Login',
+                    onPressed: () {
+                      controller.login(controller.emailController.text,
+                          controller.passwordController.text);
+                    },
+                  ),
                   vBox(40),
                   Divider(
                     color: ColorConstant.primaryWhite,
                     thickness: 3,
                   ),
-                  
                 ],
               ),
             ),
