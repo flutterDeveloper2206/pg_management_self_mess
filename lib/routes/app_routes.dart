@@ -6,6 +6,8 @@ import 'package:pg_managment/presentation/add_update_day_details_screen/add_upda
 import 'package:pg_managment/presentation/add_update_day_details_screen/binding/add_update_day_details_screen_binding.dart';
 import 'package:pg_managment/presentation/all_details_list_screen/all_details_list_screen.dart';
 import 'package:pg_managment/presentation/all_details_list_screen/binding/all_details_list_screen_binding.dart';
+import 'package:pg_managment/presentation/config_screen/binding/config_screen_binding.dart';
+import 'package:pg_managment/presentation/config_screen/config_screen.dart';
 import 'package:pg_managment/presentation/dashboard_screen/binding/dashboard_screen_binding.dart';
 import 'package:pg_managment/presentation/dashboard_screen/dashboard_screen.dart';
 import 'package:pg_managment/presentation/day_details_list_screen/binding/day_details_list_screen_binding.dart';
@@ -32,6 +34,7 @@ class AppRoutes {
   static const String splashScreenRoute = '/splash_screen';
 
   static const String loginScreenRoute = '/login_screen';
+  static const String configScreenRoute = '/config_screen';
 
   static const String dashboardScreenRoute = '/dashboard_screen';
 
@@ -164,11 +167,19 @@ class AppRoutes {
           DepositDetailsScreenBinding(),
         ],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 100)),    GetPage(
+        transitionDuration: const Duration(milliseconds: 100)),
+    GetPage(
         name: studentProfileScreenRoute,
         page: () => const StudentProfileScreen(),
         bindings: [
           StudentProfileScreenBinding(),
+        ],
+        transition: Transition.rightToLeft,
+        transitionDuration: const Duration(milliseconds: 100)),GetPage(
+        name: configScreenRoute,
+        page: () => const ConfigScreen(),
+        bindings: [
+          ConfigScreenBinding(),
         ],
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 100)),

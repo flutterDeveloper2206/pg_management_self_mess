@@ -44,6 +44,7 @@ class AllData {
   final double? simpleGuestAmount;
   final int? feastGuest;
   final double? feastGuestAmount;
+  final String? rate;
   final double? dueAmount;
   final double? penaltyAmount;
   final double? totalAmount;
@@ -69,6 +70,7 @@ class AllData {
     this.dueAmount,
     this.penaltyAmount,
     this.totalAmount,
+    this.rate,
     this.paidAmount,
     this.remainAmount,
     this.remark,
@@ -93,6 +95,7 @@ class AllData {
     penaltyAmount: json["penalty_amount"].toDouble(),
     totalAmount: json["total_amount"].toDouble(),
     paidAmount: json["paid_amount"].toDouble(),
+    rate: json["rate"] ,
     remainAmount: json["remain_amount"].toDouble(),
     remark: json["remark"],
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
@@ -105,6 +108,7 @@ class AllData {
     "student_id": studentId,
     "total_day": totalDay,
     "total_eat_day": totalEatDay,
+    "rate": rate,
     "cut_day": cutDay,
     "amount": amount,
     "date": date?.toIso8601String(),

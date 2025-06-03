@@ -49,7 +49,7 @@ class DayDetailsListScreen extends GetWidget<DayDetailsListScreenController> {
                       'isAdd': 0,
                     })?.then((value) {
                   controller.getAllStudentDetails(
-                      month: controller.month.text,
+                      month: '',
                       year: controller.year.text,
                       studentId: controller.studentId.value.toString());
                 });
@@ -217,8 +217,7 @@ class DayDetailsListScreen extends GetWidget<DayDetailsListScreenController> {
                                                     })?.then((value) {
                                                   controller
                                                       .getAllStudentDetails(
-                                                          month: controller
-                                                              .month.text,
+                                                          month: '',
                                                           year: controller
                                                               .year.text,
                                                           studentId: controller
@@ -244,8 +243,11 @@ class DayDetailsListScreen extends GetWidget<DayDetailsListScreenController> {
                                             ),
                                             CommonConstant.instance.isStudent ==false?   Bounce(
                                               onTap: () {
-                                                controller.deleteStudentDetails(
-                                                    data?.id.toString());
+                                                controller.showDeleteConfirmationDialog(context, () {
+                                                  controller.deleteStudentDetails(
+                                                      data?.id.toString());
+                                                },);
+
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.all(5),

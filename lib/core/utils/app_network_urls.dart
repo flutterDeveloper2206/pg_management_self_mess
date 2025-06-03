@@ -49,6 +49,8 @@ abstract class NetworkUrls {
 
   /// student_profile url
   static String studentProfile = '${baseUrl}admin/students/';
+  /// get config url
+  static String getConfigUrl = '${baseUrl}admin/configs';
 
   /// monthly transaction url
   static String monthlyTransactionUrl =

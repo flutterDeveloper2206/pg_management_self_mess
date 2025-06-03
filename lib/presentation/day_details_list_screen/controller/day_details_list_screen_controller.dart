@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg_managment/core/utils/app_network_urls.dart';
+import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/commonConstant.dart';
 import 'package:pg_managment/core/utils/navigation_service.dart';
 import 'package:pg_managment/core/utils/pref_utils.dart';
@@ -90,10 +91,43 @@ class DayDetailsListScreenController extends GetxController {
             message: 'Student details deleted successfully',
             success: true);
         getAllStudentDetails(
-            month: month.text,
+            month: '',
             year: year.text,
             studentId: studentId.toString());
       }
     });
   }
+  void showDeleteConfirmationDialog(BuildContext context, VoidCallback onYesPressed) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Confirm Delete"),
+          content: Text("Are you sure you want to delete this Entry?"),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          actionsAlignment: MainAxisAlignment.end,
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text("No",style: TextStyle(color: Colors.black),),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                onYesPressed(); // Callback for yes
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ColorConstant.primary,
+              ),
+              child: Text("Yes",style: TextStyle(color: Colors.white),),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

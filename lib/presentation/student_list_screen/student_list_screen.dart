@@ -57,20 +57,33 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
                           },
                         ),
                       ),
+                      vBox(10),
+                      Text(
+                        'Total Student :- ${controller.studentListModel.value.data?.length}',
+                        style: PMT.appStyle(
+                            size: 16,
+                            fontColor:
+                            ColorConstant.primaryBlack),
+                      ),
                       Expanded(
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
                               controller.studentListSearch.isEmpty == true
-                                  ? Center(
-                                      child: Text(
-                                        'Student Not found',
-                                        style: PMT.appStyle(
-                                            size: 16,
-                                            fontColor:
-                                                ColorConstant.primaryBlack),
-                                      ),
-                                    )
+                                  ? Column(
+                                    children: [
+                                      vBox(250),
+                                      Center(
+                                          child: Text(
+                                            'Student Not found',
+                                            style: PMT.appStyle(
+                                                size: 16,
+                                                fontColor:
+                                                    ColorConstant.primaryBlack),
+                                          ),
+                                        ),
+                                    ],
+                                  )
                                   : Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16, vertical: 16),

@@ -68,6 +68,9 @@ class AddUpdateDayDetailsScreen
                             textInputType: TextInputType.number,
                             title: 'Total Eat Day',
                             hintText: 'Total Eat Day',
+                            onChanged: (p0) {
+                              controller.changeEatDay(p0);
+                            },
                             controller: controller.totalEatDayController),
                       ),
                     ],
@@ -78,8 +81,12 @@ class AddUpdateDayDetailsScreen
                           child: titleWidget(
                               readOnly: controller.readOnly.value,
                               textInputType: TextInputType.number,
+                              onChanged: (p0) {
+                                controller.changeCutDay(p0);
+
+                              },
                               title: 'Cut Day',
-                              hintText: 'Cut Day',
+                                hintText: 'Cut Day',
                               controller: controller.cutDayController)),
                       hBox(20),
                       Expanded(
@@ -94,6 +101,23 @@ class AddUpdateDayDetailsScreen
                               controller: controller.dateController)),
                     ],
                   ),
+                  titleWidget(
+                      readOnly: true,
+                      textInputType: TextInputType.number,
+                      title: 'Rate',
+                      hintText: 'Rate',
+                      controller: TextEditingController(
+                          text:
+                          '${controller.dataGet.value.rate ?? ' '}')),
+                  titleWidget(
+                      readOnly: true,
+                      textInputType: TextInputType.number,
+                      title: 'Current Bill',
+                      hintText: 'Current Bill',
+                      controller: TextEditingController(
+                          text:
+                          '${controller.dataGet.value.amount ?? ' '}')),
+
                   Row(
                     children: [
                       Expanded(
@@ -102,12 +126,22 @@ class AddUpdateDayDetailsScreen
                               textInputType: TextInputType.number,
                               title: 'Simple Guest',
                               hintText: 'Simple Guest',
+                              onChanged: (p0) {
+
+                                controller.calculateSimpleGuestAmount(p0);
+                                controller.changeFeastAndSimple(p0,true);
+                              },
                               controller: controller.simpleGuestController)),
                       hBox(20),
                       Expanded(
                           child: titleWidget(
                               readOnly: controller.readOnly.value,
                               textInputType: TextInputType.number,
+                              onChanged: (p0) {
+                                controller.calculateFeastGuestAmount(p0);
+                                controller.changeFeastAndSimple(p0,false);
+
+                              },
                               title: 'Feast Guest',
                               hintText: 'Feast Guest',
                               controller: controller.feastGuestController)),
@@ -139,57 +173,122 @@ class AddUpdateDayDetailsScreen
                           child: titleWidget(
                               readOnly: controller.readOnly.value,
                               textInputType: TextInputType.number,
+                              title: 'Due Amount',
+                              hintText: 'Due Amount',
+                              controller: TextEditingController(
+                                  text:
+                                  '${controller.dataGet.value.dueAmount ?? ' '}'))),
+                      hBox(20),
+
+                      Expanded(
+                          child: titleWidget(
+                              readOnly: controller.readOnly.value,
+                              textInputType: TextInputType.number,
                               title: 'Penalty Amount ',
+                              onChanged: (p0) {
+                                if(p0.isEmpty){
+                                  controller.penaltyAmountController.text='0';
+                                }
+                              },
                               hintText: 'Penalty Amount ',
                               controller: controller.penaltyAmountController)),
-                      hBox(20),
+
+                    ],
+                  ),
+                titleWidget(
+                    readOnly: controller.readOnly.value,
+                    textInputType: TextInputType.number,
+                    title: 'Total Bill',
+                    hintText: 'Total Bill',
+                    controller: TextEditingController(
+                        text:
+                        '${controller.dataGet.value.totalAmount ?? ' '}')),
+
+            Row(
+                    children: [
+
                       Expanded(
                           child: titleWidget(
                               readOnly: controller.readOnly.value,
                               textInputType: TextInputType.number,
                               title: 'Paid Amount ',
                               hintText: 'Paid Amount ',
+                              onChanged: (p0) {
+                                controller.setRemainAmountCalculate();
+                              },
                               controller: controller.paidAmountController)),
+                      hBox(20),
+
+                      Expanded(
+                          child: titleWidget(
+                              readOnly: true,
+                              textInputType: TextInputType.number,
+                              title: 'Remain Amount ',
+                              hintText: 'Remain Amount ',
+                              controller:  controller.remainController
+                              // controller: TextEditingController(
+                              //     text:
+                              //     '${controller.dataGet.value.remainAmount ?? ' '}')
+                          )),
+
+                      // Expanded(
+                      //   child: titleWidget(
+                      //       readOnly: true,
+                      //       textInputType: TextInputType.number,
+                      //       title: 'Current Amount',
+                      //       hintText: 'Current Amount',
+                      //       controller: TextEditingController(
+                      //           text:
+                      //           '${controller.dataGet.value.totalAmount ?? ' '}')),
+                      // ),
 
                     ],
                   ),
-                  Obx(() => controller.isAdd.value == 2
-                      ? Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                    child: titleWidget(
-                                        readOnly: controller.readOnly.value,
-                                        textInputType: TextInputType.number,
-                                        title: 'Dua Amount',
-                                        hintText: 'Dua Amount',
-                                        controller: TextEditingController(
-                                            text:
-                                                '${controller.dataGet.value.dueAmount ?? ' '}'))),
-                                hBox(20),
-                                         Expanded(
-                                    child: titleWidget(
-                                        readOnly: controller.readOnly.value,
-                                        textInputType: TextInputType.number,
-                                        title: 'Remain Amount ',
-                                        hintText: 'Remain Amount ',
-                                        controller: TextEditingController(
-                                            text:
-                                                '${controller.dataGet.value.remainAmount ?? ' '}'))),
-                              ],
-                            ),
-                            titleWidget(
-                                readOnly: controller.readOnly.value,
-                                textInputType: TextInputType.number,
-                                title: 'Total Amount',
-                                hintText: 'Total Amount',
-                                controller: TextEditingController(
-                                    text:
-                                        '${controller.dataGet.value.totalAmount ?? ' '}')),
-                          ],
-                        )
-                      : SizedBox.shrink()),
+
+
+                  // Obx(() => controller.isAdd.value == 2
+                  //     ?
+                  // Column(
+                  //         children: [
+                  //           Row(
+                  //             children: [
+                  //
+                  //               // Expanded(
+                  //               //     child: titleWidget(
+                  //               //         readOnly: controller.readOnly.value,
+                  //               //         textInputType: TextInputType.number,
+                  //               //         title: 'Dua Amount',
+                  //               //         hintText: 'Dua Amount',
+                  //               //         controller: TextEditingController(
+                  //               //             text:
+                  //               //                 '${controller.dataGet.value.dueAmount ?? ' '}'))),
+                  //                        Expanded(
+                  //                   child: titleWidget(
+                  //                       readOnly: true,
+                  //                       textInputType: TextInputType.number,
+                  //                       title: 'Remain Amount ',
+                  //                       hintText: 'Remain Amount ',
+                  //                       controller: TextEditingController(
+                  //                           text:
+                  //                               '${controller.dataGet.value.remainAmount ?? ' '}'))),
+                  //
+                  //               hBox(20),
+                  //               Expanded(
+                  //                 child: titleWidget(
+                  //                     readOnly: true,
+                  //                     textInputType: TextInputType.number,
+                  //                     title: 'Total Amount',
+                  //                     hintText: 'Total Amount',
+                  //                     controller: TextEditingController(
+                  //                         text:
+                  //                         '${controller.dataGet.value.totalAmount ?? ' '}')),
+                  //               ),
+                  //
+                  //             ],
+                  //           ),
+                  //           ],
+                  //       )
+                  //     : SizedBox.shrink()),
                   titleWidget(
                       readOnly: controller.readOnly.value,
                       title: 'Remark',
@@ -218,6 +317,7 @@ class AddUpdateDayDetailsScreen
       required String hintText,
       required TextEditingController controller,
       TextInputType? textInputType,
+        Function(String)? onChanged,
       bool? readOnly,
       int? maxLine,
       Function()? onTap}) {
@@ -238,6 +338,7 @@ class AddUpdateDayDetailsScreen
           onTap: onTap,
           textInputType: textInputType,
           controller: controller,
+          onChanged: onChanged,
           variant: TextFormFieldVariant.OutlineGray200,
           hintText: hintText,
         ),

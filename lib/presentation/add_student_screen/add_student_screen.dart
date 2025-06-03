@@ -56,9 +56,19 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                       controller: controller.nameController),
                   titleWidget(
                       readOnly: controller.readOnly.value,
-                      title: 'Hostel Name',
-                      hintText: 'Enter Your Hostel Name',
+                      title: 'Name of Hostel',
+                      hintText: 'Enter Your Name of Hostel',
                       controller: controller.hostelNameController),
+                  titleWidget(
+                      readOnly: controller.readOnly.value,
+                      title: 'Registration Number',
+                      hintText: 'Enter Your Registration Number',
+                      controller: controller.registrationNumberController),
+                  titleWidget(
+                      readOnly: controller.readOnly.value,
+                      title: 'College Name',
+                      hintText: 'Enter Your College Name',
+                      controller: controller.collageNameController),
                   titleWidget(
                       readOnly: controller.readOnly.value,
                       title: 'Email',
@@ -88,9 +98,9 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                       controller: controller.currentlyPursuingController),
                   titleWidget(
                       readOnly: controller.readOnly.value,
-                      title: 'Currently Studying Year',
+                      title: 'Studying Year',
                       textInputType: TextInputType.number,
-                      hintText: 'Enter Your Currently Studying Year',
+                      hintText: 'Enter Your Studying Year',
                       controller: controller.currentlyStudyingYearController),
                   Row(
                     children: [

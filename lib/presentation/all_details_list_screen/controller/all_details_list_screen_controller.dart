@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pdf/pdf.dart';
 import 'package:pg_managment/core/utils/app_network_urls.dart';
 import 'package:pg_managment/core/utils/navigation_service.dart';
 import 'package:pg_managment/core/utils/progress_dialog_utils.dart';
 import 'package:pg_managment/presentation/all_details_list_screen/all_details_list_model.dart';
 
 import '../../../ApiServices/api_service.dart';
-
+import 'package:pdf/widgets.dart' as pw;
+import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
 class AllDetailsListScreenController extends GetxController {
   RxBool isLoading = false.obs;
   Rx<StudentAllDetailsModel> allStudentListModel = StudentAllDetailsModel().obs;
   TextEditingController month = TextEditingController();
   TextEditingController year = TextEditingController();
+  RxList<List<String>> studentMonthlyStudentList = <List<String>>[].obs;
 
   @override
   void onInit() {
@@ -67,6 +70,10 @@ class AllDetailsListScreenController extends GetxController {
       if (value != null && value.statusCode == 200) {
         isLoading.value = false;
         allStudentListModel.value = StudentAllDetailsModel.fromJson(value.body);
+        if(allStudentListModel.value.data!=null &&allStudentListModel.value.data!.isNotEmpty) {
+          studentMonthlyStudentList.value =
+              generateStudentTableList(allStudentListModel.value) ?? [];
+        }
       }
     });
   }
@@ -104,4 +111,65 @@ class AllDetailsListScreenController extends GetxController {
           success: false);
     }
   }
+
+
+  List<List<String>>? generateStudentTableList(StudentAllDetailsModel model) {
+    return model.data?.asMap().entries.map((entry) {
+      final student = entry.value;
+      return [
+        '${student.studentId}',
+        '${student.studentName ?? ' '}',
+        '${student.totalDay?.toString() ?? '0'}',
+        '${student.totalEatDay ?? '0'}',
+        '${student.cutDay ?? '0'}',
+        '${student.simpleGuest ?? '0'}',
+        '${student.feastGuest ?? '0'}',
+      '${student.rate ?? '0'}',
+        '${student.penaltyAmount ?? '0'}',
+        '${student.paidAmount ?? '0'}',
+        '${student.totalAmount ?? '0'}',
+
+
+
+
+      ];
+    }).toList() ?? [];
+  }
+  Future<Uint8List> generatePdf() async {
+    final pdf = pw.Document();
+
+    // Load optional image from assets
+    final ByteData logoBytes = await rootBundle.load('assets/images/ic_launcher.png');
+    final Uint8List logoUint8List = logoBytes.buffer.asUint8List();
+    final image = pw.MemoryImage(logoUint8List);
+
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        build: (context) => [
+          pw.Center(child: pw.Image(image, width: 100)), // Optional logo
+          pw.SizedBox(height: 20),
+          pw.Text('Student Monthly Report',
+              style: pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold)),
+          pw.SizedBox(height: 16),
+          pw.Text('Date: ${DateTime.now().toLocal()}'),
+          pw.SizedBox(height: 16),
+          pw.Text('This is a  PDF report with All Student Monthly data.'),
+
+          pw.SizedBox(height: 20),
+          pw.Table.fromTextArray(
+            headers: ['Student ID', 'Student Name', 'Total Day','Total Eat Day','Cut Day',
+              'Simple Guest','Feast Guest','Rate','Penalty Amount','Paid Amount','Total Amount'],            data: studentMonthlyStudentList,
+            headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            cellStyle: pw.TextStyle(fontSize: 12),
+            cellAlignment: pw.Alignment.center,
+            border: pw.TableBorder.all(color: PdfColors.grey),
+          ),
+        ],
+      ),
+    );
+
+    return pdf.save();
+  }
+
 }

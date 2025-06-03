@@ -18,12 +18,16 @@ abstract class NetworkInfo {
     } else {
       if (connectivityResult.contains(ConnectivityResult.none)) {
         ProgressDialogUtils.hideProgressDialog() ;
+        Get.closeAllSnackbars();
+
         AppFlushBars.appCommonFlushBar(
             context: NavigationService.navigatorKey.currentState!.context,
             message: 'NO INTERNET CONNECTION',
             success: false);
+Future.delayed(Duration(seconds: 2),() {
 
         checkNetwork();
+},);
         return false;
       } else {
         return true;

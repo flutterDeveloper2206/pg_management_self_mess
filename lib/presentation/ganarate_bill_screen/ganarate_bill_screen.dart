@@ -82,8 +82,33 @@ class GanarateBillScreen extends GetWidget<GanarateBillScreenController> {
                   ),
                 ),
                 vBox(40),
+                Row(
+                  children: [
+                    Expanded(
+                        child: CustomAppTextFormField(
+                            controller: controller.month,
+                            onTap: () {
+                              controller.selectMonth(context);
+                            },
+                            readOnly: true,
+                            variant: TextFormFieldVariant.OutlineGray200,
+                            hintText: 'Select Month')),
+                    hBox(10),
+                    Expanded(
+                        child: CustomAppTextFormField(
+                            controller: controller.year,
+                            readOnly: true,
+                            variant: TextFormFieldVariant.OutlineGray200,
+                            onTap: () {
+                              controller.selectYear(context);
+                            },
+                            hintText: 'Select Year')),
+
+                  ],
+                ),
+                vBox(20),
                 Text(
-                  "Calculate Rate",
+                  "Actual Rate",
                   style: PMT.appStyle(
                       size: 16,
                       fontWeight: FontWeight.w500,
@@ -93,7 +118,23 @@ class GanarateBillScreen extends GetWidget<GanarateBillScreenController> {
                   () =>  CustomAppTextFormField(
                     hintText: controller.billTotal.value,
                     textInputType: TextInputType.number,
+readOnly: true,
+                    controller: controller.rateController.value,
+                    variant: TextFormFieldVariant.OutlineGray200,
+                  ),
 
+                ),
+                vBox(10),Text(
+                  "Modify Rate",
+                  style: PMT.appStyle(
+                      size: 16,
+                      fontWeight: FontWeight.w500,
+                      fontColor: ColorConstant.primary),
+                ),
+                Obx(
+                  () =>  CustomAppTextFormField(
+                    hintText: '0.00',
+                    textInputType: TextInputType.number,
                     controller: controller.rateController.value,
                     variant: TextFormFieldVariant.OutlineGray200,
                   ),

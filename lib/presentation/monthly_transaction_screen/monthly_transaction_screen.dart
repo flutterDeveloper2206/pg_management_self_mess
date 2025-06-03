@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:pg_managment/core/utils/app_fonts.dart';
 import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/size_utils.dart';
+import 'package:pg_managment/widgets/custom_elavated_button.dart';
+import 'package:printing/printing.dart';
 import 'controller/monthly_transaction_screen_controller.dart';
 import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 
@@ -113,6 +115,20 @@ class MonthlyTransactionScreen
               }),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(left: 16,right: 16,bottom: 10),
+        child: AppElevatedButton(
+          buttonName: 'Download PDF',
+          onPressed: () async {
+            final pdfData = await controller.generatePdf();
+            await Printing.sharePdf(
+              bytes: pdfData,
+
+              filename: 'Expanse Repost ${DateTime.now()}.pdf',
+            );
+          },
         ),
       ),
     );

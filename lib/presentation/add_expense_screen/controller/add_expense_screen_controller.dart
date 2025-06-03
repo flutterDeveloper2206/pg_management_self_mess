@@ -10,9 +10,9 @@ import 'package:pg_managment/presentation/expense_list_screen/expense_list_model
 class AddExpenseScreenController extends GetxController {
   TextEditingController itemController = TextEditingController();
   TextEditingController dateController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController amountController = TextEditingController();
-  TextEditingController remarkController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    TextEditingController amountController = TextEditingController();
+    TextEditingController remarkController = TextEditingController();
 
   dynamic argumentData = Get.arguments;
 
@@ -103,13 +103,17 @@ class AddExpenseScreenController extends GetxController {
                 : NetworkUrls.expenseAddUrl).then((value) async {
           if (value != null &&
               (value.statusCode == 200 || value.statusCode == 201)) {
-            Get.back();
-            if (isAddEdit.value == 1) {}
+            if (isAddEdit.value == 1) {
+              Get.back();
+
+            }else{
+
+            }
 
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
               AppFlushBars.appCommonFlushBar(
                   context: NavigationService.navigatorKey.currentContext!,
-                  message: isAddEdit.value == 1
+                  message: isAddEdit.value == 0
                       ? 'Expense Added successfully'
                       : 'Expense Updated successfully',
                   success: true);
@@ -131,13 +135,19 @@ class AddExpenseScreenController extends GetxController {
                 : NetworkUrls.expenseAddUrl).then((value) async {
           if (value != null &&
               (value.statusCode == 200 || value.statusCode == 201)) {
-            Get.back();
-            if (isAddEdit.value == 1) {}
+            if (isAddEdit.value == 1) {
+              Get.back();
+
+            }else{
+              itemController.clear();
+          amountController.clear();
+          remarkController.clear();
+            }
 
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
               AppFlushBars.appCommonFlushBar(
                   context: NavigationService.navigatorKey.currentContext!,
-                  message: isAddEdit.value == 1
+                  message: isAddEdit.value == 0
                       ? 'Expense Added successfully'
                       : 'Expense Updated successfully',
                   success: true);

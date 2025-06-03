@@ -38,7 +38,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'color': Colors.orange,
       },
       {
-        'title': 'Details List',
+        'title': 'Monthly Summary',
         'icon': Icons.fact_check, // Checklist/details icon
         'route': AppRoutes.allDetailsListScreenRoute,
         'color': Colors.teal,
@@ -58,9 +58,16 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
       {
         'title': 'Deposit Details',
         'icon': Icons.payment, // Represents bills/expenses
-        'route':  AppRoutes.depositDetailsScreenRoute,
+        'route': AppRoutes.depositDetailsScreenRoute,
         'color': Colors.redAccent,
-      },{
+      },
+      {
+        'title': 'Config',
+        'icon': Icons.settings, // Represents bills/expenses
+        'route': AppRoutes.configScreenRoute,
+        'color': Colors.greenAccent,
+      },
+      {
         'title': 'Logout',
         'icon': Icons.exit_to_app, // Represents bills/expenses
         'route': '',
@@ -131,10 +138,9 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                   icon: item['icon'] as IconData,
                   color: item['color'] as Color,
                   onTap: () {
-                    if(item['route'].toString()
-                        .isNotEmpty) {
+                    if (item['route'].toString().isNotEmpty) {
                       Get.toNamed(item['route'] as String);
-                    }else{
+                    } else {
                       PrefUtils.clearPreferencesData();
                       Get.offAllNamed(AppRoutes.loginScreenRoute);
                     }

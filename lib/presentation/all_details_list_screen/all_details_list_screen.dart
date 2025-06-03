@@ -9,6 +9,8 @@ import 'package:pg_managment/presentation/all_details_list_screen/all_details_li
 import 'package:pg_managment/routes/app_routes.dart';
 import 'package:pg_managment/widgets/bouncing_button.dart';
 import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
+import 'package:printing/printing.dart';
+import '../../widgets/custom_elavated_button.dart';
 import 'controller/all_details_list_screen_controller.dart';
 
 class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
@@ -18,6 +20,20 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: ColorConstant.primaryWhite,
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.only(left: 16,right: 16,bottom: 10),
+          child: AppElevatedButton(
+            buttonName: 'Download PDF',
+            onPressed: () async {
+              final pdfData = await controller.generatePdf();
+              await Printing.sharePdf(
+                bytes: pdfData,
+
+                filename: 'Expanse Repost ${DateTime.now()}.pdf',
+              );
+            },
+          ),
+        ),
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: ColorConstant.primary,

@@ -149,7 +149,8 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
                               final pdfData = await controller.generatePdf();
                               await Printing.sharePdf(
                                 bytes: pdfData,
-                                filename: 'student_report.pdf',
+
+                                filename: 'student Deposit Repost ${DateTime.now()}.pdf',
                               );
                             },
                           ),

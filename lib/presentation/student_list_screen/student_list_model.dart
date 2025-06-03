@@ -36,6 +36,8 @@ class Data {
   final int? id;
   final String? name;
   final String? hostelName;
+  final String? registrationNumber;
+  final String? collageName;
   final String? roomNo;
   final String? email;
   final String? residentialAddress;
@@ -69,6 +71,8 @@ class Data {
     this.bloodGroup,
     this.deposit,
     this.userId,
+    this.collageName,
+    this.registrationNumber,
     this.createdAt,
     this.updatedAt,
   });
@@ -90,6 +94,8 @@ class Data {
     bloodGroup: json["blood_group"],
     deposit: json["deposit"].toDouble(),
     userId: json["user_id"],
+    registrationNumber: json["registration_no"],
+    collageName: json["college_name"],
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
   );
@@ -98,6 +104,8 @@ class Data {
     "id": id,
     "name": name,
     "hostel_name": hostelName,
+    "registration_no": registrationNumber,
+    "college_name": collageName,
     "room_no": roomNo,
     "email": email,
     "residential_address": residentialAddress,

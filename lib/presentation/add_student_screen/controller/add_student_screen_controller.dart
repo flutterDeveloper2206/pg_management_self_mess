@@ -10,6 +10,8 @@ import 'package:pg_managment/presentation/student_list_screen/student_list_model
 class AddStudentScreenController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController hostelNameController = TextEditingController();
+  TextEditingController registrationNumberController = TextEditingController();
+  TextEditingController collageNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController roomController = TextEditingController();
   TextEditingController bloodController = TextEditingController();
@@ -83,6 +85,8 @@ class AddStudentScreenController extends GetxController {
   setData() {
     nameController.text = model.value.name ?? '';
     hostelNameController.text = model.value.hostelName ?? '';
+    registrationNumberController.text = model.value.registrationNumber ?? '';
+    collageNameController.text = model.value.collageName ?? '';
     emailController.text = model.value.email ?? '';
     roomController.text = model.value.roomNo ?? '';
     bloodController.text = model.value.bloodGroup ?? '';
@@ -106,6 +110,8 @@ class AddStudentScreenController extends GetxController {
           body: {
             "name": nameController.text,
             "hostel_name": hostelNameController.text,
+            "registration_no": registrationNumberController.text,
+            "college_name": collageNameController.text,
             "room_no": roomController.text,
             "email": emailController.text,
             "residential_address": addressController.text,
@@ -140,6 +146,9 @@ class AddStudentScreenController extends GetxController {
           body: {
             "name": nameController.text,
             "hostel_name": hostelNameController.text,
+            "registration_no": registrationNumberController.text,
+            "college_name": collageNameController.text,
+
             "room_no": roomController.text,
             "email": emailController.text,
             "residential_address": addressController.text,

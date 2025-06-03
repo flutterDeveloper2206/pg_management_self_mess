@@ -12,11 +12,42 @@ class GanarateBillScreenController extends GetxController {
 RxString billTotal = '0.0'.obs;
   RxBool isLoading = false.obs;
   RxBool isLock = false.obs;
-
+  TextEditingController month = TextEditingController();
+  TextEditingController year = TextEditingController();
   @override
   void onInit() {
     super.onInit();
     calculateRate();
+  }
+  Future<void> selectYear(BuildContext context) async {
+    print('object');
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDatePickerMode: DatePickerMode.year,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2090),
+    );
+
+    if (picked != null) {
+      String formattedDate = "${picked.year.toString()}";
+      year.text = formattedDate;
+    }
+  }
+  Future<void> selectMonth(BuildContext context) async {
+    print('object');
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDatePickerMode: DatePickerMode.day,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2090),
+    );
+
+    if (picked != null) {
+      String formattedDate = picked.month.toString().padLeft(2, '0');
+      month.text = formattedDate;
+    }
   }
 
   Future<void> calculateRate() async {
@@ -40,6 +71,8 @@ RxString billTotal = '0.0'.obs;
     isLoading.value = true;
     await ApiService().callPostApi(
         body: {
+          'month':int.parse(month.text),
+          'year':int.parse(year.text),
           'rate': rateController.value.text,
           'guest_cash': guestCashController.value.text,
           "status": isLock ? "lock" : "generated"
