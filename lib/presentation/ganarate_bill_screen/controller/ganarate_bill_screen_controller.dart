@@ -17,6 +17,10 @@ RxString billTotal = '0.0'.obs;
   @override
   void onInit() {
     super.onInit();
+    DateTime now = DateTime.now();
+    DateTime picked = DateTime(now.year, now.month, 0);
+    month.text= picked.month.toString();
+    year.text= picked.year.toString();
     calculateRate();
   }
   Future<void> selectYear(BuildContext context) async {
@@ -51,11 +55,12 @@ RxString billTotal = '0.0'.obs;
   }
 
   Future<void> calculateRate() async {
+
     await ApiService().callGetApi(
         body: {},
         headerWithToken: true,
         showLoader: true,
-        url: NetworkUrls.calculateRateUrl).then((value) async {
+        url: '${NetworkUrls.calculateRateUrl}?month=${month.text}&year=${year.text}').then((value) async {
       if (value != null && value.statusCode == 200) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           rateController.value.text = value.body['data']['rate'].toString();
@@ -63,6 +68,9 @@ RxString billTotal = '0.0'.obs;
           isLock.value = value.body['data']['status'] == 'lock';
         });
         update();
+      }else{
+        rateController.value.clear();
+        billTotal.value='0.0';
       }
     });
   }

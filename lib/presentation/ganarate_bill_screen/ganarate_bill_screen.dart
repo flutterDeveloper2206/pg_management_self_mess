@@ -103,6 +103,19 @@ class GanarateBillScreen extends GetWidget<GanarateBillScreenController> {
                               controller.selectYear(context);
                             },
                             hintText: 'Select Year')),
+                    hBox(10),
+
+                    TextButton(
+                        onPressed: () {
+                          controller.calculateRate(
+                              );
+                        },
+                        child: Text('GO',
+                            style: PMT.appStyle(
+                                size: 16,
+                                fontWeight: FontWeight.bold,
+                                fontColor: ColorConstant.primary)))
+
 
                   ],
                 ),

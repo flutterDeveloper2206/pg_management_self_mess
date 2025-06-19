@@ -58,6 +58,8 @@ class AddUpdateDayDetailsScreenController extends GetxController {
         readOnly.value = true;
       }
       if (isAdd.value == 0) {
+        setDate();
+
         String day = PrefUtils.getString(StringConstants.totalDays).isEmpty
             ? '0.0'
             : PrefUtils.getString(StringConstants.totalDays);
@@ -84,6 +86,16 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     super.onInit();
   }
 
+
+  setDate(){
+    DateTime now = DateTime.now();
+    DateTime picked = DateTime(now.year, now.month, 0);
+    String formattedDate =
+        "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+    dateController.text = formattedDate;
+    paidAmountController.text='0.0';
+    print(picked); // Example output: 2025-05-31 00:00:00.000
+  }
   changeEatDay(String value) {
     if (value.isNotEmpty) {
       int val = int.parse(value);
