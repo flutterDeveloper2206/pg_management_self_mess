@@ -7,6 +7,7 @@ import 'package:pg_managment/core/utils/size_utils.dart';
 import 'package:pg_managment/presentation/student_list_screen/student_list_model.dart';
 import 'package:pg_managment/routes/app_routes.dart';
 import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
+import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/student_list_screen_controller.dart';
 
 class StudentListScreen extends GetWidget<StudentListScreenController> {
@@ -23,10 +24,13 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
               onPressed: () {
                 Get.back();
               },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: ColorConstant.primaryWhite,
-              )),
+              icon:   Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomImageView(
+                    height: 40,
+                    width: 40,
+                    imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
+              ),),
           title: Text(
             'All Student',
             style: PMT.appStyle(
@@ -166,11 +170,10 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
                                                                         2
                                                                   });
                                                             },
-                                                            icon: Icon(
-                                                              Icons.view_list,
-                                                              color: ColorConstant
-                                                                  .primaryBlack,
-                                                            ))),
+                                                            icon: CustomImageView(
+                                                                height: 20,
+                                                                width: 20,
+                                                                imagePath:  'assets/images/list.png' ,color: ColorConstant.primaryBlack),)),
                                                     hBox(10),
                                                     Expanded(
                                                         child: IconButton(
@@ -195,8 +198,10 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
                                                                     .getStudentList();
                                                               });
                                                             },
-                                                            icon: Icon(
-                                                              Icons.edit,
+                                                            icon: CustomImageView(
+                                                              height: 20,
+                                                              width: 20,
+                                                              imagePath:  'assets/images/pencil.png' ,
                                                               color:
                                                                   ColorConstant
                                                                       .primary,
@@ -224,8 +229,10 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
                                                                     'isAdd': 0,
                                                                   });
                                                             },
-                                                            icon: Icon(
-                                                              Icons.add,
+                                                            icon: CustomImageView(
+                                                              height: 20,
+                                                              width: 20,
+                                                              imagePath:  'assets/images/add.png' ,
                                                               color:
                                                                   ColorConstant
                                                                       .green,
@@ -247,8 +254,10 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
                                                               },);
 
                                                             },
-                                                            icon: Icon(
-                                                              Icons.delete,
+                                                            icon: CustomImageView(
+                                                              height: 20,
+                                                              width: 20,
+                                                              imagePath:  'assets/images/delete.png' ,
                                                               color:
                                                                   ColorConstant
                                                                       .red,

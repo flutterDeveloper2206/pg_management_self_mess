@@ -9,6 +9,7 @@ import 'package:pg_managment/presentation/expense_list_screen/expense_list_model
 import 'package:pg_managment/routes/app_routes.dart';
 import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 import 'package:pg_managment/widgets/custom_elavated_button.dart';
+import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'package:printing/printing.dart';
 import 'controller/expense_list_screen_controller.dart';
 
@@ -26,10 +27,13 @@ class ExpenseListScreen extends GetWidget<ExpenseListScreenController> {
               onPressed: () {
                 Get.back();
               },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: ColorConstant.primaryWhite,
-              )),
+              icon: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomImageView(
+                    height: 40,
+                    width: 40,
+                    imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
+              ),),
           title: Text(
             'All Expense',
             style: PMT.appStyle(
@@ -194,8 +198,10 @@ class ExpenseListScreen extends GetWidget<ExpenseListScreenController> {
                                                                   "isAddEdit": 2
                                                                 });
                                                           },
-                                                          icon: const Icon(
-                                                            Icons.view_list,
+                                                          icon: CustomImageView(
+                                                            height: 20,
+                                                            width: 20,
+                                                            imagePath:  'assets/images/list.png' ,
                                                             color: ColorConstant
                                                                 .primaryBlack,
                                                           ))),
@@ -224,8 +230,10 @@ class ExpenseListScreen extends GetWidget<ExpenseListScreenController> {
                                                                       '${DateTime.now().year}');
                                                             });
                                                           },
-                                                          icon: const Icon(
-                                                            Icons.edit,
+                                                          icon:   CustomImageView(
+                                                            height: 20,
+                                                            width: 20,
+                                                            imagePath:  'assets/images/pencil.png' ,
                                                             color: ColorConstant
                                                                 .primary,
                                                           ))),
@@ -251,8 +259,10 @@ class ExpenseListScreen extends GetWidget<ExpenseListScreenController> {
                                                               },
                                                             );
                                                           },
-                                                          icon: const Icon(
-                                                            Icons.delete,
+                                                          icon: CustomImageView(
+                                                            height: 20,
+                                                            width: 20,
+                                                            imagePath:  'assets/images/delete.png' ,
                                                             color: ColorConstant
                                                                 .red,
                                                           )))

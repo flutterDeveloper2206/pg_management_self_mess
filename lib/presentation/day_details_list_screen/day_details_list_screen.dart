@@ -9,6 +9,7 @@ import 'package:pg_managment/core/utils/size_utils.dart';
 import 'package:pg_managment/presentation/all_details_list_screen/all_details_list_model.dart';
 import 'package:pg_managment/routes/app_routes.dart';
 import 'package:pg_managment/widgets/bouncing_button.dart';
+import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/day_details_list_screen_controller.dart';
 import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 
@@ -26,10 +27,13 @@ class DayDetailsListScreen extends GetWidget<DayDetailsListScreenController> {
               onPressed: () {
                 Get.back();
               },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: ColorConstant.primaryWhite,
-              )),
+              icon: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomImageView(
+                    height: 40,
+                    width: 40,
+                    imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
+              ),),
           title: Obx(
             () => Text(
               '${controller.studentName.value} Details ',
@@ -194,8 +198,10 @@ class DayDetailsListScreen extends GetWidget<DayDetailsListScreenController> {
                                                             8),
                                                     color: ColorConstant
                                                         .primaryWhite),
-                                                child: Icon(
-                                                  Icons.list,
+                                                child: CustomImageView(
+                                                  height: 20,
+                                                  width: 20,
+                                                  imagePath:  'assets/images/list.png' ,
                                                 ),
                                               ),
                                             ),
@@ -233,8 +239,11 @@ class DayDetailsListScreen extends GetWidget<DayDetailsListScreenController> {
                                                             8),
                                                     color: ColorConstant
                                                         .primaryWhite),
-                                                child: Icon(
-                                                  Icons.edit,
+                                                child:  CustomImageView(
+                                                  height: 20,
+                                                  width: 20,
+                                                  imagePath:  'assets/images/pencil.png' ,
+
                                                 ),
                                               ),
                                             ):SizedBox.shrink(),
@@ -257,8 +266,10 @@ class DayDetailsListScreen extends GetWidget<DayDetailsListScreenController> {
                                                             8),
                                                     color: ColorConstant
                                                         .primaryWhite),
-                                                child: Icon(
-                                                  Icons.delete,
+                                                child:  CustomImageView(
+                                                  height: 20,
+                                                  width: 20,
+                                                  imagePath:  'assets/images/delete.png' ,
                                                 ),
                                               ),
                                             ):SizedBox.shrink(),

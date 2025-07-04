@@ -7,6 +7,7 @@ import 'package:pg_managment/core/utils/size_utils.dart';
 import 'package:pg_managment/presentation/deposit_details_screen/controller/deposit_details_screen_controller.dart';
 import 'package:pg_managment/widgets/custom_elavated_button.dart';
 import 'package:flutter/material.dart';
+import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'package:printing/printing.dart';
 
 import '../student_list_screen/student_list_model.dart';
@@ -25,10 +26,13 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
               onPressed: () {
                 Get.back();
               },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: ColorConstant.primaryWhite,
-              )),
+              icon: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomImageView(
+                    height: 40,
+                    width: 40,
+                    imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
+              ),),
           title: Text(
             'Deposit Details',
             style: PMT.appStyle(

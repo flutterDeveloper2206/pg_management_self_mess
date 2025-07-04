@@ -11,6 +11,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
 class AllDetailsListScreenController extends GetxController {
   RxBool isLoading = false.obs;
+  RxDouble totalCollection = 0.0.obs;
   Rx<StudentAllDetailsModel> allStudentListModel = StudentAllDetailsModel().obs;
   TextEditingController month = TextEditingController();
   TextEditingController year = TextEditingController();
@@ -73,44 +74,15 @@ class AllDetailsListScreenController extends GetxController {
         if(allStudentListModel.value.data!=null &&allStudentListModel.value.data!.isNotEmpty) {
           studentMonthlyStudentList.value =
               generateStudentTableList(allStudentListModel.value) ?? [];
+          allStudentListModel.value.data?.forEach((element) {
+            totalCollection.value = totalCollection.value+element.paidAmount!.toDouble()??0.0;
+
+          },);
         }
       }
     });
   }
 
-  Future<void> getNotificationApi() async {
-    isLoading.value = true;
-
-    try {
-      await ApiService()
-          .callGetApi(
-              body: FormData({}),
-              headerWithToken: false,
-              showLoader: true,
-              url: '')
-          .then((value) async {
-        if (value.statusCode == 200) {
-          isLoading.value = false;
-          allStudentListModel.value =
-              StudentAllDetailsModel.fromJson(value.body);
-        } else {
-          isLoading.value = false;
-
-          AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: 'Something went wrong',
-              success: false);
-        }
-      });
-    } catch (error) {
-      isLoading.value = false;
-
-      AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Something went wrong',
-          success: false);
-    }
-  }
 
 
   List<List<String>>? generateStudentTableList(StudentAllDetailsModel model) {
@@ -155,6 +127,10 @@ class AllDetailsListScreenController extends GetxController {
           pw.Text('Date: ${DateTime.now().toLocal()}'),
           pw.SizedBox(height: 16),
           pw.Text('This is a  PDF report with All Student Monthly data.'),
+          pw.SizedBox(height: 16),
+
+          pw.Text('Total Collection : ${totalCollection.value}'),
+          pw.SizedBox(height: 16),
 
           pw.SizedBox(height: 20),
           pw.Table.fromTextArray(

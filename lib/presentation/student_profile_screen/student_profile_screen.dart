@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pg_managment/core/utils/app_fonts.dart';
 import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/size_utils.dart';
+import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/student_profile_screen_controller.dart';
 
 class StudentProfileScreen extends GetWidget<StudentProfileScreenController> {
@@ -16,7 +17,13 @@ class StudentProfileScreen extends GetWidget<StudentProfileScreenController> {
       appBar: AppBar(
         backgroundColor: ColorConstant.primary,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: ColorConstant.primaryWhite),
+          icon: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomImageView(
+                height: 40,
+                width: 40,
+                imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
+          ),
           onPressed: () => Get.back(),
         ),
         title: Text(

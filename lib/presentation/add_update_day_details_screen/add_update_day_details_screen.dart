@@ -6,6 +6,7 @@ import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/size_utils.dart';
 import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 import 'package:pg_managment/widgets/custom_elavated_button.dart';
+import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/add_update_day_details_screen_controller.dart';
 
 class AddUpdateDayDetailsScreen
@@ -23,10 +24,13 @@ class AddUpdateDayDetailsScreen
               onPressed: () {
                 Get.back();
               },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: ColorConstant.primaryWhite,
-              )),
+              icon: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomImageView(
+                    height: 40,
+                    width: 40,
+                    imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
+              ),),
           title: Obx(
             () => Text(
               controller.isAdd.value == 2

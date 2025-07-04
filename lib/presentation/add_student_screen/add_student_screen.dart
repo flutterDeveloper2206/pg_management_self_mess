@@ -7,6 +7,7 @@ import 'package:pg_managment/core/utils/size_utils.dart';
 import 'package:pg_managment/routes/app_routes.dart';
 import 'package:pg_managment/widgets/bouncing_button.dart';
 import 'package:pg_managment/widgets/custom_elavated_button.dart';
+import 'package:pg_managment/widgets/custom_image_view.dart';
 import '../../widgets/custom_app_text_form_field.dart';
 import 'controller/add_student_screen_controller.dart';
 
@@ -24,10 +25,13 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
               onPressed: () {
                 Get.back();
               },
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: ColorConstant.primaryWhite,
-              )),
+              icon: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomImageView(
+                    height: 40,
+                    width: 40,
+                    imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
+              ),),
           title: Obx(
             () => Text(
               controller.isAddEdit.value == 2

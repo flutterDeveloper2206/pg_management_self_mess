@@ -37,7 +37,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           visualDensity: VisualDensity.standard,
         ),
-        translations: AppLocalization(),
         navigatorKey:
              NavigationService.navigatorKey,
 

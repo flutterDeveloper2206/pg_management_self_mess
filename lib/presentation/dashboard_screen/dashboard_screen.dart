@@ -5,6 +5,7 @@ import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/commonConstant.dart';
 import 'package:pg_managment/core/utils/pref_utils.dart';
 import 'package:pg_managment/routes/app_routes.dart';
+import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/dashboard_screen_controller.dart';
 
 class DashboardScreen extends GetWidget<DashboardScreenController> {
@@ -15,61 +16,61 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
     final menuItems = [
       {
         'title': 'All Students',
-        'icon': Icons.school, // More appropriate for student list
+        'icon': 'assets/images/graduation.png', // More appropriate for student list
         'route': AppRoutes.studentListScreenRoute,
         'color': Colors.blueAccent,
       },
       {
         'title': 'Add Student',
-        'icon': Icons.person_add, // Add person icon
+        'icon': 'assets/images/student.png', // Add person icon
         'route': AppRoutes.addStudentScreenRoute,
         'color': Colors.green,
       },
       {
         'title': 'All Expenses',
-        'icon': Icons.receipt_long, // Represents bills/expenses
+        'icon': 'assets/images/bold.png', // Represents bills/expenses
         'route': AppRoutes.expenseListScreenRoute,
         'color': Colors.deepPurple,
       },
       {
         'title': 'Add Expense',
-        'icon': Icons.add_chart, // Add new expense/chart icon
+        'icon': 'assets/images/invoice.png', // Add new expense/chart icon
         'route': AppRoutes.addExpenseScreenRoute,
         'color': Colors.orange,
       },
       {
         'title': 'Monthly Summary',
-        'icon': Icons.fact_check, // Checklist/details icon
+        'icon': 'assets/images/check-document.png', // Checklist/details icon
         'route': AppRoutes.allDetailsListScreenRoute,
         'color': Colors.teal,
       },
       {
         'title': 'Ganarate Bill',
-        'icon': Icons.receipt, // Represents bills/expenses
+        'icon': 'assets/images/bill.png', // Represents bills/expenses
         'route': AppRoutes.ganarateBillScreenRoute,
         'color': Colors.blueGrey,
       },
       {
         'title': 'Monthly Transaction',
-        'icon': Icons.monetization_on, // Represents bills/expenses
+        'icon': 'assets/images/transaction.png', // Represents bills/expenses
         'route': AppRoutes.monthlyTransactionScreenRoute,
         'color': Colors.pinkAccent,
       },
       {
         'title': 'Deposit Details',
-        'icon': Icons.payment, // Represents bills/expenses
+        'icon': 'assets/images/deposit.png', // Represents bills/expenses
         'route': AppRoutes.depositDetailsScreenRoute,
         'color': Colors.redAccent,
       },
       {
         'title': 'Config',
-        'icon': Icons.settings, // Represents bills/expenses
+        'icon': 'assets/images/setting.png', // Represents bills/expenses
         'route': AppRoutes.configScreenRoute,
         'color': Colors.greenAccent,
       },
       {
         'title': 'Logout',
-        'icon': Icons.exit_to_app, // Represents bills/expenses
+        'icon': 'assets/images/exit.png', // Represents bills/expenses
         'route': '',
         'color': Colors.lightGreen,
       },
@@ -77,19 +78,19 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
     final studentMenuItems = [
       {
         'title': 'Profile',
-        'icon': Icons.person, // More appropriate for student list
+        'icon': 'assets/images/user.png', // Checklist/details icon
         'route': AppRoutes.studentProfileScreenRoute,
         'color': Colors.deepPurple,
       },
       {
         'title': 'Monthly Details',
-        'icon': Icons.fact_check, // Checklist/details icon
+        'icon': 'assets/images/check-document.png', // Checklist/details icon
         'route': AppRoutes.dayDetailsListScreenRoute,
         'color': Colors.teal,
       },
       {
         'title': 'Logout',
-        'icon': Icons.exit_to_app, // Represents bills/expenses
+        'icon': 'assets/images/exit.png', // Represents bills/expenses
         'route': '',
         'color': Colors.red,
       },
@@ -135,7 +136,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                     : menuItems[index];
                 return _DashboardTile(
                   title: item['title'] as String,
-                  icon: item['icon'] as IconData,
+                  icon: item['icon'] as String,
                   color: item['color'] as Color,
                   onTap: () {
                     if (item['route'].toString().isNotEmpty) {
@@ -157,7 +158,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
 
 class _DashboardTile extends StatefulWidget {
   final String title;
-  final IconData icon;
+  final String icon;
   final Color color;
   final VoidCallback onTap;
 
@@ -199,7 +200,11 @@ class _DashboardTileState extends State<_DashboardTile> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(widget.icon, size: 48, color: Colors.white),
+              CustomImageView(
+                  height: 50,
+                  width: 50,
+                  imagePath:  widget.icon ,color: Colors.white),
+              // Icon(widget.icon, size: 48, color: Colors.white),
               const SizedBox(height: 16),
               Text(
                 widget.title,
@@ -210,6 +215,7 @@ class _DashboardTileState extends State<_DashboardTile> {
                   fontColor: Colors.white,
                 ),
               ),
+
             ],
           ),
         ),

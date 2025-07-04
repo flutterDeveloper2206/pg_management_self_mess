@@ -30,9 +30,8 @@ class StudentListScreenController extends GetxController {
                   element.email!.toLowerCase().contains(search) ||
                   element.mobile!.toLowerCase().contains(search) ||
                   element.hostelName!.toLowerCase().contains(search) ||
-                  element.roomNo!.toLowerCase().contains(search) ||
-                  element.advisorGuide!.toLowerCase().contains(search) ||
-                  element.bloodGroup!.toLowerCase().contains(search))
+                  element.roomNo!.toLowerCase().contains(search)
+                  )
               .toList() ??
           [];
     }

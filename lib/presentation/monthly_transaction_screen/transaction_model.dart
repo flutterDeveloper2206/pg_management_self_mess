@@ -47,6 +47,10 @@ class Data {
   final String? currentMonthTotalCutDay;
   final String? currentMonthTotalDay;
   final String? currentMonthProfit;
+  final String? lastMonthTotalCollection;
+  final String? lastMonthTotalCaseOnHand; // Corrected typo from your JSON
+  final String? lastMonthTotalCashGuestAmount;
+  final String? lastMonthTotalAmount;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -65,6 +69,10 @@ class Data {
     this.currentMonthTotalCutDay,
     this.currentMonthTotalDay,
     this.currentMonthProfit,
+    this.lastMonthTotalCollection,
+    this.lastMonthTotalCaseOnHand,
+    this.lastMonthTotalCashGuestAmount,
+    this.lastMonthTotalAmount,
     this.createdAt,
     this.updatedAt,
   });
@@ -84,6 +92,10 @@ class Data {
     currentMonthTotalCutDay: json["current_month_total_cut_day"],
     currentMonthTotalDay: json["current_month_total_day"],
     currentMonthProfit: json["current_month_profit"],
+    lastMonthTotalCollection: json["last_month_total_collection"],
+    lastMonthTotalCaseOnHand: json["last_month_total_case_on_hand"], // Note: key might be 'case' or 'cash'
+    lastMonthTotalCashGuestAmount:json["last_month_total_cash_guest_amount"],
+    lastMonthTotalAmount: json["last_month_total_amount"],
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
   );

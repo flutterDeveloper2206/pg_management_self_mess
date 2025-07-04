@@ -7,6 +7,7 @@ import 'package:pg_managment/core/utils/size_utils.dart';
 import 'package:pg_managment/routes/app_routes.dart';
 import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 import 'package:pg_managment/widgets/custom_elavated_button.dart';
+import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/login_screen_controller.dart';
 
 class LoginScreen extends GetWidget<LoginScreenController> {
@@ -67,9 +68,15 @@ class LoginScreen extends GetWidget<LoginScreenController> {
                           onTap: () {
                             controller.isShow.value = !controller.isShow.value;
                           },
-                          child: Icon(controller.isShow.value
-                              ? Icons.remove_red_eye
-                              : CupertinoIcons.eye_slash_fill)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CustomImageView(
+                              height: 30,
+                              width: 30,
+                              imagePath:   controller.isShow.value
+                                ? 'assets/images/eye.png'
+                                : 'assets/images/hidden.png'),
+                          )),
                       hintText: 'Enter Your Password',
                     ),
                   ),

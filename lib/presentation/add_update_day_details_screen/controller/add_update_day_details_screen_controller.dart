@@ -197,8 +197,7 @@ class AddUpdateDayDetailsScreenController extends GetxController {
         simpleGuestController.text.isEmpty ||
         simpleGuestAmountController.text.isEmpty ||
         feastGuestController.text.isEmpty ||
-        feastGuestAmountController.text.isEmpty ||
-        remarkController.text.isEmpty) {
+        feastGuestAmountController.text.isEmpty ) {
       AppFlushBars.appCommonFlushBar(
           context: NavigationService.navigatorKey.currentContext!,
           message: 'Please fill all the fields',
