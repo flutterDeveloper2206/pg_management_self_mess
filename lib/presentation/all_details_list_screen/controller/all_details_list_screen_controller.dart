@@ -12,6 +12,7 @@ import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
 class AllDetailsListScreenController extends GetxController {
   RxBool isLoading = false.obs;
   RxDouble totalCollection = 0.0.obs;
+  RxDouble totalRemaining = 0.0.obs;
   Rx<StudentAllDetailsModel> allStudentListModel = StudentAllDetailsModel().obs;
   TextEditingController month = TextEditingController();
   TextEditingController year = TextEditingController();
@@ -76,6 +77,7 @@ class AllDetailsListScreenController extends GetxController {
               generateStudentTableList(allStudentListModel.value) ?? [];
           allStudentListModel.value.data?.forEach((element) {
             totalCollection.value = totalCollection.value+element.paidAmount!.toDouble()??0.0;
+            totalRemaining.value = totalRemaining.value+element.remainAmount!.toDouble()??0.0;
 
           },);
         }
@@ -130,6 +132,8 @@ class AllDetailsListScreenController extends GetxController {
           pw.SizedBox(height: 16),
 
           pw.Text('Total Collection : ${totalCollection.value}'),
+          pw.SizedBox(height: 16),
+          pw.Text('Total Remaining : ${totalRemaining.value}'),
           pw.SizedBox(height: 16),
 
           pw.SizedBox(height: 20),
