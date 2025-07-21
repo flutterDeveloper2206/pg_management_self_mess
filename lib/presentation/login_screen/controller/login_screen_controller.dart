@@ -70,7 +70,7 @@ class LoginScreenController extends GetxController {
               false);
         }
 
-        Get.toNamed(AppRoutes.dashboardScreenRoute);
+        Get.offNamed(AppRoutes.dashboardScreenRoute);
       }
     });
   }

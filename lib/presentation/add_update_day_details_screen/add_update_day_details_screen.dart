@@ -190,9 +190,7 @@ class AddUpdateDayDetailsScreen
                               textInputType: TextInputType.number,
                               title: 'Penalty Amount ',
                               onChanged: (p0) {
-                                if(p0.isEmpty){
-                                  controller.penaltyAmountController.text='0';
-                                }
+                                controller.changeTotalAmount(p0);
                               },
                               hintText: 'Penalty Amount ',
                               controller: controller.penaltyAmountController)),
@@ -204,9 +202,12 @@ class AddUpdateDayDetailsScreen
                     textInputType: TextInputType.number,
                     title: 'Total Bill',
                     hintText: 'Total Bill',
-                    controller: TextEditingController(
-                        text:
-                        '${controller.dataGet.value.totalAmount ?? ' '}')),
+
+                    controller: controller.totalAmountController
+                    // controller: TextEditingController(
+                    //     text:
+                    //     '${controller.dataGet.value.totalAmount ?? ' '}')
+                      ),
 
             Row(
                     children: [
