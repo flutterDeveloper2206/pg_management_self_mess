@@ -58,8 +58,8 @@ class AddUpdateDayDetailsScreen
                       Expanded(
                         child: titleWidget(
                             readOnly: controller.readOnly.value,
-                            title: 'Total Day',
-                            hintText: 'Total Day',
+                            title: 'Total Meal Day',
+                            hintText: 'Total Meal Day',
                             textInputType: TextInputType.number,
                             controller: controller.totalDayController),
                       ),
@@ -70,8 +70,8 @@ class AddUpdateDayDetailsScreen
                         child: titleWidget(
                             readOnly: controller.readOnly.value,
                             textInputType: TextInputType.number,
-                            title: 'Total Eat Day',
-                            hintText: 'Total Eat Day',
+                            title: 'Meal Day Attended',
+                            hintText: 'Meal Day Attended',
                             onChanged: (p0) {
                               controller.changeEatDay(p0);
                             },
@@ -108,8 +108,8 @@ class AddUpdateDayDetailsScreen
                   titleWidget(
                       readOnly: true,
                       textInputType: TextInputType.number,
-                      title: 'Rate',
-                      hintText: 'Rate',
+                      title: 'Par Day Rate (₹)',
+                      hintText: 'Par Day Rate',
                       controller: TextEditingController(
                           text:
                           '${controller.dataGet.value.rate ?? ' '}')),
@@ -157,8 +157,8 @@ class AddUpdateDayDetailsScreen
                           child: titleWidget(
                               readOnly: controller.readOnly.value,
                               textInputType: TextInputType.number,
-                              title: 'Simple Guest Amount',
-                              hintText: 'Simple Guest Amount',
+                              title: 'Simple Guest Charge',
+                              hintText: 'Simple Guest Charge',
                               controller:
                                   controller.simpleGuestAmountController)),
                       hBox(20),
@@ -166,8 +166,8 @@ class AddUpdateDayDetailsScreen
                           child: titleWidget(
                               readOnly: controller.readOnly.value,
                               textInputType: TextInputType.number,
-                              title: 'Feast Guest Amount',
-                              hintText: 'Feast Guest Amount',
+                              title: 'Feast Guest Charge',
+                              hintText: 'Feast Guest Charge',
                               controller:
                                   controller.feastGuestAmountController)),
                     ],
@@ -177,8 +177,8 @@ class AddUpdateDayDetailsScreen
                           child: titleWidget(
                               readOnly: controller.readOnly.value,
                               textInputType: TextInputType.number,
-                              title: 'Due Amount',
-                              hintText: 'Due Amount',
+                              title: 'Due Amount / Unpaid',
+                              hintText: 'Due Amount / Unpaid',
                               controller: TextEditingController(
                                   text:
                                   '${controller.dataGet.value.dueAmount ?? ' '}'))),
@@ -200,8 +200,8 @@ class AddUpdateDayDetailsScreen
                 titleWidget(
                     readOnly: controller.readOnly.value,
                     textInputType: TextInputType.number,
-                    title: 'Total Bill',
-                    hintText: 'Total Bill',
+                    title: 'Final Bill',
+                    hintText: 'Final Bill',
 
                     controller: controller.totalAmountController
                     // controller: TextEditingController(

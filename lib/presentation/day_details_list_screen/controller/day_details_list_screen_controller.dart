@@ -27,7 +27,7 @@ class DayDetailsListScreenController extends GetxController {
       studentId.value = argument['student_id'];
       studentName.value = argument['name'];
     }
-    if(CommonConstant.instance.isStudent){
+    if(CommonConstant.instance.isStudent!=1&&CommonConstant.instance.isStudent!=2&&CommonConstant.instance.isStudent!=3){
       studentId.value = int.parse(PrefUtils.getString(StringConstants.studentId));
     }
     month.text = DateTime.now().month.toString().padLeft(2, '0');

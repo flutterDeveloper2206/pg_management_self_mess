@@ -10,7 +10,7 @@ class SplashScreenController extends GetxController {
   @override
   void onInit() {
     CommonConstant.instance.isStudent =
-        PrefUtils.getBool(StringConstants.isStudent);
+        PrefUtils.getInt(StringConstants.isStudent);
     Timer(const Duration(seconds: 3), () {
       if (PrefUtils.getString(StringConstants.authToken).isNotEmpty) {
         Get.offAllNamed(AppRoutes.dashboardScreenRoute);

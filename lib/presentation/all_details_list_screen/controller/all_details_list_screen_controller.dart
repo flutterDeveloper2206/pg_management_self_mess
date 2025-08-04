@@ -17,6 +17,7 @@ class AllDetailsListScreenController extends GetxController {
   TextEditingController month = TextEditingController();
   TextEditingController year = TextEditingController();
   RxList<List<String>> studentMonthlyStudentList = <List<String>>[].obs;
+  RxList<AllData> studentListSearch = <AllData>[].obs;
 
   @override
   void onInit() {
@@ -26,6 +27,22 @@ class AllDetailsListScreenController extends GetxController {
     super.onInit();
   }
 
+
+  Future searchStudent(String search) async {
+    if (search.isEmpty) {
+      studentListSearch.value = allStudentListModel.value.data ?? [];
+    } else {
+      studentListSearch.value = allStudentListModel.value.data
+          ?.where((element) =>
+      element.studentName!.toLowerCase().contains(search) ||
+          element.id!.toString().toLowerCase().contains(search)
+
+      )
+          .toList() ??
+          [];
+    }
+    update();
+  }
   Future<void> selectMonth(BuildContext context) async {
     print('object');
     final DateTime? picked = await showDatePicker(
@@ -73,11 +90,15 @@ class AllDetailsListScreenController extends GetxController {
         isLoading.value = false;
         allStudentListModel.value = StudentAllDetailsModel.fromJson(value.body);
         if(allStudentListModel.value.data!=null &&allStudentListModel.value.data!.isNotEmpty) {
+          totalCollection.value=0.0;
+          totalRemaining.value=0.0;
           studentMonthlyStudentList.value =
               generateStudentTableList(allStudentListModel.value) ?? [];
+          studentListSearch.value = allStudentListModel.value.data ?? [];
+
           allStudentListModel.value.data?.forEach((element) {
-            totalCollection.value = totalCollection.value+element.paidAmount!.toDouble()??0.0;
-            totalRemaining.value = totalRemaining.value+element.remainAmount!.toDouble()??0.0;
+            totalCollection.value = totalCollection.value+(element.paidAmount??0).toDouble()??0.0;
+            totalRemaining.value = totalRemaining.value+(element.remainAmount??0).toDouble()??0.0;
 
           },);
         }

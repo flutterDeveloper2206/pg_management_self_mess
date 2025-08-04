@@ -59,15 +59,15 @@ class LoginScreenController extends GetxController {
             loginModel.value.data?.accessToken ?? '');
         if (loginModel.value.data?.user?.studentId!=null) {
 
-          CommonConstant.instance.isStudent=true;
+          CommonConstant.instance.isStudent=loginModel.value.data?.user?.studentId??4;
           PrefUtils.setString(StringConstants.studentId,
               '${loginModel.value.data?.user?.studentId ?? ' '}');
-          PrefUtils.setBool(StringConstants.isStudent,
-             true);
-        }else{
-          CommonConstant.instance.isStudent=false;
-          PrefUtils.setBool(StringConstants.isStudent,
-              false);
+          PrefUtils.setInt(StringConstants.isStudent,
+              loginModel.value.data?.user?.studentId ??0);
+        } else{
+          CommonConstant.instance.isStudent=loginModel.value.data?.user?.id??0;
+          PrefUtils.setInt(StringConstants.isStudent,
+              loginModel.value.data?.user?.id??0);
         }
 
         Get.offNamed(AppRoutes.dashboardScreenRoute);

@@ -159,7 +159,7 @@ class AddUpdateDayDetailsScreenController extends GetxController {
 
   setRemainAmountCalculate() {
     if (paidAmountController.text.isNotEmpty) {
-      remainController.text = ((dataGet.value.totalAmount ?? 0) -
+      remainController.text = (double.parse(totalAmountController.text) -
               double.parse(paidAmountController.text))
           .toString();
     } else {
@@ -182,6 +182,7 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     paidAmountController.text = dataGet.value.paidAmount.toString();
     remarkController.text = dataGet.value.remark ?? '';
     totalAmountController.text = ((dataGet.value.totalAmount ??0.0) + (dataGet.value.penaltyAmount??0.0)).toString();
+    setRemainAmountCalculate();
   }
 
   Future<void> selectDate(BuildContext context) async {

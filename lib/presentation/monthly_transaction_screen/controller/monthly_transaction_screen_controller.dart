@@ -283,13 +283,30 @@ class MonthlyTransactionScreenController extends GetxController {
               pw.Divider(thickness: 1.5),
 
               // 5. Profit (with red color for negative values)
+
               _buildKeyValue(
-                '16.Profit  (sr. no 11 - 15)',
+                '16.Surplus Amount (sr. no 11 - 15)',
                 currencyFormat.format(profit),
                 valueStyle: pw.TextStyle(
                   fontWeight: pw.FontWeight.bold,
                   font: font,
                   color: profit < 0 ? PdfColors.red : PdfColors.black,
+                ),
+              ), _buildKeyValue(
+                '17.Current Month Total Collection',
+                currencyFormat.format(double.parse(data.currentTotalCollection??'0.0')),
+                valueStyle: pw.TextStyle(
+                  fontWeight: pw.FontWeight.bold,
+                  font: font,
+                  color: PdfColors.black,
+                ),
+              ), _buildKeyValue(
+                '18.Current Month Total Remaining',
+                currencyFormat.format(double.parse(data.currentTotalRemaining??'0.0')),
+                valueStyle: pw.TextStyle(
+                  fontWeight: pw.FontWeight.bold,
+                  font: font,
+                  color:  PdfColors.black,
                 ),
               ),
 

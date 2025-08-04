@@ -111,7 +111,7 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
                               ),
                             ],
                           )
-                        : controller.allStudentListModel.value.data?.isEmpty ??
+                        : controller.studentListSearch.isEmpty ==
                                 true
                             ? Column(
                                 children: [
@@ -124,6 +124,14 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
                               )
                             : Column(
                               children: [
+                                CustomAppTextFormField(
+                                  variant: TextFormFieldVariant.OutlineGray200,
+                                  hintText: 'Search Student',
+                                  onChanged: (value) {
+                                    controller.searchStudent(value);
+                                  },
+                                ),
+                                vBox(10),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -136,7 +144,7 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
                                                 fontColor: Colors.grey.shade700))),
                                     Expanded(
                                       child: Text(
-                                        '${controller.totalCollection.value}' ?? 'N/A',
+                                        '${controller.totalCollection.value.toStringAsFixed(2)}' ?? 'N/A',
                                         // '20000.00',
                                         style: PMT.appStyle(
                                             size: 14,
@@ -158,7 +166,7 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
                                                 fontColor: Colors.grey.shade700))),
                                     Expanded(
                                       child: Text(
-                                        '${controller.totalRemaining.value}' ?? 'N/A',
+                                        '${controller.totalRemaining.value.toStringAsFixed(2)}' ?? 'N/A',
                                         // '20000.00',
                                         style: PMT.appStyle(
                                             size: 14,
@@ -174,12 +182,11 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
                                 ListView.builder(
                                     physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
-                                    itemCount: controller.allStudentListModel.value
-                                            .data?.length ??
+                                    itemCount: controller.studentListSearch.length ??
                                         0,
                                     itemBuilder: (context, index) {
                                       AllData? data = controller
-                                          .allStudentListModel.value.data?[index];
+                                          .studentListSearch[index];
                                       return Bounce(
                                         onTap: () {
                                           Get.toNamed(

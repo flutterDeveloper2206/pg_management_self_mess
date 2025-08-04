@@ -18,9 +18,11 @@ class GanarateBillScreen extends GetWidget<GanarateBillScreenController> {
     return Scaffold(
         backgroundColor: ColorConstant.primaryWhite,
         bottomNavigationBar: Obx(
-          () => controller.isLock.value
-              ? const SizedBox()
-              : Padding(
+          () =>
+          // controller.isLock.value
+          //     ? const SizedBox()
+          //     :
+          Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [

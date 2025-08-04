@@ -65,13 +65,13 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                       controller: controller.hostelNameController),
                   titleWidget(
                       readOnly: controller.readOnly.value,
-                      title: 'Registration Number',
-                      hintText: 'Enter Your Registration Number',
+                      title: 'Registration Number / Enrollment ID',
+                      hintText: 'Enter Your Registration Number / Enrollment ID',
                       controller: controller.registrationNumberController),
                   titleWidget(
                       readOnly: controller.readOnly.value,
-                      title: 'College Name',
-                      hintText: 'Enter Your College Name',
+                      title: 'College Name / Institute Name',
+                      hintText: 'Enter Your College Name / Institute Name',
                       controller: controller.collageNameController),
                   titleWidget(
                       readOnly: controller.readOnly.value,
@@ -97,21 +97,21 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                   ),
                   titleWidget(
                       readOnly: controller.readOnly.value,
-                      title: 'Currently Pursuing',
-                      hintText: 'Enter Your Currently Pursuing',
-                      controller: controller.currentlyPursuingController),
+                      title: 'Academic Program (Diploma/UG/PG/Doctoral)',
+                      hintText: 'Enter Your Academic Program (Diploma/UG/PG/Doctoral)',
+                      controller: controller.academicProgramController),
                   titleWidget(
                       readOnly: controller.readOnly.value,
-                      title: 'Studying Year',
+                      title: 'Current Year / Semester',
                       textInputType: TextInputType.number,
-                      hintText: 'Enter Your Studying Year',
+                      hintText: 'Enter Your Current Year / Semester',
                       controller: controller.currentlyStudyingYearController),
                   Row(
                     children: [
                       Expanded(
                           child: titleWidget(
                               readOnly: true,
-                              title: 'Date',
+                              title: 'Date Of Mess Enrollment',
                               onTap: () {
                                 controller.selectDate(context);
                               },
@@ -145,14 +145,14 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                       controller: controller.alternativeMobileNumberController),
                   titleWidget(
                       readOnly: controller.readOnly.value,
-                      title: 'Password',
-                      hintText: 'Enter Your Password ',
+                      title: 'Account Login Password',
+                      hintText: 'Enter Your Account Login Password ',
                       controller: controller.passwordController),
                   titleWidget(
                       readOnly: controller.readOnly.value,
-                      title: 'Deposit',
+                      title: 'Security Deposit (₹) ',
                       textInputType: TextInputType.number,
-                      hintText: 'Enter Deposit ',
+                      hintText: 'Enter Security Deposit ',
                       controller: controller.depositController),
                   titleWidget(
                       readOnly: controller.readOnly.value,
@@ -162,8 +162,8 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                       controller: controller.addressController),
                   titleWidget(
                       readOnly: controller.readOnly.value,
-                      title: 'Advisor Guide',
-                      hintText: 'Enter Your Advisor Guide ',
+                      title: 'Academic Advisor/Guide Name',
+                      hintText: 'Enter Your Academic Advisor/Guide Name ',
                       maxLine: 3,
                       controller: controller.guidController),
                   controller.isAddEdit.value != 2

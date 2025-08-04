@@ -381,7 +381,9 @@ class MonthlyTransactionScreen
 
                     _buildSeparator(),
 
-                    _buildSingleDataRow('16.Profit  (sr. no 11 - 15)', _formatCurrency(profit), isImportant: true),
+                    _buildSingleDataRow('16.Surplus Amount (sr. no 11 - 15)', _formatCurrency(profit), isImportant: true),
+                    _buildSingleDataRow('17.Current Month Total Collection', _formatCurrency(double.parse(responseData.currentTotalCollection??'0.0')), isImportant: true),
+                    _buildSingleDataRow('18.Current Month Total Remaining', _formatCurrency(double.parse(responseData.currentTotalRemaining??'0.0')), isImportant: true),
 
                     // NOTE: Assuming a 'remarks' field exists in your data model
                     // _buildRemarks(responseData.remarks),
@@ -456,7 +458,9 @@ class MonthlyTransactionScreen
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('$label:', style: PMT.appStyle(size: 15, fontColor: Colors.black54)),
+          Expanded(
+
+              child: Text('$label:', style: PMT.appStyle(size: 15, fontColor: Colors.black54))),
           Text(
             value,
             style: PMT.appStyle(size: 15, fontWeight: valueWeight, fontColor: valueColor),

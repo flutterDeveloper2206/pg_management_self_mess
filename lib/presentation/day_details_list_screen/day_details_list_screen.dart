@@ -24,16 +24,18 @@ class DayDetailsListScreen extends GetWidget<DayDetailsListScreenController> {
           automaticallyImplyLeading: false,
           backgroundColor: ColorConstant.primary,
           leading: IconButton(
-              onPressed: () {
-                Get.back();
-              },
-              icon: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomImageView(
-                    height: 40,
-                    width: 40,
-                    imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
-              ),),
+            onPressed: () {
+              Get.back();
+            },
+            icon: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomImageView(
+                  height: 40,
+                  width: 40,
+                  imagePath: 'assets/images/left-arrow.png',
+                  color: ColorConstant.primaryWhite),
+            ),
+          ),
           title: Obx(
             () => Text(
               '${controller.studentName.value} Details ',
@@ -43,34 +45,39 @@ class DayDetailsListScreen extends GetWidget<DayDetailsListScreenController> {
                   fontColor: ColorConstant.primaryWhite),
             ),
           ),
-          actions:[
-            CommonConstant.instance.isStudent ==false?            Bounce(
-              onTap: () {
-                Get.toNamed(AppRoutes.addUpdateDayDetailsScreenRoute,
-                    arguments: {
-                      'student_id': controller.studentId.value,
-                      'name': controller.studentName.value,
-                      'isAdd': 0,
-                    })?.then((value) {
-                  controller.getAllStudentDetails(
-                      month: '',
-                      year: controller.year.text,
-                      studentId: controller.studentId.value.toString());
-                });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: ColorConstant.primaryWhite),
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                child: Text(
-                  '+ ADD Details',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: ColorConstant.primary),
-                ),
-              ),
-            ):SizedBox.shrink(),
+          actions: [
+            CommonConstant.instance.isStudent == 1 ||
+                    CommonConstant.instance.isStudent == 2 ||
+                    CommonConstant.instance.isStudent == 3
+                ? Bounce(
+                    onTap: () {
+                      Get.toNamed(AppRoutes.addUpdateDayDetailsScreenRoute,
+                          arguments: {
+                            'student_id': controller.studentId.value,
+                            'name': controller.studentName.value,
+                            'isAdd': 0,
+                          })?.then((value) {
+                        controller.getAllStudentDetails(
+                            month: '',
+                            year: controller.year.text,
+                            studentId: controller.studentId.value.toString());
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: ColorConstant.primaryWhite),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                      child: Text(
+                        '+ ADD Details',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: ColorConstant.primary),
+                      ),
+                    ),
+                  )
+                : SizedBox.shrink(),
             SizedBox(
               width: 10,
             ),
@@ -201,78 +208,99 @@ class DayDetailsListScreen extends GetWidget<DayDetailsListScreenController> {
                                                 child: CustomImageView(
                                                   height: 20,
                                                   width: 20,
-                                                  imagePath:  'assets/images/list.png' ,
+                                                  imagePath:
+                                                      'assets/images/list.png',
                                                 ),
                                               ),
                                             ),
                                             SizedBox(
                                               width: 5,
                                             ),
-                                            CommonConstant.instance.isStudent ==false?   Bounce(
-                                              onTap: () {
-                                                Get.toNamed(
-                                                    AppRoutes
-                                                        .addUpdateDayDetailsScreenRoute,
-                                                    arguments: {
-                                                      'student_id': controller
-                                                          .studentId.value,
-                                                      'name': controller
-                                                          .studentName.value,
-                                                      'isAdd': 1,
-                                                      'data': data
-                                                    })?.then((value) {
-                                                  controller
-                                                      .getAllStudentDetails(
-                                                          month: '',
-                                                          year: controller
-                                                              .year.text,
-                                                          studentId: controller
-                                                              .studentId.value
-                                                              .toString());
-                                                });
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(5),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                    color: ColorConstant
-                                                        .primaryWhite),
-                                                child:  CustomImageView(
-                                                  height: 20,
-                                                  width: 20,
-                                                  imagePath:  'assets/images/pencil.png' ,
-
-                                                ),
-                                              ),
-                                            ):SizedBox.shrink(),
+                                            CommonConstant.instance.isStudent == 1 ||
+                                                CommonConstant.instance.isStudent == 2 ||
+                                                CommonConstant.instance.isStudent == 3
+                                                ? Bounce(
+                                                    onTap: () {
+                                                      Get.toNamed(
+                                                          AppRoutes
+                                                              .addUpdateDayDetailsScreenRoute,
+                                                          arguments: {
+                                                            'student_id':
+                                                                controller
+                                                                    .studentId
+                                                                    .value,
+                                                            'name': controller
+                                                                .studentName
+                                                                .value,
+                                                            'isAdd': 1,
+                                                            'data': data
+                                                          })?.then((value) {
+                                                        controller
+                                                            .getAllStudentDetails(
+                                                                month: '',
+                                                                year: controller
+                                                                    .year.text,
+                                                                studentId: controller
+                                                                    .studentId
+                                                                    .value
+                                                                    .toString());
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.all(5),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                          color: ColorConstant
+                                                              .primaryWhite),
+                                                      child: CustomImageView(
+                                                        height: 20,
+                                                        width: 20,
+                                                        imagePath:
+                                                            'assets/images/pencil.png',
+                                                      ),
+                                                    ),
+                                                  )
+                                                : SizedBox.shrink(),
                                             SizedBox(
                                               width: 5,
                                             ),
-                                            CommonConstant.instance.isStudent ==false?   Bounce(
-                                              onTap: () {
-                                                controller.showDeleteConfirmationDialog(context, () {
-                                                  controller.deleteStudentDetails(
-                                                      data?.id.toString());
-                                                },);
-
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(5),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                    color: ColorConstant
-                                                        .primaryWhite),
-                                                child:  CustomImageView(
-                                                  height: 20,
-                                                  width: 20,
-                                                  imagePath:  'assets/images/delete.png' ,
-                                                ),
-                                              ),
-                                            ):SizedBox.shrink(),
+                                            CommonConstant.instance.isStudent == 1 ||
+                                                CommonConstant.instance.isStudent == 2 ||
+                                                CommonConstant.instance.isStudent == 3
+                                                ? Bounce(
+                                                    onTap: () {
+                                                      controller
+                                                          .showDeleteConfirmationDialog(
+                                                        context,
+                                                        () {
+                                                          controller
+                                                              .deleteStudentDetails(
+                                                                  data?.id
+                                                                      .toString());
+                                                        },
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.all(5),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                          color: ColorConstant
+                                                              .primaryWhite),
+                                                      child: CustomImageView(
+                                                        height: 20,
+                                                        width: 20,
+                                                        imagePath:
+                                                            'assets/images/delete.png',
+                                                      ),
+                                                    ),
+                                                  )
+                                                : SizedBox.shrink(),
                                           ],
                                         )
                                       ],

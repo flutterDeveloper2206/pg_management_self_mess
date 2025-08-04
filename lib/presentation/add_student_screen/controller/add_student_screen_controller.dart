@@ -15,7 +15,7 @@ class AddStudentScreenController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController roomController = TextEditingController();
   TextEditingController bloodController = TextEditingController();
-  TextEditingController currentlyPursuingController = TextEditingController();
+  TextEditingController academicProgramController = TextEditingController();
   TextEditingController currentlyStudyingYearController =
       TextEditingController();
   TextEditingController dateController = TextEditingController();
@@ -90,7 +90,7 @@ class AddStudentScreenController extends GetxController {
     emailController.text = model.value.email ?? '';
     roomController.text = model.value.roomNo ?? '';
     bloodController.text = model.value.bloodGroup ?? '';
-    currentlyPursuingController.text = model.value.currentlyPursuing ?? '';
+    academicProgramController.text = model.value.currentlyPursuing ?? '';
     currentlyStudyingYearController.text =
         '${model.value.currentlyStudyingYear ?? ''}';
     dateController.text = '${model.value.date ?? ''}';
@@ -115,7 +115,7 @@ class AddStudentScreenController extends GetxController {
             "room_no": roomController.text,
             "email": emailController.text,
             "residential_address": addressController.text,
-            "currently_pursuing": currentlyPursuingController.text,
+            "currently_pursuing": academicProgramController.text,
             "currently_studying_year": currentlyStudyingYearController.text,
             "date": dateController.text,
             "year": yearController.text,
@@ -152,7 +152,7 @@ class AddStudentScreenController extends GetxController {
             "room_no": roomController.text,
             "email": emailController.text,
             "residential_address": addressController.text,
-            "currently_pursuing": currentlyPursuingController.text,
+            "currently_pursuing": academicProgramController.text,
             "currently_studying_year":
                 int.parse(currentlyStudyingYearController.text),
             "date": dateController.text,
