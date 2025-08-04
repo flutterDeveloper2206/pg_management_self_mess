@@ -37,6 +37,11 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'icon': 'assets/images/check-document.png',
         'route': AppRoutes.allDetailsListScreenRoute,
         'color': const Color(0xFF1ABC9C),
+      }, {
+        'title': 'Logout',
+        'icon': 'assets/images/exit.png',
+        'route': '',
+        'color': const Color(0xFFE74C3C),
       }
     ];
     final menuItems = [
