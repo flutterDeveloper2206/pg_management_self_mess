@@ -38,11 +38,12 @@ class AddUpdateDayDetailsScreenController extends GetxController {
   TextEditingController feastGuestController = TextEditingController();
   TextEditingController feastGuestAmountController = TextEditingController();
   TextEditingController penaltyAmountController = TextEditingController();
-  TextEditingController totalAmountController = TextEditingController(text: '0.0');
+  TextEditingController totalAmountController =
+      TextEditingController(text: '0.0');
   TextEditingController paidAmountController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
   TextEditingController remainController = TextEditingController();
-
+  RxDouble finalAmount = 0.0.obs;
   @override
   void onInit() {
     if (argument != null) {
@@ -64,16 +65,17 @@ class AddUpdateDayDetailsScreenController extends GetxController {
         String day = PrefUtils.getString(StringConstants.totalDays).isEmpty
             ? '0.0'
             : PrefUtils.getString(StringConstants.totalDays);
-        String eatenDays = PrefUtils.getString(StringConstants.eatenDays).isEmpty
-            ? '0.0'
-            : PrefUtils.getString(StringConstants.eatenDays);
-       String penaltyS = PrefUtils.getString(StringConstants.penalty).isEmpty
+        String eatenDays =
+            PrefUtils.getString(StringConstants.eatenDays).isEmpty
+                ? '0.0'
+                : PrefUtils.getString(StringConstants.eatenDays);
+        String penaltyS = PrefUtils.getString(StringConstants.penalty).isEmpty
             ? '0.0'
             : PrefUtils.getString(StringConstants.penalty);
 
-        totalDay.value = double.parse(day);
-        penalty.value = double.parse(penaltyS);
-        eatenDay.value = double.parse(eatenDays);
+        totalDay.value = doubleParse(day);
+        penalty.value = doubleParse(penaltyS);
+        eatenDay.value = doubleParse(eatenDays);
         totalDayController.text = totalDay.value.toInt().toString();
         penaltyAmountController.text = penalty.value.toInt().toString();
         totalEatDayController.text = eatenDay.value.toInt().toString();
@@ -87,41 +89,108 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     super.onInit();
   }
 
-
-  setDate(){
+  setDate() {
     DateTime now = DateTime.now();
     DateTime picked = DateTime(now.year, now.month, 0);
     String formattedDate =
         "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
     dateController.text = formattedDate;
-    paidAmountController.text='0.0';
+    paidAmountController.text = '0.0';
     print(picked); // Example output: 2025-05-31 00:00:00.000
   }
+
   changeEatDay(String value) {
     if (value.isNotEmpty) {
       int val = int.parse(value);
       cutDayController.text = (totalDay.value.toInt() - val).toString();
-    }else{
+    } else {
       cutDayController.clear();
     }
-  }  changeTotalAmount(String value) {
-    if (value.isNotEmpty) {
-      double val = double.parse(value);
-      totalAmountController.text = ((dataGet.value.amount??0.0) + val).toString();
+  }
 
-    }else{
-      penaltyAmountController.text='0';
-      totalAmountController.text=(dataGet.value.amount??0.0).toString();
+  double doubleParse(String value) {
+    if (value.isEmpty) {
+      return 0.0;
+    } else {
+      return double.parse(value);
     }
   }
+
+  changeTotalAmountPenalty(String value) {
+    double val = doubleParse(value);
+    totalAmountController.clear();
+    if (value.isNotEmpty) {
+      totalAmountController.text = (doubleParse(totalAmountController.text) +
+              val +
+              (dataGet.value.dueAmount ?? 0.0) +
+              doubleParse(feastGuestAmountController.text) +(dataGet.value.amount ?? 0.0)+
+              doubleParse(simpleGuestAmountController.text))
+          .toString();
+    } else {
+      penaltyAmountController.text = '0';
+      totalAmountController.text = (doubleParse(totalAmountController.text) +
+              (dataGet.value.dueAmount ?? 0.0) +
+              doubleParse(penaltyAmountController.text) +
+              doubleParse(feastGuestAmountController.text) +(dataGet.value.amount ?? 0.0)+
+              doubleParse(simpleGuestAmountController.text))
+          .toString();
+    }
+    setRemainingAmount();
+
+  }
+
+  changeTotalAmountSimpleGuest(String value) {
+    double val = doubleParse(value);
+    totalAmountController.clear();
+    if (value.isNotEmpty) {
+      totalAmountController.text = (doubleParse(totalAmountController.text) +
+          val +
+          (dataGet.value.dueAmount ?? 0.0) +(dataGet.value.amount ?? 0.0)+
+          doubleParse(feastGuestAmountController.text) +
+          doubleParse(penaltyAmountController.text))
+          .toString();
+    } else {
+      simpleGuestAmountController.text = '0';
+      totalAmountController.text = (doubleParse(totalAmountController.text) +
+          (dataGet.value.dueAmount ?? 0.0) +
+          doubleParse(penaltyAmountController.text) +
+          doubleParse(feastGuestAmountController.text) +(dataGet.value.amount ?? 0.0)+
+          doubleParse(simpleGuestAmountController.text))
+          .toString();
+    }
+    setRemainingAmount();
+
+  }
+  changeTotalAmountFeastGuest(String value) {
+    double val = doubleParse(value);
+    totalAmountController.clear();
+    if (value.isNotEmpty) {
+      totalAmountController.text = (doubleParse(totalAmountController.text) +
+          val +
+          (dataGet.value.dueAmount ?? 0.0) +(dataGet.value.amount ?? 0.0)+
+          doubleParse(simpleGuestAmountController.text) +
+          doubleParse(penaltyAmountController.text))
+          .toString();
+    } else {
+      feastGuestAmountController.text = '0';
+      totalAmountController.text = (doubleParse(totalAmountController.text) +
+          (dataGet.value.dueAmount ?? 0.0) +
+          doubleParse(penaltyAmountController.text) +
+          doubleParse(feastGuestAmountController.text) +(dataGet.value.amount ?? 0.0)+
+          doubleParse(simpleGuestAmountController.text))
+          .toString();
+    }
+    setRemainingAmount();
+  }
+
   changeFeastAndSimple(String value, bool isSimpleOrFeast) {
     if (value.isEmpty) {
-      if(isSimpleOrFeast){
-        simpleGuestAmountController.text='0';
-        simpleGuestController.text='0';
-      }else{
-        feastGuestAmountController.text='0';
-        feastGuestController.text='0';
+      if (isSimpleOrFeast) {
+        simpleGuestAmountController.text = '0';
+        simpleGuestController.text = '0';
+      } else {
+        feastGuestAmountController.text = '0';
+        feastGuestController.text = '0';
       }
     }
   }
@@ -130,41 +199,50 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     if (value.isNotEmpty) {
       int val = int.parse(value);
       totalEatDayController.text = (totalDay.value.toInt() - val).toString();
-    }else{
+    } else {
       totalEatDayController.clear();
+    }
+
+  }
+
+  calculateSimpleGuestAmount(String value) {
+    if (value.isNotEmpty) {
+      String amount = PrefUtils.getString(StringConstants.simpleGuest).isEmpty
+          ? '0.0'
+          : PrefUtils.getString(StringConstants.simpleGuest);
+      simpleGuestAmountController.text =
+          (int.parse(value) * doubleParse(amount)).toString();
+    } else {
+      simpleGuestAmountController.clear();
     }
   }
 
-  calculateSimpleGuestAmount( String value){
-    if(value.isNotEmpty) {
-      String amount = PrefUtils.getString(StringConstants.simpleGuest).isEmpty
-        ? '0.0'
-        : PrefUtils.getString(StringConstants.simpleGuest);
-    simpleGuestAmountController.text = (int.parse(value) * double.parse(amount)).toString();
-    }else{
-      simpleGuestAmountController.clear();
-    }
-
-  }calculateFeastGuestAmount( String value){
-    if(value.isNotEmpty) {
+  calculateFeastGuestAmount(String value) {
+    if (value.isNotEmpty) {
       String amount = PrefUtils.getString(StringConstants.feastGuest).isEmpty
-        ? '0.0'
-        : PrefUtils.getString(StringConstants.feastGuest);
-    feastGuestAmountController.text = (int.parse(value) * double.parse(amount)).toString();
-    }else{
+          ? '0.0'
+          : PrefUtils.getString(StringConstants.feastGuest);
+      feastGuestAmountController.text =
+          (int.parse(value) * doubleParse(amount)).toString();
+    } else {
       feastGuestAmountController.clear();
     }
-
   }
 
   setRemainAmountCalculate() {
     if (paidAmountController.text.isNotEmpty) {
-      remainController.text = (double.parse(totalAmountController.text) -
-              double.parse(paidAmountController.text))
+      remainController.text = (doubleParse(totalAmountController.text) -
+              doubleParse(paidAmountController.text))
           .toString();
     } else {
       remainController.text = '0.0';
     }
+  }
+
+  setRemainingAmount(){
+    remainController.text = (doubleParse(totalAmountController.text) -
+        doubleParse(paidAmountController.text))
+        .toString();
   }
 
   setData() {
@@ -181,7 +259,13 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     penaltyAmountController.text = dataGet.value.penaltyAmount.toString();
     paidAmountController.text = dataGet.value.paidAmount.toString();
     remarkController.text = dataGet.value.remark ?? '';
-    totalAmountController.text = ((dataGet.value.amount ??0.0) + (dataGet.value.penaltyAmount??0.0)).toString();
+    totalAmountController.text = ((dataGet.value.amount ?? 0.0) +
+            (dataGet.value.penaltyAmount ?? 0.0) +
+            (dataGet.value.dueAmount ?? 0.0) +
+            (dataGet.value.feastGuestAmount ?? 0.0) +
+            (dataGet.value.simpleGuestAmount ?? 0.0))
+        .toString();
+    finalAmount.value = doubleParse(totalAmountController.text);
     setRemainAmountCalculate();
   }
 
@@ -209,7 +293,7 @@ class AddUpdateDayDetailsScreenController extends GetxController {
         simpleGuestController.text.isEmpty ||
         simpleGuestAmountController.text.isEmpty ||
         feastGuestController.text.isEmpty ||
-        feastGuestAmountController.text.isEmpty ) {
+        feastGuestAmountController.text.isEmpty) {
       AppFlushBars.appCommonFlushBar(
           context: NavigationService.navigatorKey.currentContext!,
           message: 'Please fill all the fields',
@@ -226,12 +310,13 @@ class AddUpdateDayDetailsScreenController extends GetxController {
             "cut_day": int.parse(cutDayController.text),
             "date": dateController.text,
             "simple_guest": int.parse(simpleGuestController.text),
+            "remain_amount": doubleParse(remainController.text),
             "simple_guest_amount":
-                double.parse(simpleGuestAmountController.text),
+                doubleParse(simpleGuestAmountController.text),
             "feast_guest": int.parse(feastGuestController.text),
-            "paid_amount": double.parse(paidAmountController.text),
-            "penalty_amount": double.parse(penaltyAmountController.text),
-            "feast_guest_amount": double.parse(feastGuestAmountController.text),
+            "paid_amount": doubleParse(paidAmountController.text),
+            "penalty_amount": doubleParse(penaltyAmountController.text),
+            "feast_guest_amount": doubleParse(feastGuestAmountController.text),
             "remark": remarkController.text
           },
           headerWithToken: true,
@@ -259,12 +344,12 @@ class AddUpdateDayDetailsScreenController extends GetxController {
             "date": dateController.text,
             "simple_guest": int.parse(simpleGuestController.text),
             "simple_guest_amount":
-                double.parse(simpleGuestAmountController.text),
+                doubleParse(simpleGuestAmountController.text),
             "feast_guest": int.parse(feastGuestController.text),
-            "paid_amount": double.parse(paidAmountController.text),
-            "remain_amount": double.parse(remainController.text),
-            "penalty_amount": double.parse(penaltyAmountController.text),
-            "feast_guest_amount": double.parse(feastGuestAmountController.text),
+            "paid_amount": doubleParse(paidAmountController.text),
+            "remain_amount": doubleParse(remainController.text),
+            "penalty_amount": doubleParse(penaltyAmountController.text),
+            "feast_guest_amount": doubleParse(feastGuestAmountController.text),
             "remark": remarkController.text
           },
           headerWithToken: true,

@@ -157,6 +157,9 @@ class AddUpdateDayDetailsScreen
                           child: titleWidget(
                               readOnly: controller.readOnly.value,
                               textInputType: TextInputType.number,
+                              onChanged: (p0) {
+                                controller.changeTotalAmountSimpleGuest(p0);
+                              },
                               title: 'Simple Guest Charge',
                               hintText: 'Simple Guest Charge',
                               controller:
@@ -164,6 +167,9 @@ class AddUpdateDayDetailsScreen
                       hBox(20),
                       Expanded(
                           child: titleWidget(
+                            onChanged: (p0) {
+                              controller.changeTotalAmountFeastGuest(p0);
+                            },
                               readOnly: controller.readOnly.value,
                               textInputType: TextInputType.number,
                               title: 'Feast Guest Charge',
@@ -190,7 +196,7 @@ class AddUpdateDayDetailsScreen
                               textInputType: TextInputType.number,
                               title: 'Penalty Amount ',
                               onChanged: (p0) {
-                                controller.changeTotalAmount(p0);
+                                controller.changeTotalAmountPenalty(p0);
                               },
                               hintText: 'Penalty Amount ',
                               controller: controller.penaltyAmountController)),
@@ -202,7 +208,10 @@ class AddUpdateDayDetailsScreen
                     textInputType: TextInputType.number,
                     title: 'Final Bill',
                     hintText: 'Final Bill',
+onChanged: (p0) {
+  controller.setRemainingAmount();
 
+},
                     controller: controller.totalAmountController
                     // controller: TextEditingController(
                     //     text:
