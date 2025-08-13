@@ -107,11 +107,11 @@ class AddUpdateDayDetailsScreenController extends GetxController {
   }  changeTotalAmount(String value) {
     if (value.isNotEmpty) {
       double val = double.parse(value);
-      totalAmountController.text = ((dataGet.value.totalAmount??0.0) + val).toString();
+      totalAmountController.text = ((dataGet.value.amount??0.0) + val).toString();
 
     }else{
       penaltyAmountController.text='0';
-      totalAmountController.text=(dataGet.value.totalAmount??0.0).toString();
+      totalAmountController.text=(dataGet.value.amount??0.0).toString();
     }
   }
   changeFeastAndSimple(String value, bool isSimpleOrFeast) {
@@ -181,7 +181,7 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     penaltyAmountController.text = dataGet.value.penaltyAmount.toString();
     paidAmountController.text = dataGet.value.paidAmount.toString();
     remarkController.text = dataGet.value.remark ?? '';
-    totalAmountController.text = ((dataGet.value.totalAmount ??0.0) + (dataGet.value.penaltyAmount??0.0)).toString();
+    totalAmountController.text = ((dataGet.value.amount ??0.0) + (dataGet.value.penaltyAmount??0.0)).toString();
     setRemainAmountCalculate();
   }
 
