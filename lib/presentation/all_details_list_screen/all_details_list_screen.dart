@@ -24,14 +24,9 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.only(left: 16,right: 16,bottom: 10),
           child: AppElevatedButton(
-            buttonName: 'Download PDF',
+            buttonName: 'Download',
             onPressed: () async {
-              final pdfData = await controller.generatePdf();
-              await Printing.sharePdf(
-                bytes: pdfData,
-
-                filename: 'Expanse Repost ${DateTime.now()}.pdf',
-              );
+              controller.showDownloadSheet(context);
             },
           ),
         ),
@@ -176,6 +171,51 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
                                     ),
                                   ],
                                 ),
+                                Divider(),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+
+                                  children: [
+                                    SizedBox(
+                                        width: getWidth(120),
+                                        child: Text('Total MealDay :',
+                                            style: PMT.appStyle(
+                                                size: 14,
+                                                fontColor: Colors.grey.shade700))),
+                                    Expanded(
+                                      child: Text(
+                                        '${controller.totalMealDay.value}' ?? 'N/A',
+                                        // '20000.00',
+                                        style: PMT.appStyle(
+                                            size: 14,
+                                            fontColor: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+
+                                  children: [
+                                    SizedBox(
+                                        width: getWidth(120),
+                                        child: Text('Total CutDay :',
+                                            style: PMT.appStyle(
+                                                size: 14,
+                                                fontColor: Colors.grey.shade700))),
+                                    Expanded(
+                                      child: Text(
+                                        '${controller.totalCutDay.value}' ?? 'N/A',
+                                        // '20000.00',
+                                        style: PMT.appStyle(
+                                            size: 14,
+                                            fontColor: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -215,6 +255,9 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               AppRichText(
+                                                  title: 'Student ID : ',
+                                                  value: '${data.studentId ?? 0}'),
+                                              vBox(5), AppRichText(
                                                   title: 'Student Name : ',
                                                   value: data?.studentName ?? ''),
                                               vBox(5),
@@ -230,6 +273,20 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
                                                           title: 'Total : ',
                                                           value:
                                                               '${data?.totalAmount ?? ' '}')),
+                                                ],
+                                              ),vBox(5),
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                      child: AppRichText(
+                                                          title: 'Paid: ',
+                                                          value:
+                                                          '${data?.paidAmount ?? ' '}')),
+                                                  Expanded(
+                                                      child: AppRichText(
+                                                          title: 'Remaining: ',
+                                                          value:
+                                                              '${data?.remainAmount ?? ' '}')),
                                                 ],
                                               ),
                                             ],

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg_managment/core/utils/app_fonts.dart';
@@ -37,7 +38,12 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'icon': 'assets/images/check-document.png',
         'route': AppRoutes.allDetailsListScreenRoute,
         'color': const Color(0xFF1ABC9C),
-      }, {
+      },  {
+        'title': 'Impport Data',
+        'icon': 'assets/images/import.png',
+        'route': AppRoutes.importScreenRoute,
+        'color': const Color(0xFF1CA7AF),
+      },{
         'title': 'Logout',
         'icon': 'assets/images/exit.png',
         'route': '',
@@ -99,6 +105,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'route': AppRoutes.configScreenRoute,
         'color': const Color(0xFF95A5A6),
       },
+
       {
         'title': 'Logout',
         'icon': 'assets/images/exit.png',
@@ -148,6 +155,14 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         padding: const EdgeInsets.all(20),
         child: LayoutBuilder(
           builder: (context, constraints) {
+            if(CommonConstant.instance.isStudent == 1 &&!kIsWeb){
+              menuItems.add( {
+                'title': 'Impport Data',
+                'icon': 'assets/images/import.png',
+                'route': AppRoutes.importScreenRoute,
+                'color': const Color(0xFF1CA7AF),
+              },);
+            }
             int crossAxisCount = constraints.maxWidth > 800
                 ? 4
                 : constraints.maxWidth > 600

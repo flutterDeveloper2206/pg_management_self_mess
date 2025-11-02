@@ -27,10 +27,12 @@ class StudentListScreenController extends GetxController {
       studentListSearch.value = studentListModel.value.data
               ?.where((element) =>
                   element.name!.toLowerCase().contains(search) ||
-                  element.email!.toLowerCase().contains(search) ||
-                  element.mobile!.toLowerCase().contains(search) ||
-                  element.hostelName!.toLowerCase().contains(search) ||
-                  element.roomNo!.toLowerCase().contains(search)
+                  element.id!.toString().contains(search)
+                  //     ||
+                  // element.email!.toLowerCase().contains(search) ||
+                  // element.mobile!.toLowerCase().contains(search) ||
+                  // element.hostelName!.toLowerCase().contains(search) ||
+                  // element.roomNo!.toLowerCase().contains(search)
                   )
               .toList() ??
           [];

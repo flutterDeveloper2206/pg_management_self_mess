@@ -43,14 +43,17 @@ dependencies:
   intl: ^0.20.2
   lottie:
   another_flushbar: ^1.12.30
-  image_picker: ^1.1.2
-  image_cropper: ^9.0.0
-  flutter_image_compress: ^2.4.0
   back_button_interceptor: ^8.0.4
   firebase_core: ^3.12.1
   firebase_messaging: ^15.2.4
   pdf: ^3.10.7
   printing: ^5.12.0
+  excel: ^4.0.6
+  path_provider:
+  share_plus: ^10.0.2
+  file_picker: ^5.3.4
+  spreadsheet_decoder: ^2.3.0
+  csv:
 
 dev_dependencies:
   flutter_test:

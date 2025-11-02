@@ -22,7 +22,7 @@ class StudentAllDetailsModel {
   factory StudentAllDetailsModel.fromJson(Map<String, dynamic> json) => StudentAllDetailsModel(
     stateCode: json["state_code"],
     message: json["message"],
-    data: json["data"] == null ? [] : List<AllData>.from(json["data"]!.map((x) => AllData.fromJson(x))),
+    data: json["data"] == null ? [] : List<AllData>.from(json["data"]!.map((x) => AllData.fromJson(x))).reversed.toList(),
   );
 
   Map<String, dynamic> toJson() => {

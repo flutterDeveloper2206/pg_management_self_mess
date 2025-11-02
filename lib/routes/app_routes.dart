@@ -16,6 +16,7 @@ import 'package:pg_managment/presentation/deposit_details_screen/binding/deposit
 import 'package:pg_managment/presentation/deposit_details_screen/deposit_details_screen.dart';
 import 'package:pg_managment/presentation/expense_list_screen/binding/expense_list_screen_binding.dart';
 import 'package:pg_managment/presentation/expense_list_screen/expense_list_screen.dart';
+import 'package:pg_managment/presentation/import_data_screen/binding/import_data_screen_binding.dart';
 import 'package:pg_managment/presentation/login_screen/binding/login_screen_binding.dart';
 import 'package:pg_managment/presentation/login_screen/login_screen.dart';
 import 'package:get/get.dart';
@@ -30,11 +31,14 @@ import 'package:pg_managment/presentation/monthly_transaction_screen/binding/mon
 import 'package:pg_managment/presentation/student_profile_screen/binding/student_profile_screen_binding.dart';
 import 'package:pg_managment/presentation/student_profile_screen/student_profile_screen.dart';
 
+import '../presentation/import_data_screen/import_data_screen.dart';
+
 class AppRoutes {
   static const String splashScreenRoute = '/splash_screen';
 
   static const String loginScreenRoute = '/login_screen';
   static const String configScreenRoute = '/config_screen';
+  static const String importScreenRoute = '/import_screen';
 
   static const String dashboardScreenRoute = '/dashboard_screen';
 
@@ -61,8 +65,7 @@ class AppRoutes {
 
   static const String monthlyTransactionScreenRoute =
       '/monthly_transaction_screen';
-  static const String depositDetailsScreenRoute =
-      '/deposit_details_screen';
+  static const String depositDetailsScreenRoute = '/deposit_details_screen';
 
   static List<GetPage> pages = [
     GetPage(
@@ -160,7 +163,8 @@ class AppRoutes {
           MonthlyTransactionScreenBinding(),
         ],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 100)),  GetPage(
+        transitionDuration: const Duration(milliseconds: 100)),
+    GetPage(
         name: depositDetailsScreenRoute,
         page: () => const DepositDetailsScreen(),
         bindings: [
@@ -175,11 +179,19 @@ class AppRoutes {
           StudentProfileScreenBinding(),
         ],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 100)),GetPage(
+        transitionDuration: const Duration(milliseconds: 100)),
+    GetPage(
         name: configScreenRoute,
         page: () => const ConfigScreen(),
         bindings: [
           ConfigScreenBinding(),
+        ],
+        transition: Transition.rightToLeft,
+        transitionDuration: const Duration(milliseconds: 100)), GetPage(
+        name: importScreenRoute,
+        page: () => const ImportDataScreen(),
+        bindings: [
+          ImportDataScreenBinding(),
         ],
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 100)),

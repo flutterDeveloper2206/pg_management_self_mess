@@ -16,6 +16,7 @@ import '../../../ApiServices/api_service.dart';
 
 class AddUpdateDayDetailsScreenController extends GetxController {
   RxBool isLoading = false.obs;
+  RxBool isGetLoading = false.obs;
 
   Rx<StudentAllDetailsModel> allStudentListModel = StudentAllDetailsModel().obs;
   RxInt studentId = 0.obs;
@@ -54,6 +55,11 @@ class AddUpdateDayDetailsScreenController extends GetxController {
         dataGet.value = argument['data'];
         setData();
         setRemainAmountCalculate();
+      }else{
+        DateTime now = DateTime.now();
+        DateTime previousMonth = DateTime(now.year, now.month - 1, now.day);
+
+        getStudentPreviousMonthDetails(month: '${previousMonth.month}',year: '${previousMonth.year}',studentId:'${ studentId.value}');
       }
 
       if (isAdd.value == 2) {
@@ -89,6 +95,26 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     super.onInit();
   }
 
+  Future<void> getStudentPreviousMonthDetails(
+      {String? month, String? year, String? studentId}) async {
+    isGetLoading.value = true;
+
+    await ApiService().callGetApi(
+        body: {},
+        headerWithToken: true,
+        showLoader: false,
+        url: '${NetworkUrls.dayDetailsListUrl}month=$month&year=$year&student_id=$studentId').then(
+            (value) async {
+              isGetLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            isGetLoading.value = false;
+            StudentAllDetailsModel  allStudentListModel = StudentAllDetailsModel.fromJson(value.body);
+            if(allStudentListModel.data!=null&&allStudentListModel.data!.isNotEmpty) {
+              remainController.text='${allStudentListModel.data?[0].remainAmount??0.0}';
+            }
+          }
+        });
+  }
   setDate() {
     DateTime now = DateTime.now();
     DateTime picked = DateTime(now.year, now.month, 0);

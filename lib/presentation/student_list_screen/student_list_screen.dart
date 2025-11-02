@@ -116,10 +116,10 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
                                               children: [
                                                 AppRichText(
                                                     title: 'Name : ',
-                                                    value: data?.name ?? ''),
+                                                    value: data.name ?? ''),
                                                 vBox(5),AppRichText(
                                                     title: 'Student Id : ',
-                                                    value: '${data?.id ?? 0}'),
+                                                    value: '${data.id ?? 0}'),
                                                 vBox(5),
                                                 Row(
                                                   children: [
@@ -128,24 +128,24 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
                                                             title:
                                                                 'Room no. : ',
                                                             value:
-                                                                data?.roomNo ??
+                                                                data.roomNo ??
                                                                     '')),
                                                     Expanded(
                                                         child: AppRichText(
                                                             title: 'Year : ',
                                                             value:
-                                                                '${data?.year ?? ' '}')),
+                                                                '${data.year ?? ' '}')),
                                                   ],
                                                 ),
                                                 vBox(5),
                                                 AppRichText(
                                                     title: 'Deposit : ',
                                                     value:
-                                                        '${data?.deposit ?? ' '}'),
+                                                        '${data.deposit ?? ' '}'),
                                                 vBox(5),
                                                 AppRichText(
                                                     title: 'Mobile Nu. : ',
-                                                    value: data?.mobile ?? ''),
+                                                    value: data.mobile ?? ''),
                                                 vBox(5),
                                                 Row(
                                                   mainAxisAlignment:
@@ -227,10 +227,10 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
                                                                       .addUpdateDayDetailsScreenRoute,
                                                                   arguments: {
                                                                     'student_id':
-                                                                        data?.id ??
+                                                                        data.id ??
                                                                             '',
                                                                     'name':
-                                                                        data?.name ??
+                                                                        data.name ??
                                                                             '',
                                                                     'isAdd': 0,
                                                                   });
@@ -258,7 +258,7 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
                                                               controller.showDeleteConfirmationDialog(context, () {
                                                                 controller
                                                                     .deleteStudent(
-                                                                    '${data?.id ?? 0}');
+                                                                    '${data.id ?? 0}');
                                                               },);
 
                                                             },
