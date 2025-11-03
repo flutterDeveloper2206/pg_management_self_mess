@@ -151,58 +151,80 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if(CommonConstant.instance.isStudent == 1 &&!kIsWeb){
-              menuItems.add( {
-                'title': 'Impport Data',
-                'icon': 'assets/images/import.png',
-                'route': AppRoutes.importScreenRoute,
-                'color': const Color(0xFF1CA7AF),
-              },);
-            }
-            int crossAxisCount = constraints.maxWidth > 800
-                ? 4
-                : constraints.maxWidth > 600
-                    ? 3
-                    : 2;
-            return GridView.builder(
-              itemCount: CommonConstant.instance.isStudent == 1
-                  ? menuItems.length
-                  : CommonConstant.instance.isStudent == 2 ||
-                  CommonConstant.instance.isStudent == 3
-                  ? staffSecretary.length
-                  : studentMenuItems.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                childAspectRatio: 1.1,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if(CommonConstant.instance.isStudent == 1 &&!kIsWeb){
+                    menuItems.add( {
+                      'title': 'Impport Data',
+                      'icon': 'assets/images/import.png',
+                      'route': AppRoutes.importScreenRoute,
+                      'color': const Color(0xFF1CA7AF),
+                    },);
+                  }
+                  int crossAxisCount = constraints.maxWidth > 800
+                      ? 4
+                      : constraints.maxWidth > 600
+                          ? 3
+                          : 2;
+                  return GridView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: CommonConstant.instance.isStudent == 1
+                        ? menuItems.length
+                        : CommonConstant.instance.isStudent == 2 ||
+                        CommonConstant.instance.isStudent == 3
+                        ? staffSecretary.length
+                        : studentMenuItems.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+                      childAspectRatio: 1.1,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = CommonConstant.instance.isStudent == 1
+                          ? menuItems[index]
+                          :  CommonConstant.instance.isStudent == 2 ||
+                          CommonConstant.instance.isStudent == 3
+                          ? staffSecretary[index]
+                          :studentMenuItems[index];
+                      return CleanDashboardTile(
+                        title: item['title'] as String,
+                        icon: item['icon'] as String,
+                        color: item['color'] as Color,
+                        onTap: () {
+                          if (item['route'].toString().isNotEmpty) {
+                            Get.toNamed(item['route'] as String);
+                          } else {
+                            _showLogoutDialog(context);
+                          }
+                        },
+                      );
+                    },
+                  );
+                },
               ),
-              itemBuilder: (context, index) {
-                final item = CommonConstant.instance.isStudent == 1
-                    ? menuItems[index]
-                    :  CommonConstant.instance.isStudent == 2 ||
-                    CommonConstant.instance.isStudent == 3
-                    ? staffSecretary[index]
-                    :studentMenuItems[index];
-                return CleanDashboardTile(
-                  title: item['title'] as String,
-                  icon: item['icon'] as String,
-                  color: item['color'] as Color,
-                  onTap: () {
-                    if (item['route'].toString().isNotEmpty) {
-                      Get.toNamed(item['route'] as String);
-                    } else {
-                      _showLogoutDialog(context);
-                    }
-                  },
-                );
-              },
-            );
-          },
+              SizedBox(height: 20,),
+              Text(
+                'V.1.0.3',
+                textAlign: TextAlign.center,
+                style: PMT.appStyle(
+                  size: 16,
+                  fontWeight: FontWeight.w600,
+                  fontColor: Colors.black87,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 20,),
+
+            ],
+          ),
         ),
       ),
     );

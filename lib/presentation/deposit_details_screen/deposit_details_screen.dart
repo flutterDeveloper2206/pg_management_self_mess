@@ -148,14 +148,10 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16,right: 16,bottom: 10),
                           child: AppElevatedButton(
-                            buttonName: 'Download PDF',
+                            buttonName: 'Download',
                             onPressed: () async {
-                              final pdfData = await controller.generatePdf();
-                              await Printing.sharePdf(
-                                bytes: pdfData,
+                              controller.showDownloadSheet(context);
 
-                                filename: 'student Deposit Repost ${DateTime.now()}.pdf',
-                              );
                             },
                           ),
                         ),
