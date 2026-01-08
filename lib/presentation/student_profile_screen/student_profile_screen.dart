@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:pg_managment/core/utils/app_fonts.dart';
 import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/size_utils.dart';
+import 'package:pg_managment/widgets/custom_elavated_button.dart';
 import 'package:pg_managment/widgets/custom_image_view.dart';
+import '../../routes/app_routes.dart';
 import 'controller/student_profile_screen_controller.dart';
 
 class StudentProfileScreen extends GetWidget<StudentProfileScreenController> {
@@ -77,13 +79,36 @@ class StudentProfileScreen extends GetWidget<StudentProfileScreenController> {
       _infoRow("Room No", data.roomNo),
       _infoRow("Currently Pursuing", data.currentlyPursuing),
       _infoRow("Studying Year", "${data.currentlyStudyingYear}"),
-      _infoRow("Admission Date", "${data.date?.toLocal().toString().split(' ')[0]}"),
+      _infoRow("Admission Date", "${DateTime.parse(data.date??DateTime.now().toString())?.toLocal().toString().split(' ')[0]}"),
       _infoRow("Passing Year", "${data.year}"),
       _infoRow("Advisor", data.advisorGuide),
 
       const SizedBox(height: 20),
       _sectionTitle("Finance"),
       _infoRow("Deposit", "₹${data.deposit}"),
+      const SizedBox(height: 30),
+
+      AppElevatedButton(
+        buttonName: 'Edit Profile',
+        onPressed: () {
+          Get.toNamed(
+              AppRoutes
+                  .addStudentScreenRoute,
+              arguments: {
+                "data":
+                data,
+                "isAddEdit":
+                1 ,"isStudentShow":
+                true
+              })?.then(
+                  (value) {
+              controller.getStudentProfile();
+              });
+        },
+
+      ),
+      const SizedBox(height: 30),
+
     ],
   ),
 );

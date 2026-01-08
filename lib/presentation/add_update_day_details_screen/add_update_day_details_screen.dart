@@ -181,10 +181,13 @@ class AddUpdateDayDetailsScreen
                     children: [
                       Expanded(
                           child: titleWidget(
-                              readOnly: controller.readOnly.value,
+
+                              readOnly: true,
                               textInputType: TextInputType.number,
                               title: 'Due Amount / Unpaid',
                               hintText: 'Due Amount / Unpaid',
+                              fontStyle:PMT.style(14,fontWeight: FontWeight.w800,fontColor: ColorConstant.red),
+
                               controller: TextEditingController(
                                   text:
                                   '${controller.dataGet.value.dueAmount ?? ' '}'))),
@@ -227,6 +230,7 @@ onChanged: (p0) {
                               textInputType: TextInputType.number,
                               title: 'Paid Amount ',
                               hintText: 'Paid Amount ',
+                fontStyle:PMT.style(14,fontWeight: FontWeight.w800,fontColor: ColorConstant.green),
                               onChanged: (p0) {
                                 controller.setRemainAmountCalculate();
                               },
@@ -334,6 +338,7 @@ onChanged: (p0) {
         Function(String)? onChanged,
       bool? readOnly,
       int? maxLine,
+        TextStyle? fontStyle,
       Function()? onTap}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,6 +360,7 @@ onChanged: (p0) {
           onChanged: onChanged,
           variant: TextFormFieldVariant.OutlineGray200,
           hintText: hintText,
+          fontStyle: fontStyle,
         ),
         vBox(20),
       ],

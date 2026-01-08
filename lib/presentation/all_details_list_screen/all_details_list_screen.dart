@@ -193,6 +193,27 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
                                       ),
                                     ),
                                   ],
+                                ), Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+
+                                  children: [
+                                    SizedBox(
+                                        width: getWidth(120),
+                                        child: Text('Total Attended MealDay :',
+                                            style: PMT.appStyle(
+                                                size: 14,
+                                                fontColor: Colors.grey.shade700))),
+                                    Expanded(
+                                      child: Text(
+                                        '${controller.totalMealDay.value - controller.totalCutDay.value}' ?? 'N/A',
+                                        // '20000.00',
+                                        style: PMT.appStyle(
+                                            size: 14,
+                                            fontColor: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,

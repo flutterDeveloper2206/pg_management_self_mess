@@ -54,7 +54,7 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                 children: [
                   vBox(20),
                   titleWidget(
-                      readOnly: controller.readOnly.value,
+                      readOnly: controller.readOnly.value||controller.isStudentShow.value,
                       title: 'Name',
                       hintText: 'Enter Your Name',
                       controller: controller.nameController),
@@ -64,7 +64,7 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                       hintText: 'Enter Your Name of Hostel',
                       controller: controller.hostelNameController),
                   titleWidget(
-                      readOnly: controller.readOnly.value,
+                      readOnly: controller.readOnly.value||controller.isStudentShow.value,
                       title: 'Registration Number / Enrollment ID',
                       hintText: 'Enter Your Registration Number / Enrollment ID',
                       controller: controller.registrationNumberController),
@@ -74,7 +74,7 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                       hintText: 'Enter Your College Name / Institute Name',
                       controller: controller.collageNameController),
                   titleWidget(
-                      readOnly: controller.readOnly.value,
+                      readOnly: controller.readOnly.value||controller.isStudentShow.value,
                       title: 'Email',
                       hintText: 'Enter Your Email',
                       controller: controller.emailController),
@@ -96,7 +96,7 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                     ],
                   ),
                   titleWidget(
-                      readOnly: controller.readOnly.value,
+                      readOnly: controller.readOnly.value||controller.isStudentShow.value,
                       title: 'Academic Program (Diploma/UG/PG/Doctoral)',
                       hintText: 'Enter Your Academic Program (Diploma/UG/PG/Doctoral)',
                       controller: controller.academicProgramController),
@@ -132,24 +132,24 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                     ],
                   ),
                   titleWidget(
-                      readOnly: controller.readOnly.value,
+                      readOnly: controller.readOnly.value||controller.isStudentShow.value,
                       title: 'Mobile Number',
                       textInputType: TextInputType.phone,
                       hintText: 'Enter Your Mobile Number',
                       controller: controller.mobileNumberController),
                   titleWidget(
-                      readOnly: controller.readOnly.value,
+                      readOnly: controller.readOnly.value||controller.isStudentShow.value,
                       title: 'Alternative Mobile Number',
                       textInputType: TextInputType.phone,
                       hintText: 'Enter Your Alternative Mobile Number',
                       controller: controller.alternativeMobileNumberController),
                   titleWidget(
-                      readOnly: controller.readOnly.value,
+                      readOnly: controller.readOnly.value||controller.isStudentShow.value,
                       title: 'Account Login Password',
                       hintText: 'Enter Your Account Login Password ',
                       controller: controller.passwordController),
                   titleWidget(
-                      readOnly: controller.readOnly.value,
+                      readOnly: controller.readOnly.value||controller.isStudentShow.value,
                       title: 'Security Deposit (₹) ',
                       textInputType: TextInputType.number,
                       hintText: 'Enter Security Deposit ',

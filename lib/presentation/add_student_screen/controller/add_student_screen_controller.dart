@@ -33,6 +33,7 @@ class AddStudentScreenController extends GetxController {
   RxInt isAddEdit = 0.obs;
 
   RxBool readOnly = false.obs;
+  RxBool isStudentShow = false.obs;
 
   Rx<Data> model = Data().obs;
 
@@ -72,6 +73,7 @@ class AddStudentScreenController extends GetxController {
   void onInit() {
     if (argumentData != null) {
       isAddEdit.value = argumentData['isAddEdit'];
+      isStudentShow.value = argumentData['isStudentShow']??false;
       model.value = argumentData['data'];
 
       if (isAddEdit.value == 2) {
