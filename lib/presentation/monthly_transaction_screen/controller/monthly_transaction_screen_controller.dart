@@ -12,6 +12,7 @@ import 'package:pg_managment/core/utils/navigation_service.dart';
 import 'package:pg_managment/core/utils/progress_dialog_utils.dart';
 import 'package:pg_managment/presentation/monthly_transaction_screen/transaction_model.dart';
 import 'package:pg_managment/presentation/student_list_screen/student_list_model.dart'as s;
+import 'package:pg_managment/widgets/month_year_picker.dart';
 
 class MonthlyTransactionScreenController extends GetxController {
   RxBool isLoading = false.obs;
@@ -33,34 +34,20 @@ class MonthlyTransactionScreenController extends GetxController {
   }
 
   Future<void> selectMonth(BuildContext context) async {
-    print('object');
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDatePickerMode: DatePickerMode.day,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2090),
-    );
+    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(yearController.text), int.parse(monthController.text)));
 
     if (picked != null) {
-      String formattedDate = picked.month.toString().padLeft(2, '0');
-      monthController.text = formattedDate;
+      monthController.text = picked.month.toString().padLeft(2, '0');
+      yearController.text = picked.year.toString();
     }
   }
 
   Future<void> selectYear(BuildContext context) async {
-    print('object');
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDatePickerMode: DatePickerMode.year,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2090),
-    );
+    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(yearController.text), int.parse(monthController.text)));
 
     if (picked != null) {
-      String formattedDate = "${picked.year.toString()}";
-      yearController.text = formattedDate;
+      monthController.text = picked.month.toString().padLeft(2, '0');
+      yearController.text = picked.year.toString();
     }
   }
 

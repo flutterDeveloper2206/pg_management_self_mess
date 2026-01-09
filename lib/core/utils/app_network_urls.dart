@@ -45,6 +45,7 @@ abstract class NetworkUrls {
   static String calculateRateUrl = '${baseUrl}admin/generate-bill';
 
   /// generate bill url
+  static String updateAllBillUrl = '${baseUrl}admin/update-remain-amount';
   static String generateBillUrl = '${baseUrl}admin/update-generated-bill';
   static String sendBulkData = '${baseUrl}admin/bulk-store';
 

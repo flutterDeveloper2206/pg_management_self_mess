@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-
+import 'package:get/get.dart';
 class MenuScreenController extends GetxController {
   var selectedDay = 'Mon'.obs;
 
