@@ -30,6 +30,9 @@ import 'package:pg_managment/presentation/monthly_transaction_screen/monthly_tra
 import 'package:pg_managment/presentation/monthly_transaction_screen/binding/monthly_transaction_screen_binding.dart';
 import 'package:pg_managment/presentation/student_profile_screen/binding/student_profile_screen_binding.dart';
 import 'package:pg_managment/presentation/student_profile_screen/student_profile_screen.dart';
+import 'package:pg_managment/presentation/menu_screen/menu_screen.dart';
+import 'package:pg_managment/presentation/menu_screen/binding/menu_screen_binding.dart';
+
 
 import '../presentation/import_data_screen/import_data_screen.dart';
 
@@ -66,6 +69,8 @@ class AppRoutes {
   static const String monthlyTransactionScreenRoute =
       '/monthly_transaction_screen';
   static const String depositDetailsScreenRoute = '/deposit_details_screen';
+  static const String menuScreenRoute = '/menu_screen';
+
 
   static List<GetPage> pages = [
     GetPage(
@@ -94,7 +99,7 @@ class AppRoutes {
         transitionDuration: const Duration(milliseconds: 100)),
     GetPage(
         name: addStudentScreenRoute,
-        page: () => const AddStudentScreen(),
+        page: () =>  AddStudentScreen(),
         bindings: [
           AddStudentScreenBinding(),
         ],
@@ -192,6 +197,14 @@ class AppRoutes {
         page: () => const ImportDataScreen(),
         bindings: [
           ImportDataScreenBinding(),
+        ],
+        transition: Transition.rightToLeft,
+        transitionDuration: const Duration(milliseconds: 100)),
+    GetPage(
+        name: menuScreenRoute,
+        page: () => const MenuScreen(),
+        bindings: [
+          MenuScreenBinding(),
         ],
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 100)),

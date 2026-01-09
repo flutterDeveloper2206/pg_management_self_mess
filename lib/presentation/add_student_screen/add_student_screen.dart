@@ -6,13 +6,16 @@ import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/size_utils.dart';
 import 'package:pg_managment/routes/app_routes.dart';
 import 'package:pg_managment/widgets/bouncing_button.dart';
+import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 import 'package:pg_managment/widgets/custom_elavated_button.dart';
 import 'package:pg_managment/widgets/custom_image_view.dart';
-import '../../widgets/custom_app_text_form_field.dart';
+import 'package:pg_managment/core/utils/validation_functions.dart';
 import 'controller/add_student_screen_controller.dart';
 
 class AddStudentScreen extends GetWidget<AddStudentScreenController> {
-  const AddStudentScreen({super.key});
+  AddStudentScreen({super.key});
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +51,10 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
                   vBox(20),
@@ -73,11 +78,24 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                       title: 'College Name / Institute Name',
                       hintText: 'Enter Your College Name / Institute Name',
                       controller: controller.collageNameController),
-                  titleWidget(
-                      readOnly: controller.readOnly.value||controller.isStudentShow.value,
-                      title: 'Email',
-                      hintText: 'Enter Your Email',
-                      controller: controller.emailController),
+                      titleWidget(
+                          readOnly: controller.readOnly.value ||
+                              controller.isStudentShow.value,
+                          title: 'Email',
+                          hintText: 'Enter Your Email',
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Enter Your Email';
+                            }
+                            const pattern =
+                                r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|""(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*"")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])";
+                            final regex = RegExp(pattern);
+                            if (!regex.hasMatch(value)) {
+                              return 'Enter a Valid Email';
+                            }
+                            return '';
+                          },
+                          controller: controller.emailController),
                   Row(
                     children: [
                       Expanded(
@@ -172,8 +190,10 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
                               ? 'Update '
                               : 'Save',
                           onPressed: () {
-                            controller.updateAddStudent(
-                                id: controller.model.value.id.toString());
+                            if (_formKey.currentState!.validate()) {
+                              controller.updateAddStudent(
+                                  id: controller.model.value.id.toString());
+                            }
                           },
                         )
                       : SizedBox.shrink()
@@ -181,7 +201,9 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget titleWidget(
@@ -191,6 +213,7 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
       TextInputType? textInputType,
       bool? readOnly,
       Function()? onTap,
+        String    Function(String?)? validator,
       int? maxLine}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,6 +232,7 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
           textInputType: textInputType,
           controller: controller,
           onTap: onTap,
+          validator: validator,
           variant: TextFormFieldVariant.OutlineGray200,
           hintText: hintText,
         ),
