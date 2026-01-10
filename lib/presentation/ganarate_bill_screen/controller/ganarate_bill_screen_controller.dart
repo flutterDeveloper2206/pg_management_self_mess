@@ -5,12 +5,14 @@ import 'package:pg_managment/core/utils/app_fonts.dart';
 import 'package:pg_managment/core/utils/app_network_urls.dart';
 import 'package:pg_managment/core/utils/navigation_service.dart';
 import 'package:pg_managment/core/utils/progress_dialog_utils.dart';
+import 'package:pg_managment/widgets/month_year_picker.dart';
 
 class GanarateBillScreenController extends GetxController {
   Rx<TextEditingController> rateController = TextEditingController().obs;
   Rx<TextEditingController> guestCashController = TextEditingController().obs;
 RxString billTotal = '0.0'.obs;
   RxBool isLoading = false.obs;
+  RxBool isLoading1 = false.obs;
   RxBool isLock = false.obs;
   TextEditingController month = TextEditingController();
   TextEditingController year = TextEditingController();
@@ -24,33 +26,19 @@ RxString billTotal = '0.0'.obs;
     calculateRate();
   }
   Future<void> selectYear(BuildContext context) async {
-    print('object');
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDatePickerMode: DatePickerMode.year,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2090),
-    );
+    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
 
     if (picked != null) {
-      String formattedDate = "${picked.year.toString()}";
-      year.text = formattedDate;
+      month.text = picked.month.toString().padLeft(2, '0');
+      year.text = picked.year.toString();
     }
   }
   Future<void> selectMonth(BuildContext context) async {
-    print('object');
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDatePickerMode: DatePickerMode.day,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2090),
-    );
+    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
 
     if (picked != null) {
-      String formattedDate = picked.month.toString().padLeft(2, '0');
-      month.text = formattedDate;
+      month.text = picked.month.toString().padLeft(2, '0');
+      year.text = picked.year.toString();
     }
   }
 
@@ -97,6 +85,31 @@ RxString billTotal = '0.0'.obs;
           AppFlushBars.appCommonFlushBar(
               context: NavigationService.navigatorKey.currentContext!,
               message: "Bill generated successfully",
+              success: true);
+        });
+      }
+    });
+  }
+  Future<void> updateAllBill() async {
+    isLoading1.value = true;
+    await ApiService().callPostApi(
+        body: {
+          'month':int.parse(month.text),
+          'year':int.parse(year.text),
+
+        },
+        headerWithToken: true,
+        showLoader: true,
+        url: NetworkUrls.updateAllBillUrl).then((value) async {
+      isLoading1.value = false;
+      if (value != null && value.statusCode == 200) {
+        isLoading1.value = false;
+
+        Get.back();
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          AppFlushBars.appCommonFlushBar(
+              context: NavigationService.navigatorKey.currentContext!,
+              message: "All Student Bill Updated successfully",
               success: true);
         });
       }

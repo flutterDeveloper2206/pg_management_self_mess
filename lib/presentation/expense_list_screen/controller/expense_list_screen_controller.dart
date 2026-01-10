@@ -9,6 +9,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
 import '../../../ApiServices/api_service.dart';
 import '../../../core/utils/color_constant.dart';
+import 'package:pg_managment/widgets/month_year_picker.dart';
 
 class ExpenseListScreenController extends GetxController {
   RxBool isLoading = false.obs;
@@ -27,34 +28,20 @@ class ExpenseListScreenController extends GetxController {
     super.onInit();
   }
   Future<void> selectMonth(BuildContext context) async {
-    print('object');
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDatePickerMode: DatePickerMode.day,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2090),
-    );
+    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
 
     if (picked != null) {
-      String formattedDate = picked.month.toString().padLeft(2, '0');
-      month.text = formattedDate;
+      month.text = picked.month.toString().padLeft(2, '0');
+      year.text = picked.year.toString();
     }
   }
 
   Future<void> selectYear(BuildContext context) async {
-    print('object');
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDatePickerMode: DatePickerMode.year,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2090),
-    );
+    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
 
     if (picked != null) {
-      String formattedDate = "${picked.year.toString()}";
-      year.text = formattedDate;
+      month.text = picked.month.toString().padLeft(2, '0');
+      year.text = picked.year.toString();
     }
   }
 

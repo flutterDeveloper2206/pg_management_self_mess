@@ -24,27 +24,42 @@ class GanarateBillScreen extends GetWidget<GanarateBillScreenController> {
           //     :
           Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Row(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(
-                        child: AppElevatedButton(
-                          isLoading: controller.isLoading.value,
-                          buttonName: "Generate Bill",
-                          onPressed: () {
-                            controller.generateBill(false);
-                          },
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AppElevatedButton(
+                              isLoading: controller.isLoading.value,
+                              buttonName: "Generate Bill",
+                              onPressed: () {
+                                controller.generateBill(false);
+                              },
+                            ),
+                          ),
+                          hBox(10),
+                          Expanded(
+                            child: AppElevatedButton(
+                              isLoading: controller.isLoading.value,
+                              buttonName: "Finalize Bill",
+                              onPressed: () {
+                                controller.generateBill(true);
+                              },
+                            ),
+                          )
+                        ],
                       ),
-                      hBox(10),
-                      Expanded(
-                        child: AppElevatedButton(
-                          isLoading: controller.isLoading.value,
-                          buttonName: "Finalize Bill",
-                          onPressed: () {
-                            controller.generateBill(true);
-                          },
-                        ),
-                      )
+                      SizedBox(height: 15,),
+                      AppElevatedButton(
+                        isLoading: controller.isLoading1.value,
+                        buttonName: "Update All Student Bill",
+                        onPressed: () {
+                          controller.updateAllBill();
+                        },
+                      ),
+                      SizedBox(height: 20,),
+
                     ],
                   ),
                 ),

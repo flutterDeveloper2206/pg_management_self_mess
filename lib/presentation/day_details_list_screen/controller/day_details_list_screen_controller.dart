@@ -10,6 +10,7 @@ import 'package:pg_managment/core/utils/string_constant.dart';
 import 'package:pg_managment/presentation/all_details_list_screen/all_details_list_model.dart';
 
 import '../../../ApiServices/api_service.dart';
+import 'package:pg_managment/widgets/month_year_picker.dart';
 
 class DayDetailsListScreenController extends GetxController {
   RxBool isLoading = false.obs;
@@ -40,19 +41,11 @@ class DayDetailsListScreenController extends GetxController {
   }
 
   Future<void> selectYear(BuildContext context) async {
-    print('object');
-    month.clear();
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDatePickerMode: DatePickerMode.year,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2090),
-    );
+    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(year.text), month.text.isEmpty?1:int.parse(month.text)));
 
     if (picked != null) {
-      String formattedDate = "${picked.year.toString()}";
-      year.text = formattedDate;
+      month.text = picked.month.toString().padLeft(2, '0');
+      year.text = picked.year.toString();
     }
   }
 

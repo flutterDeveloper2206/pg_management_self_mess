@@ -13,6 +13,7 @@ import 'package:pg_managment/presentation/expense_list_screen/expense_list_model
 import 'package:pg_managment/presentation/student_list_screen/student_list_model.dart';
 
 import '../../../ApiServices/api_service.dart';
+import 'package:pg_managment/widgets/month_year_picker.dart';
 
 class AddUpdateDayDetailsScreenController extends GetxController {
   RxBool isLoading = false.obs;
@@ -296,17 +297,10 @@ class AddUpdateDayDetailsScreenController extends GetxController {
   }
 
   Future<void> selectDate(BuildContext context) async {
-    print('object');
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2090),
-    );
+    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime.now());
 
     if (picked != null) {
-      String formattedDate =
-          "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+      String formattedDate = "${picked.year}-${picked.month.toString().padLeft(2, '0')}-01";
       dateController.text = formattedDate;
     }
   }
@@ -376,7 +370,9 @@ class AddUpdateDayDetailsScreenController extends GetxController {
             "remain_amount": doubleParse(remainController.text),
             "penalty_amount": doubleParse(penaltyAmountController.text),
             "feast_guest_amount": doubleParse(feastGuestAmountController.text),
-            "remark": remarkController.text
+            "remark": remarkController.text,
+            if(dataGet.value.status=='lock')...{
+            "status":'finalize'}
           },
           headerWithToken: true,
           showLoader: true,
