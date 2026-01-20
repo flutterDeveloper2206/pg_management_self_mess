@@ -39,6 +39,7 @@ class MonthlyTransactionScreenController extends GetxController {
     if (picked != null) {
       monthController.text = picked.month.toString().padLeft(2, '0');
       yearController.text = picked.year.toString();
+      getMonthlyTransaction();
     }
   }
 
@@ -48,6 +49,7 @@ class MonthlyTransactionScreenController extends GetxController {
     if (picked != null) {
       monthController.text = picked.month.toString().padLeft(2, '0');
       yearController.text = picked.year.toString();
+      getMonthlyTransaction();
     }
   }
 
