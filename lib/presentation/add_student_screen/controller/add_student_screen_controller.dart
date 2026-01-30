@@ -107,6 +107,23 @@ class AddStudentScreenController extends GetxController {
   }
 
   Future updateAddStudent({String? id}) async {
+    const pattern =
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+    final regex = RegExp(pattern);
+    if (emailController.text.isEmpty) {
+      AppFlushBars.appCommonFlushBar(
+          context: NavigationService.navigatorKey.currentContext!,
+          message: 'Enter Your Email',
+          success: false);
+      return ;
+    }else if (!regex.hasMatch(emailController.text)){
+      AppFlushBars.appCommonFlushBar(
+          context: NavigationService.navigatorKey.currentContext!,
+          message: 'Enter a Valid Email',
+          success: false);
+
+    return ;
+  }else{
     if (isAddEdit.value == 1) {
       await ApiService().callPutApi(
           body: {
@@ -143,7 +160,8 @@ class AddStudentScreenController extends GetxController {
           });
         }
       });
-    } else {
+    }
+    else {
       await ApiService().callPostApi(
           body: {
             "name": nameController.text,
@@ -182,5 +200,5 @@ class AddStudentScreenController extends GetxController {
         }
       });
     }
-  }
+  }}
 }

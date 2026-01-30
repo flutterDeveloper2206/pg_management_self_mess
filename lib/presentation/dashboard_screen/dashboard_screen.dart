@@ -43,12 +43,14 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'icon': 'assets/images/import.png',
         'route': AppRoutes.importScreenRoute,
         'color': const Color(0xFF1CA7AF),
-      },{
-        'title': 'Today\'s Menu',
-        'icon': 'assets/images/invoice.png',
-        'route': AppRoutes.menuScreenRoute,
-        'color': const Color(0xFF5E59B3),
-      },{
+      },
+      // {
+      //   'title': 'Today\'s Menu',
+      //   'icon': 'assets/images/invoice.png',
+      //   'route': AppRoutes.menuScreenRoute,
+      //   'color': const Color(0xFF5E59B3),
+      // },
+      {
         'title': 'Logout',
         'icon': 'assets/images/exit.png',
         'route': '',
@@ -138,12 +140,12 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'route': AppRoutes.dayDetailsListScreenRoute,
         'color': const Color(0xFF1ABC9C),
       },
-      {
-        'title': 'Today\'s Menu',
-        'icon': 'assets/images/invoice.png',
-        'route': AppRoutes.menuScreenRoute,
-        'color': const Color(0xFF5E59B3),
-      },
+      // {
+      //   'title': 'Today\'s Menu',
+      //   'icon': 'assets/images/invoice.png',
+      //   'route': AppRoutes.menuScreenRoute,
+      //   'color': const Color(0xFF5E59B3),
+      // },
       {
         'title': 'Logout',
         'icon': 'assets/images/exit.png',
@@ -228,7 +230,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
               ),
               SizedBox(height: 20,),
               Text(
-                'V.1.0.4',
+                'V(1.0.6)',
                 textAlign: TextAlign.center,
                 style: PMT.appStyle(
                   size: 16,

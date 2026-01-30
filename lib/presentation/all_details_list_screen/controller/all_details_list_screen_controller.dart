@@ -57,6 +57,9 @@ class AllDetailsListScreenController extends GetxController {
     if (picked != null) {
       month.text = picked.month.toString().padLeft(2, '0');
       year.text = picked.year.toString();
+      getAllStudentDetails(
+          month: month.text,
+          year: year.text);
     }
   }
 
@@ -67,6 +70,9 @@ class AllDetailsListScreenController extends GetxController {
       month.text = picked.month.toString().padLeft(2, '0');
       year.text = picked.year.toString();
     }
+    getAllStudentDetails(
+        month: month.text,
+        year: year.text);
   }
 
   Future<void> getAllStudentDetails({String? month, String? year}) async {

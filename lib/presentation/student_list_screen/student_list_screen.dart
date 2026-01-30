@@ -144,7 +144,7 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
                                                         '${data.deposit ?? ' '}'),
                                                 vBox(5),
                                                 AppRichText(
-                                                    title: 'Mobile Nu. : ',
+                                                    title: 'Mobile No. : ',
                                                     value: data.mobile ?? ''),
                                                 vBox(5),
                                                 Row(
