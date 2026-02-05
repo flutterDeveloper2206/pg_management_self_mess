@@ -54,6 +54,7 @@ dependencies:
   file_picker: ^5.3.4
   spreadsheet_decoder: ^2.3.0
   csv:
+  flutter_local_notifications: ^19.5.0
 
 dev_dependencies:
   flutter_test:

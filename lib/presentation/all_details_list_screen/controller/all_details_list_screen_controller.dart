@@ -26,7 +26,8 @@ class AllDetailsListScreenController extends GetxController {
   TextEditingController month = TextEditingController();
   TextEditingController year = TextEditingController();
   RxList<List<String>> studentMonthlyStudentList = <List<String>>[].obs;
-  RxList<List<TextCellValue>> studentMonthlyStudentListForExel = <List<TextCellValue>>[].obs;
+  RxList<List<TextCellValue>> studentMonthlyStudentListForExel =
+      <List<TextCellValue>>[].obs;
   RxList<AllData> studentListSearch = <AllData>[].obs;
 
   @override
@@ -52,27 +53,25 @@ class AllDetailsListScreenController extends GetxController {
   }
 
   Future<void> selectMonth(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
+    final DateTime? picked = await MonthYearPicker.show(context,
+        initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
 
     if (picked != null) {
       month.text = picked.month.toString().padLeft(2, '0');
       year.text = picked.year.toString();
-      getAllStudentDetails(
-          month: month.text,
-          year: year.text);
+      getAllStudentDetails(month: month.text, year: year.text);
     }
   }
 
   Future<void> selectYear(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
+    final DateTime? picked = await MonthYearPicker.show(context,
+        initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
 
     if (picked != null) {
       month.text = picked.month.toString().padLeft(2, '0');
       year.text = picked.year.toString();
     }
-    getAllStudentDetails(
-        month: month.text,
-        year: year.text);
+    getAllStudentDetails(month: month.text, year: year.text);
   }
 
   Future<void> getAllStudentDetails({String? month, String? year}) async {
@@ -98,7 +97,10 @@ class AllDetailsListScreenController extends GetxController {
           studentMonthlyStudentList.value =
               generateStudentTableList(allStudentListModel.value) ?? [];
           studentMonthlyStudentListForExel.value =
-              generateStudentTableListExel(allStudentListModel.value)?.reversed.toList() ?? [];
+              generateStudentTableListExel(allStudentListModel.value)
+                      ?.reversed
+                      .toList() ??
+                  [];
           studentListSearch.value = allStudentListModel.value.data ?? [];
 
           allStudentListModel.value.data?.forEach(
@@ -139,7 +141,9 @@ class AllDetailsListScreenController extends GetxController {
         }).toList() ??
         [];
   }
-  List<List<TextCellValue>>? generateStudentTableListExel(StudentAllDetailsModel model) {
+
+  List<List<TextCellValue>>? generateStudentTableListExel(
+      StudentAllDetailsModel model) {
     return model.data?.asMap().entries.map((entry) {
           final student = entry.value;
           return [
@@ -249,9 +253,8 @@ class AllDetailsListScreenController extends GetxController {
       TextCellValue('Amount'),
       TextCellValue('Remark')
     ]);
-    for(var item in studentMonthlyStudentListForExel){
-
-    sheet.appendRow(item);
+    for (var item in studentMonthlyStudentListForExel) {
+      sheet.appendRow(item);
     }
 
     // 3️⃣ Encode to bytes
@@ -305,16 +308,17 @@ class AllDetailsListScreenController extends GetxController {
                   final pdfData = await generatePdf();
                   await Printing.sharePdf(
                     bytes: pdfData,
-
                     filename: 'Expanse Repost ${DateTime.now()}.pdf',
-                  );                },
+                  );
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.table_chart, color: Colors.green),
                 title: const Text('Download Excel'),
                 onTap: () {
                   Navigator.pop(context);
-                  createAndShareExcel();                },
+                  createAndShareExcel();
+                },
               ),
             ],
           ),
@@ -322,5 +326,4 @@ class AllDetailsListScreenController extends GetxController {
       },
     );
   }
-
 }

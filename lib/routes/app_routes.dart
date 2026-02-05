@@ -32,7 +32,10 @@ import 'package:pg_managment/presentation/student_profile_screen/binding/student
 import 'package:pg_managment/presentation/student_profile_screen/student_profile_screen.dart';
 import 'package:pg_managment/presentation/menu_screen/menu_screen.dart';
 import 'package:pg_managment/presentation/menu_screen/binding/menu_screen_binding.dart';
-
+import 'package:pg_managment/presentation/notification_screen/binding/notification_screen_binding.dart';
+import 'package:pg_managment/presentation/notification_screen/notification_screen.dart';
+import 'package:pg_managment/presentation/send_notification_screen/send_notification_screen.dart';
+import 'package:pg_managment/presentation/send_notification_screen/binding/send_notification_screen_binding.dart';
 
 import '../presentation/import_data_screen/import_data_screen.dart';
 
@@ -70,7 +73,7 @@ class AppRoutes {
       '/monthly_transaction_screen';
   static const String depositDetailsScreenRoute = '/deposit_details_screen';
   static const String menuScreenRoute = '/menu_screen';
-
+  static const String sendNotificationScreenRoute = '/send_notification_screen';
 
   static List<GetPage> pages = [
     GetPage(
@@ -99,7 +102,7 @@ class AppRoutes {
         transitionDuration: const Duration(milliseconds: 100)),
     GetPage(
         name: addStudentScreenRoute,
-        page: () =>  AddStudentScreen(),
+        page: () => AddStudentScreen(),
         bindings: [
           AddStudentScreenBinding(),
         ],
@@ -192,7 +195,8 @@ class AppRoutes {
           ConfigScreenBinding(),
         ],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 100)), GetPage(
+        transitionDuration: const Duration(milliseconds: 100)),
+    GetPage(
         name: importScreenRoute,
         page: () => const ImportDataScreen(),
         bindings: [
@@ -205,6 +209,22 @@ class AppRoutes {
         page: () => const MenuScreen(),
         bindings: [
           MenuScreenBinding(),
+        ],
+        transition: Transition.rightToLeft,
+        transitionDuration: const Duration(milliseconds: 100)),
+    GetPage(
+        name: notificationScreenRoute,
+        page: () => const NotificationScreen(),
+        bindings: [
+          NotificationScreenBinding(),
+        ],
+        transition: Transition.rightToLeft,
+        transitionDuration: const Duration(milliseconds: 100)),
+    GetPage(
+        name: sendNotificationScreenRoute,
+        page: () => SendNotificationScreen(),
+        bindings: [
+          SendNotificationScreenBinding(),
         ],
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 100)),

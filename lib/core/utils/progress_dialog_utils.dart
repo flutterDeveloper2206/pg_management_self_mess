@@ -34,10 +34,10 @@ class ProgressDialogUtils {
   static void showSnackBar({headerText, bodyText}) {
     Get.closeAllSnackbars();
     Get.snackbar(headerText, bodyText,
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         colorText: ColorConstant.primaryBlack,
         backgroundColor: ColorConstant.lightOrangeOutline,
-        margin: EdgeInsets.only(bottom: 26, left: 16, right: 16));
+        margin: EdgeInsets.only(top: 26, left: 16, right: 16));
   }
 }
 

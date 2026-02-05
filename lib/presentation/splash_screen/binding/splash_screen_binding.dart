@@ -4,6 +4,6 @@ import 'package:pg_managment/presentation/splash_screen/controller/splash_screen
 class SplashScreenBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => SplashScreenController());
+    Get.put(SplashScreenController());
   }
 }

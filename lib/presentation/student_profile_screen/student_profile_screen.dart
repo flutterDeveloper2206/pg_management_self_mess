@@ -13,7 +13,6 @@ class StudentProfileScreen extends GetWidget<StudentProfileScreenController> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: ColorConstant.primaryWhite,
       appBar: AppBar(
@@ -24,7 +23,8 @@ class StudentProfileScreen extends GetWidget<StudentProfileScreenController> {
             child: CustomImageView(
                 height: 40,
                 width: 40,
-                imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
+                imagePath: 'assets/images/left-arrow.png',
+                color: ColorConstant.primaryWhite),
           ),
           onPressed: () => Get.back(),
         ),
@@ -33,88 +33,82 @@ class StudentProfileScreen extends GetWidget<StudentProfileScreenController> {
           style: PMT.appStyle(size: 20, fontColor: ColorConstant.primaryWhite),
         ),
       ),
-      body: Obx(
-              () {
-                final data = controller.model.value.data;
+      body: Obx(() {
+        final data = controller.model.value.data;
 
-                return   data == null
-    ? const Center(child: CircularProgressIndicator())
-    : SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
-  child: Column(
-    children: [
-      // Profile Avatar and Name
-      CircleAvatar(
-        radius: 50,
-        backgroundColor: ColorConstant.primary,
-        child: Text(
-          data.name != null && data.name!.isNotEmpty
-              ? data.name![0]
-              : '?',
-          style: PMT.appStyle( size:36, fontColor: Colors.white),
-        ),
-      ),
-      const SizedBox(height: 10),
-      Text(
-        data.name ?? 'N/A',
-        style: PMT.appStyle( size:22, fontColor: Colors.black, fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: 4),
-      Text(
-        data.email ?? '',
-        style: PMT.appStyle( size:14, fontColor: Colors.grey),
-      ),
-      const SizedBox(height: 20),
+        return data == null
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    // Profile Avatar and Name
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundColor: ColorConstant.primary,
+                      child: Text(
+                        data.name != null && data.name!.isNotEmpty
+                            ? data.name![0]
+                            : '?',
+                        style: PMT.appStyle(size: 36, fontColor: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      data.name ?? 'N/A',
+                      style: PMT.appStyle(
+                          size: 22,
+                          fontColor: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      data.email ?? '',
+                      style: PMT.appStyle(size: 14, fontColor: Colors.grey),
+                    ),
+                    const SizedBox(height: 20),
 
-      // Personal Info Section
-      _sectionTitle("Personal Info"),
-      _infoRow("Mobile", data.mobile),
-      _infoRow("Alternative Mobile", data.alternativeMobile),
-      _infoRow("Blood Group", data.bloodGroup),
-      _infoRow("Residential Address", data.residentialAddress),
+                    // Personal Info Section
+                    _sectionTitle("Personal Info"),
+                    _infoRow("Mobile", data.mobile),
+                    _infoRow("Alternative Mobile", data.alternativeMobile),
+                    _infoRow("Blood Group", data.bloodGroup),
+                    _infoRow("Residential Address", data.residentialAddress),
 
-      const SizedBox(height: 20),
-      _sectionTitle("Academic Info"),
-      _infoRow("Hostel Name", data.hostelName),
-      _infoRow("Room No", data.roomNo),
-      _infoRow("Currently Pursuing", data.currentlyPursuing),
-      _infoRow("Studying Year", "${data.currentlyStudyingYear}"),
-      _infoRow("Admission Date", "${DateTime.parse(data.date??DateTime.now().toString())?.toLocal().toString().split(' ')[0]}"),
-      _infoRow("Passing Year", "${data.year}"),
-      _infoRow("Advisor", data.advisorGuide),
+                    const SizedBox(height: 20),
+                    _sectionTitle("Academic Info"),
+                    _infoRow("Hostel Name", data.hostelName),
+                    _infoRow("Room No", data.roomNo),
+                    _infoRow("Currently Pursuing", data.currentlyPursuing),
+                    _infoRow("Studying Year", "${data.currentlyStudyingYear}"),
+                    _infoRow("Admission Date",
+                        "${DateTime.parse(data.date ?? DateTime.now().toString())?.toLocal().toString().split(' ')[0]}"),
+                    _infoRow("Passing Year", "${data.year}"),
+                    _infoRow("Advisor", data.advisorGuide),
 
-      const SizedBox(height: 20),
-      _sectionTitle("Finance"),
-      _infoRow("Deposit", "₹${data.deposit}"),
-      const SizedBox(height: 30),
+                    const SizedBox(height: 20),
+                    _sectionTitle("Finance"),
+                    _infoRow("Deposit", "₹${data.deposit}"),
+                    const SizedBox(height: 30),
 
-      AppElevatedButton(
-        buttonName: 'Edit Profile',
-        onPressed: () {
-          Get.toNamed(
-              AppRoutes
-                  .addStudentScreenRoute,
-              arguments: {
-                "data":
-                data,
-                "isAddEdit":
-                1 ,"isStudentShow":
-                true
-              })?.then(
-                  (value) {
-              controller.getStudentProfile();
-              });
-        },
-
-      ),
-      const SizedBox(height: 30),
-
-    ],
-  ),
-);
-          }
-
-      ),
+                    AppElevatedButton(
+                      buttonName: 'Edit Profile',
+                      onPressed: () {
+                        Get.toNamed(AppRoutes.addStudentScreenRoute,
+                            arguments: {
+                              "data": data,
+                              "isAddEdit": 1,
+                              "isStudentShow": true
+                            })?.then((value) {
+                          controller.getStudentProfile();
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 30),
+                  ],
+                ),
+              );
+      }),
     );
   }
 
@@ -125,7 +119,10 @@ class StudentProfileScreen extends GetWidget<StudentProfileScreenController> {
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Text(
           title,
-          style: PMT.appStyle( size: 18, fontColor: ColorConstant.primary, fontWeight: FontWeight.w600),
+          style: PMT.appStyle(
+              size: 18,
+              fontColor: ColorConstant.primary,
+              fontWeight: FontWeight.w600),
         ),
       ),
     );
@@ -137,11 +134,18 @@ class StudentProfileScreen extends GetWidget<StudentProfileScreenController> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: getWidth(140), child: Text('${label} :', style: PMT.appStyle(size: 14, fontColor: Colors.grey.shade700))),
+          SizedBox(
+              width: getWidth(140),
+              child: Text('${label} :',
+                  style:
+                      PMT.appStyle(size: 14, fontColor: Colors.grey.shade700))),
           Expanded(
             child: Text(
               value ?? 'N/A',
-              style: PMT.appStyle(size: 14, fontColor: Colors.black, fontWeight: FontWeight.bold),
+              style: PMT.appStyle(
+                  size: 14,
+                  fontColor: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
           ),
         ],

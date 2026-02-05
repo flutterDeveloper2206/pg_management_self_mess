@@ -47,7 +47,7 @@ class ConfigScreenController extends GetxController {
           context: NavigationService.navigatorKey.currentContext!,
           message: 'Please Enter Eaten Day!',
           success: false);
-    }else if (penaltyController.text.isEmpty) {
+    } else if (penaltyController.text.isEmpty) {
       AppFlushBars.appCommonFlushBar(
           context: NavigationService.navigatorKey.currentContext!,
           message: 'Please Enter Penalty',
@@ -62,7 +62,7 @@ class ConfigScreenController extends GetxController {
           context: NavigationService.navigatorKey.currentContext!,
           message: 'Please Enter Feast Guest Amount!',
           success: false);
-    }else  {
+    } else {
       PrefUtils.setString(
           StringConstants.totalDays, totalDaysController.text ?? '');
       PrefUtils.setString(

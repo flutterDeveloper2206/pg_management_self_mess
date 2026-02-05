@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdf/pdf.dart';
@@ -27,27 +26,26 @@ class ExpenseListScreenController extends GetxController {
         month: '${DateTime.now().month}', year: '${DateTime.now().year}');
     super.onInit();
   }
+
   Future<void> selectMonth(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
+    final DateTime? picked = await MonthYearPicker.show(context,
+        initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
 
     if (picked != null) {
       month.text = picked.month.toString().padLeft(2, '0');
       year.text = picked.year.toString();
-      getExpenseList(
-          month: month.text,
-          year: year.text);
+      getExpenseList(month: month.text, year: year.text);
     }
   }
 
   Future<void> selectYear(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
+    final DateTime? picked = await MonthYearPicker.show(context,
+        initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
 
     if (picked != null) {
       month.text = picked.month.toString().padLeft(2, '0');
       year.text = picked.year.toString();
-      getExpenseList(
-          month: month.text,
-          year: year.text);
+      getExpenseList(month: month.text, year: year.text);
     }
   }
 
@@ -64,16 +62,16 @@ class ExpenseListScreenController extends GetxController {
       isLoading.value = false;
       if (value != null && value.statusCode == 200) {
         expenseListModel.value = ExpenseListModel.fromJson(value.body);
-        totalExpanse.value=0.0;
-        if(expenseListModel.value.data!=null &&expenseListModel.value.data!.isNotEmpty) {
+        totalExpanse.value = 0.0;
+        if (expenseListModel.value.data != null &&
+            expenseListModel.value.data!.isNotEmpty) {
+          expanseDetailList.value =
+              generateStudentTableList(expenseListModel.value) ?? [];
 
-          expanseDetailList.value=  generateStudentTableList(expenseListModel.value)??[];
-
-        for (var expense in expenseListModel.value.data!) {
-
-          totalExpanse.value += expense?.amount?? 0;
-
-        }}
+          for (var expense in expenseListModel.value.data!) {
+            totalExpanse.value += expense?.amount ?? 0;
+          }
+        }
       }
     });
   }
@@ -94,14 +92,17 @@ class ExpenseListScreenController extends GetxController {
       }
     });
   }
-  void showDeleteConfirmationDialog(BuildContext context, VoidCallback onYesPressed) {
+
+  void showDeleteConfirmationDialog(
+      BuildContext context, VoidCallback onYesPressed) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text("Confirm Delete"),
           content: Text("Are you sure you want to delete this expanse?"),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           actionsAlignment: MainAxisAlignment.end,
           actions: [
@@ -109,7 +110,10 @@ class ExpenseListScreenController extends GetxController {
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text("No",style: TextStyle(color: Colors.black),),
+              child: Text(
+                "No",
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -119,7 +123,10 @@ class ExpenseListScreenController extends GetxController {
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorConstant.primary,
               ),
-              child: Text("Yes",style: TextStyle(color: Colors.white),),
+              child: Text(
+                "Yes",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -127,25 +134,25 @@ class ExpenseListScreenController extends GetxController {
     );
   }
 
-
   List<List<String>>? generateStudentTableList(ExpenseListModel model) {
     return model.data?.asMap().entries.map((entry) {
-      final student = entry.value;
-      return [
-        '${entry.key+1}',
-        '${student.item ?? ' '}',
-        '${student.amount?.toString() ?? '0'}',
-        '${student.date ?? '0'}',
-
-
-      ];
-    }).toList() ?? [];
+          final student = entry.value;
+          return [
+            '${entry.key + 1}',
+            '${student.item ?? ' '}',
+            '${student.amount?.toString() ?? '0'}',
+            '${student.date ?? '0'}',
+          ];
+        }).toList() ??
+        [];
   }
+
   Future<Uint8List> generatePdf() async {
     final pdf = pw.Document();
 
     // Load optional image from assets
-    final ByteData logoBytes = await rootBundle.load('assets/images/ic_launcher.png');
+    final ByteData logoBytes =
+        await rootBundle.load('assets/images/ic_launcher.png');
     final Uint8List logoUint8List = logoBytes.buffer.asUint8List();
     final image = pw.MemoryImage(logoUint8List);
 
@@ -156,7 +163,8 @@ class ExpenseListScreenController extends GetxController {
           pw.Center(child: pw.Image(image, width: 100)), // Optional logo
           pw.SizedBox(height: 20),
           pw.Text('Expense Report',
-              style: pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold)),
+              style:
+                  pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold)),
           pw.SizedBox(height: 16),
           pw.Text('Date: ${DateTime.now().toLocal()}'),
           pw.SizedBox(height: 16),
@@ -165,7 +173,7 @@ class ExpenseListScreenController extends GetxController {
           pw.Text('Total Expense :- ${totalExpanse}'),
           pw.SizedBox(height: 20),
           pw.Table.fromTextArray(
-            headers: ['ID', 'Expense Name (Item)', 'Amount','Date'],
+            headers: ['ID', 'Expense Name (Item)', 'Amount', 'Date'],
             data: expanseDetailList,
             headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
             cellStyle: pw.TextStyle(fontSize: 12),
@@ -178,5 +186,4 @@ class ExpenseListScreenController extends GetxController {
 
     return pdf.save();
   }
-
 }

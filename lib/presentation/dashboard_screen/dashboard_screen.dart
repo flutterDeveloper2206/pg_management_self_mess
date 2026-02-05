@@ -5,6 +5,7 @@ import 'package:pg_managment/core/utils/app_fonts.dart';
 import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/commonConstant.dart';
 import 'package:pg_managment/core/utils/pref_utils.dart';
+import 'package:pg_managment/core/utils/string_constant.dart';
 import 'package:pg_managment/routes/app_routes.dart';
 import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/dashboard_screen_controller.dart';
@@ -38,7 +39,8 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'icon': 'assets/images/check-document.png',
         'route': AppRoutes.allDetailsListScreenRoute,
         'color': const Color(0xFF1ABC9C),
-      },  {
+      },
+      {
         'title': 'Impport Data',
         'icon': 'assets/images/import.png',
         'route': AppRoutes.importScreenRoute,
@@ -57,7 +59,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'color': const Color(0xFFE74C3C),
       }
     ];
-    final menuItems = [
+    final adminMenu = [
       {
         'title': 'All Students',
         'icon': 'assets/images/graduation.png',
@@ -112,12 +114,17 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'route': AppRoutes.configScreenRoute,
         'color': const Color(0xFF95A5A6),
       },
-
+      {
+        'title': 'Send Notification',
+        'icon': 'assets/images/invoice.png', // Reusing an appropriate icon
+        'route': AppRoutes.sendNotificationScreenRoute,
+        'color': const Color(0xFF673AB7),
+      },
       {
         'title': 'Today\'s Menu',
         'icon': 'assets/images/invoice.png',
         'route': AppRoutes.menuScreenRoute,
-        'color': const Color(0xFF5E59B3),
+        'color': const Color(0xFF59B365),
       },
       {
         'title': 'Logout',
@@ -169,21 +176,31 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
             fontColor: Colors.white,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () => Get.toNamed(AppRoutes.notificationScreenRoute),
+            icon: Icon(Icons.notifications, color: Colors.white),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 15),
               LayoutBuilder(
                 builder: (context, constraints) {
-                  if(CommonConstant.instance.isStudent == 1 &&!kIsWeb){
-                    menuItems.add( {
-                      'title': 'Impport Data',
-                      'icon': 'assets/images/import.png',
-                      'route': AppRoutes.importScreenRoute,
-                      'color': const Color(0xFF1CA7AF),
-                    },);
+                  if (CommonConstant.instance.isStudent == 1 && !kIsWeb) {
+                    adminMenu.add(
+                      {
+                        'title': 'Impport Data',
+                        'icon': 'assets/images/import.png',
+                        'route': AppRoutes.importScreenRoute,
+                        'color': const Color(0xFF1CA7AF),
+                      },
+                    );
                   }
                   int crossAxisCount = constraints.maxWidth > 800
                       ? 4
@@ -194,11 +211,11 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: CommonConstant.instance.isStudent == 1
-                        ? menuItems.length
+                        ? adminMenu.length
                         : CommonConstant.instance.isStudent == 2 ||
-                        CommonConstant.instance.isStudent == 3
-                        ? staffSecretary.length
-                        : studentMenuItems.length,
+                                CommonConstant.instance.isStudent == 3
+                            ? staffSecretary.length
+                            : studentMenuItems.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: crossAxisCount,
                       crossAxisSpacing: 20,
@@ -207,30 +224,46 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                     ),
                     itemBuilder: (context, index) {
                       final item = CommonConstant.instance.isStudent == 1
-                          ? menuItems[index]
-                          :  CommonConstant.instance.isStudent == 2 ||
-                          CommonConstant.instance.isStudent == 3
-                          ? staffSecretary[index]
-                          :studentMenuItems[index];
-                      return CleanDashboardTile(
-                        title: item['title'] as String,
-                        icon: item['icon'] as String,
-                        color: item['color'] as Color,
-                        onTap: () {
-                          if (item['route'].toString().isNotEmpty) {
-                            Get.toNamed(item['route'] as String);
-                          } else {
-                            _showLogoutDialog(context);
-                          }
+                          ? adminMenu[index]
+                          : CommonConstant.instance.isStudent == 2 ||
+                                  CommonConstant.instance.isStudent == 3
+                              ? staffSecretary[index]
+                              : studentMenuItems[index];
+                      return TweenAnimationBuilder<double>(
+                        duration: Duration(milliseconds: 500 + (index * 100)),
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        curve: Curves.easeOutCubic,
+                        builder: (context, value, child) {
+                          return Opacity(
+                            opacity: value.clamp(0.0, 1.0),
+                            child: Transform.translate(
+                              offset: Offset(0, 30 * (1 - value)),
+                              child: child,
+                            ),
+                          );
                         },
+                        child: CleanDashboardTile(
+                          title: item['title'] as String,
+                          icon: item['icon'] as String,
+                          color: item['color'] as Color,
+                          onTap: () {
+                            if (item['route'].toString().isNotEmpty) {
+                              Get.toNamed(item['route'] as String);
+                            } else {
+                              _showLogoutDialog(context);
+                            }
+                          },
+                        ),
                       );
                     },
                   );
                 },
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Text(
-                'V(1.0.6)',
+                'V(1.0.7)',
                 textAlign: TextAlign.center,
                 style: PMT.appStyle(
                   size: 16,
@@ -240,8 +273,9 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 20,),
-
+              SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),
@@ -414,7 +448,7 @@ class _CleanDashboardTileState extends State<CleanDashboardTile> {
 //
 //   @override
 //   Widget build(BuildContext context) {
-//     final menuItems = [
+//     final adminMenu = [
 //       {
 //         'title': 'All Students',
 //         'icon': 'assets/images/graduation.png', // More appropriate for student list
@@ -524,7 +558,7 @@ class _CleanDashboardTileState extends State<CleanDashboardTile> {
 //             return GridView.builder(
 //               itemCount: CommonConstant.instance.isStudent
 //                   ? studentMenuItems.length
-//                   : menuItems.length,
+//                   : adminMenu.length,
 //               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
 //                 crossAxisCount: crossAxisCount,
 //                 crossAxisSpacing: 16,
@@ -534,7 +568,7 @@ class _CleanDashboardTileState extends State<CleanDashboardTile> {
 //               itemBuilder: (context, index) {
 //                 final item = CommonConstant.instance.isStudent
 //                     ? studentMenuItems[index]
-//                     : menuItems[index];
+//                     : adminMenu[index];
 //                 return _DashboardTile(
 //                   title: item['title'] as String,
 //                   icon: item['icon'] as String,

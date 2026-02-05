@@ -251,7 +251,7 @@ class LoginScreen extends GetWidget<LoginScreenController> {
           const SizedBox(height: 20),
           // Password Field
           Obx(
-                () => _buildPasswordField(
+            () => _buildPasswordField(
               label: 'Password',
               controller: controller.passwordController,
               hintText: 'Enter your password',

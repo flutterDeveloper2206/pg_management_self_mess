@@ -8,6 +8,7 @@ import 'package:pg_managment/core/utils/pref_utils.dart';
 import 'package:pg_managment/core/utils/progress_dialog_utils.dart';
 import 'package:pg_managment/core/utils/string_constant.dart';
 import 'package:pg_managment/presentation/login_screen/model/login_model.dart';
+import 'package:pg_managment/core/utils/notification_service.dart';
 import 'package:pg_managment/routes/app_routes.dart';
 
 class LoginScreenController extends GetxController {
@@ -57,19 +58,20 @@ class LoginScreenController extends GetxController {
         loginModel.value = LoginModel.fromJson(value.body);
         PrefUtils.setString(StringConstants.authToken,
             loginModel.value.data?.accessToken ?? '');
-        if (loginModel.value.data?.user?.studentId!=null) {
-
-          CommonConstant.instance.isStudent=loginModel.value.data?.user?.studentId??4;
+        if (loginModel.value.data?.user?.studentId != null) {
+          CommonConstant.instance.isStudent =
+              loginModel.value.data?.user?.studentId ?? 4;
           PrefUtils.setString(StringConstants.studentId,
               '${loginModel.value.data?.user?.studentId ?? ' '}');
           PrefUtils.setInt(StringConstants.isStudent,
-              loginModel.value.data?.user?.studentId ??0);
-        } else{
-          CommonConstant.instance.isStudent=loginModel.value.data?.user?.id??0;
-          PrefUtils.setInt(StringConstants.isStudent,
-              loginModel.value.data?.user?.id??0);
+              loginModel.value.data?.user?.studentId ?? 0);
+        } else {
+          CommonConstant.instance.isStudent =
+              loginModel.value.data?.user?.id ?? 0;
+          PrefUtils.setInt(
+              StringConstants.isStudent, loginModel.value.data?.user?.id ?? 0);
         }
-
+        NotificationService.updateFcmToken();
         Get.offNamed(AppRoutes.dashboardScreenRoute);
       }
     });

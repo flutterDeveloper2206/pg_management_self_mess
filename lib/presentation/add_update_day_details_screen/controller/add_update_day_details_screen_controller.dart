@@ -56,11 +56,14 @@ class AddUpdateDayDetailsScreenController extends GetxController {
         dataGet.value = argument['data'];
         setData();
         setRemainAmountCalculate();
-      }else{
+      } else {
         DateTime now = DateTime.now();
         DateTime previousMonth = DateTime(now.year, now.month - 1, now.day);
 
-        getStudentPreviousMonthDetails(month: '${previousMonth.month}',year: '${previousMonth.year}',studentId:'${ studentId.value}');
+        getStudentPreviousMonthDetails(
+            month: '${previousMonth.month}',
+            year: '${previousMonth.year}',
+            studentId: '${studentId.value}');
       }
 
       if (isAdd.value == 2) {
@@ -104,18 +107,23 @@ class AddUpdateDayDetailsScreenController extends GetxController {
         body: {},
         headerWithToken: true,
         showLoader: false,
-        url: '${NetworkUrls.dayDetailsListUrl}month=$month&year=$year&student_id=$studentId').then(
-            (value) async {
-              isGetLoading.value = false;
-          if (value != null && value.statusCode == 200) {
-            isGetLoading.value = false;
-            StudentAllDetailsModel  allStudentListModel = StudentAllDetailsModel.fromJson(value.body);
-            if(allStudentListModel.data!=null&&allStudentListModel.data!.isNotEmpty) {
-              remainController.text='${allStudentListModel.data?[0].remainAmount??0.0}';
-            }
-          }
-        });
+        url:
+            '${NetworkUrls.dayDetailsListUrl}month=$month&year=$year&student_id=$studentId').then(
+        (value) async {
+      isGetLoading.value = false;
+      if (value != null && value.statusCode == 200) {
+        isGetLoading.value = false;
+        StudentAllDetailsModel allStudentListModel =
+            StudentAllDetailsModel.fromJson(value.body);
+        if (allStudentListModel.data != null &&
+            allStudentListModel.data!.isNotEmpty) {
+          remainController.text =
+              '${allStudentListModel.data?[0].remainAmount ?? 0.0}';
+        }
+      }
+    });
   }
+
   setDate() {
     DateTime now = DateTime.now();
     DateTime picked = DateTime(now.year, now.month, 0);
@@ -150,7 +158,8 @@ class AddUpdateDayDetailsScreenController extends GetxController {
       totalAmountController.text = (doubleParse(totalAmountController.text) +
               val +
               (dataGet.value.dueAmount ?? 0.0) +
-              doubleParse(feastGuestAmountController.text) +(dataGet.value.amount ?? 0.0)+
+              doubleParse(feastGuestAmountController.text) +
+              (dataGet.value.amount ?? 0.0) +
               doubleParse(simpleGuestAmountController.text))
           .toString();
     } else {
@@ -158,12 +167,12 @@ class AddUpdateDayDetailsScreenController extends GetxController {
       totalAmountController.text = (doubleParse(totalAmountController.text) +
               (dataGet.value.dueAmount ?? 0.0) +
               doubleParse(penaltyAmountController.text) +
-              doubleParse(feastGuestAmountController.text) +(dataGet.value.amount ?? 0.0)+
+              doubleParse(feastGuestAmountController.text) +
+              (dataGet.value.amount ?? 0.0) +
               doubleParse(simpleGuestAmountController.text))
           .toString();
     }
     setRemainingAmount();
-
   }
 
   changeTotalAmountSimpleGuest(String value) {
@@ -171,40 +180,44 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     totalAmountController.clear();
     if (value.isNotEmpty) {
       totalAmountController.text = (doubleParse(totalAmountController.text) +
-          val +
-          (dataGet.value.dueAmount ?? 0.0) +(dataGet.value.amount ?? 0.0)+
-          doubleParse(feastGuestAmountController.text) +
-          doubleParse(penaltyAmountController.text))
+              val +
+              (dataGet.value.dueAmount ?? 0.0) +
+              (dataGet.value.amount ?? 0.0) +
+              doubleParse(feastGuestAmountController.text) +
+              doubleParse(penaltyAmountController.text))
           .toString();
     } else {
       simpleGuestAmountController.text = '0';
       totalAmountController.text = (doubleParse(totalAmountController.text) +
-          (dataGet.value.dueAmount ?? 0.0) +
-          doubleParse(penaltyAmountController.text) +
-          doubleParse(feastGuestAmountController.text) +(dataGet.value.amount ?? 0.0)+
-          doubleParse(simpleGuestAmountController.text))
+              (dataGet.value.dueAmount ?? 0.0) +
+              doubleParse(penaltyAmountController.text) +
+              doubleParse(feastGuestAmountController.text) +
+              (dataGet.value.amount ?? 0.0) +
+              doubleParse(simpleGuestAmountController.text))
           .toString();
     }
     setRemainingAmount();
-
   }
+
   changeTotalAmountFeastGuest(String value) {
     double val = doubleParse(value);
     totalAmountController.clear();
     if (value.isNotEmpty) {
       totalAmountController.text = (doubleParse(totalAmountController.text) +
-          val +
-          (dataGet.value.dueAmount ?? 0.0) +(dataGet.value.amount ?? 0.0)+
-          doubleParse(simpleGuestAmountController.text) +
-          doubleParse(penaltyAmountController.text))
+              val +
+              (dataGet.value.dueAmount ?? 0.0) +
+              (dataGet.value.amount ?? 0.0) +
+              doubleParse(simpleGuestAmountController.text) +
+              doubleParse(penaltyAmountController.text))
           .toString();
     } else {
       feastGuestAmountController.text = '0';
       totalAmountController.text = (doubleParse(totalAmountController.text) +
-          (dataGet.value.dueAmount ?? 0.0) +
-          doubleParse(penaltyAmountController.text) +
-          doubleParse(feastGuestAmountController.text) +(dataGet.value.amount ?? 0.0)+
-          doubleParse(simpleGuestAmountController.text))
+              (dataGet.value.dueAmount ?? 0.0) +
+              doubleParse(penaltyAmountController.text) +
+              doubleParse(feastGuestAmountController.text) +
+              (dataGet.value.amount ?? 0.0) +
+              doubleParse(simpleGuestAmountController.text))
           .toString();
     }
     setRemainingAmount();
@@ -229,7 +242,6 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     } else {
       totalEatDayController.clear();
     }
-
   }
 
   calculateSimpleGuestAmount(String value) {
@@ -266,9 +278,9 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     }
   }
 
-  setRemainingAmount(){
+  setRemainingAmount() {
     remainController.text = (doubleParse(totalAmountController.text) -
-        doubleParse(paidAmountController.text))
+            doubleParse(paidAmountController.text))
         .toString();
   }
 
@@ -297,10 +309,12 @@ class AddUpdateDayDetailsScreenController extends GetxController {
   }
 
   Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime.now());
+    final DateTime? picked =
+        await MonthYearPicker.show(context, initialDate: DateTime.now());
 
     if (picked != null) {
-      String formattedDate = "${picked.year}-${picked.month.toString().padLeft(2, '0')}-01";
+      String formattedDate =
+          "${picked.year}-${picked.month.toString().padLeft(2, '0')}-01";
       dateController.text = formattedDate;
     }
   }
@@ -371,8 +385,7 @@ class AddUpdateDayDetailsScreenController extends GetxController {
             "penalty_amount": doubleParse(penaltyAmountController.text),
             "feast_guest_amount": doubleParse(feastGuestAmountController.text),
             "remark": remarkController.text,
-            if(dataGet.value.status=='lock')...{
-            "status":'finalize'}
+            if (dataGet.value.status == 'lock') ...{"status": 'finalize'}
           },
           headerWithToken: true,
           showLoader: true,

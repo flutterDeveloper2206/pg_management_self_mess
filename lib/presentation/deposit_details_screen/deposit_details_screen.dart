@@ -23,16 +23,18 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
           automaticallyImplyLeading: false,
           backgroundColor: ColorConstant.primary,
           leading: IconButton(
-              onPressed: () {
-                Get.back();
-              },
-              icon: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomImageView(
-                    height: 40,
-                    width: 40,
-                    imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
-              ),),
+            onPressed: () {
+              Get.back();
+            },
+            icon: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomImageView(
+                  height: 40,
+                  width: 40,
+                  imagePath: 'assets/images/left-arrow.png',
+                  color: ColorConstant.primaryWhite),
+            ),
+          ),
           title: Text(
             'Deposit Details',
             style: PMT.appStyle(
@@ -55,10 +57,10 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
                         child: Text('No data found'),
                       )
                     : Stack(
-              clipBehavior: Clip.none,
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Padding(
+                        clipBehavior: Clip.none,
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 16),
                             child: Column(
@@ -71,10 +73,12 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
                                         child: Text('Total Deposit :',
                                             style: PMT.appStyle(
                                                 size: 14,
-                                                fontColor: Colors.grey.shade700))),
+                                                fontColor:
+                                                    Colors.grey.shade700))),
                                     Expanded(
                                       child: Text(
-                                        '${controller.totalDeposit.value}' ?? 'N/A',
+                                        '${controller.totalDeposit.value}' ??
+                                            'N/A',
                                         // '20000.00',
                                         style: PMT.appStyle(
                                             size: 14,
@@ -90,8 +94,8 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
                                 Expanded(
                                   child: ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: controller
-                                            .studentListModel.value.data?.length ??
+                                    itemCount: controller.studentListModel.value
+                                            .data?.length ??
                                         0,
                                     // 3,
                                     itemBuilder: (context, index) {
@@ -100,11 +104,13 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
 
                                       return Container(
                                         decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                             border: Border.all(
                                                 color: ColorConstant.primary)),
                                         padding: const EdgeInsets.all(8),
-                                        margin: const EdgeInsets.only(bottom: 10),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           crossAxisAlignment:
@@ -124,13 +130,12 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
                                                   child: AppRichText(
                                                       title: 'Deposit : ',
                                                       value:
-                                                      '${data?.deposit ?? ' '}'),
+                                                          '${data?.deposit ?? ' '}'),
                                                 ),
                                                 Expanded(
-                                                  child:   AppRichText(
+                                                  child: AppRichText(
                                                       title: 'Date : ',
                                                       value: data?.date ?? ''),
-
                                                 ),
                                               ],
                                             ),
@@ -145,18 +150,18 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
                               ],
                             ),
                           ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16,right: 16,bottom: 10),
-                          child: AppElevatedButton(
-                            buttonName: 'Download',
-                            onPressed: () async {
-                              controller.showDownloadSheet(context);
-
-                            },
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16, right: 16, bottom: 10),
+                            child: AppElevatedButton(
+                              buttonName: 'Download',
+                              onPressed: () async {
+                                controller.showDownloadSheet(context);
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
           ),
         ));
   }

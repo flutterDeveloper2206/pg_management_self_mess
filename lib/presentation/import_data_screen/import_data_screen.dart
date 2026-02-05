@@ -14,7 +14,6 @@ import 'controller/import_data_screen_controller.dart';
 class ImportDataScreen extends GetWidget<ImportDataScreenController> {
   const ImportDataScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,13 +25,15 @@ class ImportDataScreen extends GetWidget<ImportDataScreenController> {
           onPressed: () {
             Get.back();
           },
-          icon:   Padding(
+          icon: Padding(
             padding: const EdgeInsets.all(8.0),
             child: CustomImageView(
                 height: 40,
                 width: 40,
-                imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
-          ),),
+                imagePath: 'assets/images/left-arrow.png',
+                color: ColorConstant.primaryWhite),
+          ),
+        ),
         title: Text(
           'Import Data',
           style: PMT.appStyle(
@@ -82,15 +83,17 @@ class ImportDataScreen extends GetWidget<ImportDataScreenController> {
             Expanded(
               child: controller.jsonData.isEmpty
                   ? const Center(
-                child: Text(
-                  'No data loaded yet.\nPick a file to display data.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-              )
+                      child: Text(
+                        'No data loaded yet.\nPick a file to display data.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )
                   : _buildDataTable(),
             ),
-            SizedBox(height: 20,)
+            SizedBox(
+              height: 20,
+            )
           ],
         );
       }),
@@ -105,6 +108,7 @@ class ImportDataScreen extends GetWidget<ImportDataScreenController> {
       ),
     );
   }
+
   void _showConfirmDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -149,7 +153,7 @@ class ImportDataScreen extends GetWidget<ImportDataScreenController> {
                 // Get.offAllNamed(AppRoutes.loginScreenRoute);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor:ColorConstant.primary,
+                backgroundColor: ColorConstant.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -179,26 +183,26 @@ class ImportDataScreen extends GetWidget<ImportDataScreenController> {
       child: SingleChildScrollView(
         child: DataTable(
           headingRowColor:
-          MaterialStateProperty.all(ColorConstant.primary.withOpacity(0.2)),
+              MaterialStateProperty.all(ColorConstant.primary.withOpacity(0.2)),
           border: TableBorder.all(color: Colors.grey.shade300),
           columns: headers
               .map((key) => DataColumn(
-            label: Text(
-              key,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 13),
-            ),
-          ))
+                    label: Text(
+                      key,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 13),
+                    ),
+                  ))
               .toList(),
           rows: data
               .map((row) => DataRow(
-            cells: headers
-                .map((key) => DataCell(Text(
-              row[key]?.toString() ?? '',
-              style: const TextStyle(fontSize: 12),
-            )))
-                .toList(),
-          ))
+                    cells: headers
+                        .map((key) => DataCell(Text(
+                              row[key]?.toString() ?? '',
+                              style: const TextStyle(fontSize: 12),
+                            )))
+                        .toList(),
+                  ))
               .toList(),
         ),
       ),

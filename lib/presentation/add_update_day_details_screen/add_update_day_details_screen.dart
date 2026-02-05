@@ -21,16 +21,18 @@ class AddUpdateDayDetailsScreen
           automaticallyImplyLeading: false,
           backgroundColor: ColorConstant.primary,
           leading: IconButton(
-              onPressed: () {
-                Get.back();
-              },
-              icon: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomImageView(
-                    height: 40,
-                    width: 40,
-                    imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
-              ),),
+            onPressed: () {
+              Get.back();
+            },
+            icon: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomImageView(
+                  height: 40,
+                  width: 40,
+                  imagePath: 'assets/images/left-arrow.png',
+                  color: ColorConstant.primaryWhite),
+            ),
+          ),
           title: Obx(
             () => Text(
               controller.isAdd.value == 2
@@ -87,10 +89,9 @@ class AddUpdateDayDetailsScreen
                               textInputType: TextInputType.number,
                               onChanged: (p0) {
                                 controller.changeCutDay(p0);
-
                               },
                               title: 'Cut Day',
-                                hintText: 'Cut Day',
+                              hintText: 'Cut Day',
                               controller: controller.cutDayController)),
                       hBox(20),
                       Expanded(
@@ -111,16 +112,14 @@ class AddUpdateDayDetailsScreen
                       title: 'Par Day Rate (₹)',
                       hintText: 'Par Day Rate',
                       controller: TextEditingController(
-                          text:
-                          '${controller.dataGet.value.rate ?? ' '}')),
+                          text: '${controller.dataGet.value.rate ?? ' '}')),
                   titleWidget(
                       readOnly: true,
                       textInputType: TextInputType.number,
                       title: 'Current Bill',
                       hintText: 'Current Bill',
                       controller: TextEditingController(
-                          text:
-                          '${controller.dataGet.value.amount ?? ' '}')),
+                          text: '${controller.dataGet.value.amount ?? ' '}')),
 
                   Row(
                     children: [
@@ -131,9 +130,8 @@ class AddUpdateDayDetailsScreen
                               title: 'Simple Guest',
                               hintText: 'Simple Guest',
                               onChanged: (p0) {
-
                                 controller.calculateSimpleGuestAmount(p0);
-                                controller.changeFeastAndSimple(p0,true);
+                                controller.changeFeastAndSimple(p0, true);
                               },
                               controller: controller.simpleGuestController)),
                       hBox(20),
@@ -143,8 +141,7 @@ class AddUpdateDayDetailsScreen
                               textInputType: TextInputType.number,
                               onChanged: (p0) {
                                 controller.calculateFeastGuestAmount(p0);
-                                controller.changeFeastAndSimple(p0,false);
-
+                                controller.changeFeastAndSimple(p0, false);
                               },
                               title: 'Feast Guest',
                               hintText: 'Feast Guest',
@@ -167,9 +164,9 @@ class AddUpdateDayDetailsScreen
                       hBox(20),
                       Expanded(
                           child: titleWidget(
-                            onChanged: (p0) {
-                              controller.changeTotalAmountFeastGuest(p0);
-                            },
+                              onChanged: (p0) {
+                                controller.changeTotalAmountFeastGuest(p0);
+                              },
                               readOnly: controller.readOnly.value,
                               textInputType: TextInputType.number,
                               title: 'Feast Guest Charge',
@@ -177,22 +174,22 @@ class AddUpdateDayDetailsScreen
                               controller:
                                   controller.feastGuestAmountController)),
                     ],
-                  ),  Row(
+                  ),
+                  Row(
                     children: [
                       Expanded(
                           child: titleWidget(
-
                               readOnly: true,
                               textInputType: TextInputType.number,
                               title: 'Due Amount / Unpaid',
                               hintText: 'Due Amount / Unpaid',
-                              fontStyle:PMT.style(14,fontWeight: FontWeight.w800,fontColor: ColorConstant.red),
-
+                              fontStyle: PMT.style(14,
+                                  fontWeight: FontWeight.w800,
+                                  fontColor: ColorConstant.red),
                               controller: TextEditingController(
                                   text:
-                                  '${controller.dataGet.value.dueAmount ?? ' '}'))),
+                                      '${controller.dataGet.value.dueAmount ?? ' '}'))),
                       hBox(20),
-
                       Expanded(
                           child: titleWidget(
                               readOnly: controller.readOnly.value,
@@ -203,34 +200,33 @@ class AddUpdateDayDetailsScreen
                               },
                               hintText: 'Penalty Amount ',
                               controller: controller.penaltyAmountController)),
-
                     ],
                   ),
-                titleWidget(
-                    readOnly: controller.readOnly.value,
-                    textInputType: TextInputType.number,
-                    title: 'Final Bill',
-                    hintText: 'Final Bill',
-onChanged: (p0) {
-  controller.setRemainingAmount();
-
-},
-                    controller: controller.totalAmountController
-                    // controller: TextEditingController(
-                    //     text:
-                    //     '${controller.dataGet.value.totalAmount ?? ' '}')
+                  titleWidget(
+                      readOnly: controller.readOnly.value,
+                      textInputType: TextInputType.number,
+                      title: 'Final Bill',
+                      hintText: 'Final Bill',
+                      onChanged: (p0) {
+                        controller.setRemainingAmount();
+                      },
+                      controller: controller.totalAmountController
+                      // controller: TextEditingController(
+                      //     text:
+                      //     '${controller.dataGet.value.totalAmount ?? ' '}')
                       ),
 
-            Row(
+                  Row(
                     children: [
-
                       Expanded(
                           child: titleWidget(
                               readOnly: controller.readOnly.value,
                               textInputType: TextInputType.number,
                               title: 'Paid Amount ',
                               hintText: 'Paid Amount ',
-                fontStyle:PMT.style(14,fontWeight: FontWeight.w800,fontColor: ColorConstant.green),
+                              fontStyle: PMT.style(14,
+                                  fontWeight: FontWeight.w800,
+                                  fontColor: ColorConstant.green),
                               onChanged: (p0) {
                                 controller.setRemainAmountCalculate();
                               },
@@ -243,11 +239,11 @@ onChanged: (p0) {
                               textInputType: TextInputType.number,
                               title: 'Remain Amount ',
                               hintText: 'Remain Amount ',
-                              controller:  controller.remainController
+                              controller: controller.remainController
                               // controller: TextEditingController(
                               //     text:
                               //     '${controller.dataGet.value.remainAmount ?? ' '}')
-                          )),
+                              )),
 
                       // Expanded(
                       //   child: titleWidget(
@@ -259,10 +255,8 @@ onChanged: (p0) {
                       //           text:
                       //           '${controller.dataGet.value.totalAmount ?? ' '}')),
                       // ),
-
                     ],
                   ),
-
 
                   // Obx(() => controller.isAdd.value == 2
                   //     ?
@@ -335,10 +329,10 @@ onChanged: (p0) {
       required String hintText,
       required TextEditingController controller,
       TextInputType? textInputType,
-        Function(String)? onChanged,
+      Function(String)? onChanged,
       bool? readOnly,
       int? maxLine,
-        TextStyle? fontStyle,
+      TextStyle? fontStyle,
       Function()? onTap}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

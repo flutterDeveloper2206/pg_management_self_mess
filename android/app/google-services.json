@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "939185606946",
+    "project_id": "selfmess-3a812",
+    "storage_bucket": "selfmess-3a812.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939185606946:android:e825e75b089c00afcb557b",
+        "android_client_info": {
+          "package_name": "com.selfMess.ap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUEStOXx8Swe6w9zyqfnrQ8UyXWtVBT_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939185606946:android:f5387588804f93c1cb557b",
+        "android_client_info": {
+          "package_name": "com.selfMess.pg_managment"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUEStOXx8Swe6w9zyqfnrQ8UyXWtVBT_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
