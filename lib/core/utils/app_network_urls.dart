@@ -67,4 +67,17 @@ abstract class NetworkUrls {
 
   /// send notification url
   static String sendNotificationUrl = '${baseUrl}admin/send-notification';
+
+  /// notifications list url
+  static String getNotificationsUrl = '${baseUrl}admin/notifications/';
+
+  /// delete notification url
+  static String deleteNotificationUrl = '${baseUrl}admin/delete-notification/';
+
+  /// clear all notifications url
+  static String clearAllNotificationsUrl =
+      '${baseUrl}admin/delete-student-notification/';
+
+  /// chart stats url
+  static String chartStatsUrl = '${baseUrl}admin/chart-stats';
 }

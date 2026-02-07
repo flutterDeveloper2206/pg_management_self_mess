@@ -65,9 +65,12 @@ class NotificationService {
         ?.createNotificationChannel(channel);
 
     // 4. Get Token
-    String? token = await _firebaseMessaging.getToken();
-    Logger.log("FCM Token: $token");
-
+    try {
+      String? token = await _firebaseMessaging.getToken();
+      Logger.log("FCM Token: $token");
+    }catch(e){
+      Logger.log("FCM Getting Error: $e");
+    }
     // 5. Handle messages
     _initPushNotifications(channel);
   }

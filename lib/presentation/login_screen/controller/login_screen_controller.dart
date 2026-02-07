@@ -71,6 +71,8 @@ class LoginScreenController extends GetxController {
           PrefUtils.setInt(
               StringConstants.isStudent, loginModel.value.data?.user?.id ?? 0);
         }
+        PrefUtils.setInt(
+            StringConstants.userId, loginModel.value.data?.user?.id ?? 0);
         NotificationService.updateFcmToken();
         Get.offNamed(AppRoutes.dashboardScreenRoute);
       }

@@ -7,13 +7,26 @@ import 'package:pg_managment/core/utils/pref_utils.dart';
 import 'package:pg_managment/core/utils/notification_service.dart';
 import 'package:pg_managment/core/utils/string_constant.dart';
 
+import 'package:pg_managment/core/utils/commonConstant.dart';
+import '../model/chart_stats_model.dart';
+
 class DashboardScreenController extends GetxController {
   Rx<ConfigModel> model = ConfigModel().obs;
+  Rx<ChartStatsModel> chartStatsModel = ChartStatsModel().obs;
+  RxBool isLoadingChart = false.obs;
+  RxInt selectedIndex = 0.obs;
+
+  void changeTabIndex(int index) {
+    selectedIndex.value = index;
+  }
 
   @override
   void onInit() {
     NotificationService.updateFcmToken();
     getConfig();
+    if (CommonConstant.instance.isStudent == 1) {
+      getChartStats();
+    }
     super.onInit();
   }
 
@@ -49,6 +62,20 @@ class DashboardScreenController extends GetxController {
             }
           }
         }
+      }
+    });
+  }
+
+  Future<void> getChartStats() async {
+    isLoadingChart.value = true;
+    await ApiService().callGetApi(
+        body: {},
+        headerWithToken: true,
+        showLoader: false,
+        url: NetworkUrls.chartStatsUrl).then((value) {
+      isLoadingChart.value = false;
+      if (value != null && value.statusCode == 200) {
+        chartStatsModel.value = ChartStatsModel.fromJson(value.body);
       }
     });
   }

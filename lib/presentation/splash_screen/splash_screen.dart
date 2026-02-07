@@ -124,7 +124,7 @@ class SplashScreen extends GetView<SplashScreenController> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 40),
                 child: Text(
-                  'Version 1.0.7',
+                  'Version 1.0.8',
                   style: PMT.appStyle(
                     size: 12,
                     fontColor: Colors.white.withOpacity(0.5),

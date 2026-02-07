@@ -1,14 +1,15 @@
 import 'package:flutter/foundation.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg_managment/core/utils/app_fonts.dart';
 import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/commonConstant.dart';
 import 'package:pg_managment/core/utils/pref_utils.dart';
-import 'package:pg_managment/core/utils/string_constant.dart';
 import 'package:pg_managment/routes/app_routes.dart';
 import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/dashboard_screen_controller.dart';
+import 'widgets/dashboard_chart.dart';
 
 class DashboardScreen extends GetWidget<DashboardScreenController> {
   const DashboardScreen({super.key});
@@ -161,123 +162,334 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
       },
     ];
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
-      appBar: AppBar(
-        backgroundColor: ColorConstant.primary,
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        elevation: 2,
-        title: Text(
-          'Dashboard',
-          style: PMT.appStyle(
-            size: 24,
-            fontWeight: FontWeight.w600,
-            fontColor: Colors.white,
+    return Obx(() {
+      return Scaffold(
+        backgroundColor: const Color(0xFFF5F7FA),
+        appBar: AppBar(
+          backgroundColor: ColorConstant.primary,
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          elevation: 2,
+          title: Text(
+            controller.selectedIndex.value == 0 ? 'Dashboard' : 'Actions',
+            style: PMT.appStyle(
+              size: 24,
+              fontWeight: FontWeight.w600,
+              fontColor: Colors.white,
+            ),
           ),
+          actions: [
+            IconButton(
+              onPressed: () => Get.toNamed(AppRoutes.notificationScreenRoute),
+              icon: Icon(Icons.notifications, color: Colors.white),
+            ),
+          ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () => Get.toNamed(AppRoutes.notificationScreenRoute),
-            icon: Icon(Icons.notifications, color: Colors.white),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 15),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  if (CommonConstant.instance.isStudent == 1 && !kIsWeb) {
-                    adminMenu.add(
-                      {
-                        'title': 'Impport Data',
-                        'icon': 'assets/images/import.png',
-                        'route': AppRoutes.importScreenRoute,
-                        'color': const Color(0xFF1CA7AF),
-                      },
-                    );
-                  }
-                  int crossAxisCount = constraints.maxWidth > 800
-                      ? 4
-                      : constraints.maxWidth > 600
-                          ? 3
-                          : 2;
-                  return GridView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: CommonConstant.instance.isStudent == 1
-                        ? adminMenu.length
-                        : CommonConstant.instance.isStudent == 2 ||
-                                CommonConstant.instance.isStudent == 3
-                            ? staffSecretary.length
-                            : studentMenuItems.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                      childAspectRatio: 1.1,
+        body: IndexedStack(
+          index: controller.selectedIndex.value,
+          children: [
+            _buildHomeTab(context, staffSecretary, adminMenu, studentMenuItems),
+            _buildMenuTab(context, staffSecretary, adminMenu, studentMenuItems),
+          ],
+        ),
+        bottomNavigationBar: CommonConstant.instance.isStudent == 1
+            ? Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, -5),
                     ),
-                    itemBuilder: (context, index) {
-                      final item = CommonConstant.instance.isStudent == 1
-                          ? adminMenu[index]
-                          : CommonConstant.instance.isStudent == 2 ||
-                                  CommonConstant.instance.isStudent == 3
-                              ? staffSecretary[index]
-                              : studentMenuItems[index];
-                      return TweenAnimationBuilder<double>(
-                        duration: Duration(milliseconds: 500 + (index * 100)),
-                        tween: Tween(begin: 0.0, end: 1.0),
-                        curve: Curves.easeOutCubic,
-                        builder: (context, value, child) {
-                          return Opacity(
-                            opacity: value.clamp(0.0, 1.0),
-                            child: Transform.translate(
-                              offset: Offset(0, 30 * (1 - value)),
-                              child: child,
-                            ),
-                          );
-                        },
-                        child: CleanDashboardTile(
-                          title: item['title'] as String,
-                          icon: item['icon'] as String,
-                          color: item['color'] as Color,
-                          onTap: () {
-                            if (item['route'].toString().isNotEmpty) {
-                              Get.toNamed(item['route'] as String);
-                            } else {
-                              _showLogoutDialog(context);
-                            }
-                          },
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'V(1.0.7)',
-                textAlign: TextAlign.center,
-                style: PMT.appStyle(
-                  size: 16,
-                  fontWeight: FontWeight.w600,
-                  fontColor: Colors.black87,
+                  ],
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                child: BottomNavigationBar(
+                  currentIndex: controller.selectedIndex.value,
+                  onTap: controller.changeTabIndex,
+                  elevation: 0,
+                  backgroundColor: Colors.white,
+                  selectedItemColor: ColorConstant.primary,
+                  unselectedItemColor: Colors.grey,
+                  selectedLabelStyle:
+                      PMT.appStyle(fontWeight: FontWeight.w600, size: 12),
+                  unselectedLabelStyle:
+                      PMT.appStyle(fontWeight: FontWeight.w500, size: 12),
+                  type: BottomNavigationBarType.fixed,
+                  items: const [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home_rounded),
+                      activeIcon: Icon(Icons.home_rounded),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.grid_view_rounded),
+                      activeIcon: Icon(Icons.grid_view_rounded),
+                      label: 'Menu',
+                    ),
+                  ],
+                ),
+              )
+            : null,
+      );
+    });
+  }
+
+  Widget _buildHomeTab(BuildContext context, List staffSecretary,
+      List adminMenu, List studentMenuItems) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 15),
+            if (CommonConstant.instance.isStudent == 1)
+              _buildAdminStatsSummary(),
+            if (CommonConstant.instance.isStudent == 1)
+              const SizedBox(height: 20),
+            if (CommonConstant.instance.isStudent == 1)
+              Obx(() {
+                if (controller.isLoadingChart.value) {
+                  return _buildChartShimmer();
+                }
+                if (controller.chartStatsModel.value.data == null ||
+                    controller.chartStatsModel.value.data!.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                return Column(
+                  children: [
+                    DashboardChart(
+                      data: controller.chartStatsModel.value.data!,
+                      title: "Monthly Income & Expense",
+                      initialType: ChartType.bar,
+                    ),
+                    const SizedBox(height: 30),
+                    DashboardChart(
+                      data: controller.chartStatsModel.value.data!,
+                      title: "Growth Trend",
+                      initialType: ChartType.line,
+                    ),
+                  ],
+                );
+              }),
+            if (CommonConstant.instance.isStudent != 1)
+              _buildMenuTab(
+                  context, staffSecretary, adminMenu, studentMenuItems),
+            const SizedBox(height: 30),
+            Text(
+              'V(1.0.8)',
+              textAlign: TextAlign.center,
+              style: PMT.appStyle(
+                size: 16,
+                fontWeight: FontWeight.w600,
+                fontColor: Colors.black45,
               ),
-              SizedBox(
-                height: 20,
-              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChartShimmer() {
+    return Column(
+      children: [
+        _singleShimmer(),
+        const SizedBox(height: 30),
+        _singleShimmer(),
+      ],
+    );
+  }
+
+  Widget _singleShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(width: 120, height: 20, color: Colors.white),
+              Container(
+                  width: 100,
+                  height: 35,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12))),
             ],
           ),
+          const SizedBox(height: 20),
+          Container(
+            height: 320,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Center(child: Container(width: 200, height: 15, color: Colors.white)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAdminStatsSummary() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildSummaryCard(
+            "Overview",
+            "Self Mess",
+            Icons.analytics_rounded,
+            ColorConstant.primary,
+          ),
+        ),
+        const SizedBox(width: 15),
+        Expanded(
+          child: _buildSummaryCard(
+            "Active",
+            "Students",
+            Icons.people_alt_rounded,
+            Colors.blue,
+            onTap: () => Get.toNamed(AppRoutes.studentListScreenRoute),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSummaryCard(
+      String title, String subtitle, IconData icon, Color color,
+      {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: PMT.appStyle(
+                      size: 14,
+                      fontWeight: FontWeight.w700,
+                      fontColor: Colors.black87),
+                ),
+                Text(
+                  subtitle,
+                  style: PMT.appStyle(size: 12, fontColor: Colors.black54),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuTab(BuildContext context, List staffSecretary,
+      List adminMenu, List studentMenuItems) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // Check if "Impport Data" is already there to avoid duplicates
+            bool hasImport =
+                adminMenu.any((item) => item['title'] == 'Impport Data');
+            if (CommonConstant.instance.isStudent == 1 &&
+                !kIsWeb &&
+                !hasImport) {
+              adminMenu.add(
+                {
+                  'title': 'Impport Data',
+                  'icon': 'assets/images/import.png',
+                  'route': AppRoutes.importScreenRoute,
+                  'color': const Color(0xFF1CA7AF),
+                },
+              );
+            }
+            int crossAxisCount = constraints.maxWidth > 800
+                ? 4
+                : constraints.maxWidth > 600
+                    ? 3
+                    : 2;
+            return GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: CommonConstant.instance.isStudent == 1
+                  ? adminMenu.length
+                  : CommonConstant.instance.isStudent == 2 ||
+                          CommonConstant.instance.isStudent == 3
+                      ? staffSecretary.length
+                      : studentMenuItems.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+                childAspectRatio: 1.1,
+              ),
+              itemBuilder: (context, index) {
+                final item = CommonConstant.instance.isStudent == 1
+                    ? adminMenu[index]
+                    : CommonConstant.instance.isStudent == 2 ||
+                            CommonConstant.instance.isStudent == 3
+                        ? staffSecretary[index]
+                        : studentMenuItems[index];
+                return TweenAnimationBuilder<double>(
+                  duration: Duration(milliseconds: 300 + (index * 50)),
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value.clamp(0.0, 1.0),
+                      child: Transform.translate(
+                        offset: Offset(0, 20 * (1 - value)),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: CleanDashboardTile(
+                    title: item['title'] as String,
+                    icon: item['icon'] as String,
+                    color: item['color'] as Color,
+                    onTap: () {
+                      if (item['route'].toString().isNotEmpty) {
+                        Get.toNamed(item['route'] as String);
+                      } else {
+                        _showLogoutDialog(context);
+                      }
+                    },
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );
@@ -390,43 +602,45 @@ class _CleanDashboardTileState extends State<CleanDashboardTile> {
             ),
           ],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Icon container
-            Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                color: widget.color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Center(
-                child: CustomImageView(
-                  height: 40,
-                  width: 40,
-                  imagePath: widget.icon,
-                  color: widget.color,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Icon container
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: widget.color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(
+                  child: CustomImageView(
+                    height: 32,
+                    width: 32,
+                    imagePath: widget.icon,
+                    color: widget.color,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            // Title
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                widget.title,
-                textAlign: TextAlign.center,
-                style: PMT.appStyle(
-                  size: 16,
-                  fontWeight: FontWeight.w600,
-                  fontColor: Colors.black87,
+              const SizedBox(height: 12),
+              // Title
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  widget.title,
+                  textAlign: TextAlign.center,
+                  style: PMT.appStyle(
+                    size: 14,
+                    fontWeight: FontWeight.w600,
+                    fontColor: Colors.black87,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
