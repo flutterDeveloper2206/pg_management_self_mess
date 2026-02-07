@@ -181,7 +181,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
           actions: [
             IconButton(
               onPressed: () => Get.toNamed(AppRoutes.notificationScreenRoute),
-              icon: Icon(Icons.notifications, color: Colors.white),
+              icon: const Icon(Icons.notifications, color: Colors.white),
             ),
           ],
         ),
@@ -253,7 +253,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                 }
                 if (controller.chartStatsModel.value.data == null ||
                     controller.chartStatsModel.value.data!.isEmpty) {
-                  return const SizedBox.shrink();
+                  return _buildNoDataWidget();
                 }
                 return Column(
                   children: [
@@ -285,6 +285,61 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
               ),
             ),
             const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoDataWidget() {
+    return Center(
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.bar_chart_rounded,
+                size: 40,
+                color: Colors.grey.shade400,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              "No Statistics Available",
+              style: PMT.appStyle(
+                size: 18,
+                fontWeight: FontWeight.w700,
+                fontColor: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "We don't have enough data to generate charts yet.",
+              textAlign: TextAlign.center,
+              style: PMT.appStyle(
+                size: 14,
+                fontColor: Colors.grey.shade600,
+              ),
+            ),
           ],
         ),
       ),
