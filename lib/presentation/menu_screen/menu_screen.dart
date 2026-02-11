@@ -173,10 +173,12 @@ class MenuScreen extends GetWidget<MenuScreenController> {
                               ),
                             ],
                           ),
-                          if (CommonConstant.instance.isStudent == 1)
+                          if (CommonConstant.instance.isStudent == 1 ||
+                              CommonConstant.instance.isStudent == 2 ||
+                              CommonConstant.instance.isStudent == 3)
                             Bounce(
                               onTap: () {
-                                  _showEditMenuDialog(displayMeal!);
+                                _showEditMenuDialog(displayMeal!);
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(8),
@@ -274,63 +276,7 @@ class MenuScreen extends GetWidget<MenuScreenController> {
     );
   }
 
-  Widget _buildTodayMenuItemAnimated(
-      IconData icon, String text, String label, int index) {
-    return TweenAnimationBuilder<double>(
-      duration: Duration(milliseconds: 600 + (index * 200)),
-      tween: Tween(begin: 0.0, end: 1.0),
-      curve: Curves.easeOutBack,
-      builder: (context, value, child) {
-        return Transform.scale(
-          scale: 0.8 + (0.2 * value),
-          child: Opacity(
-            opacity: value.clamp(0.0, 1.0),
-            child: child,
-          ),
-        );
-      },
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
-            ),
-            child: Icon(icon, color: Colors.white, size: 22),
-          ),
-          const SizedBox(width: 18),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: PMT.appStyle(
-                    size: 13,
-                    fontWeight: FontWeight.w600,
-                    fontColor: Colors.white.withOpacity(0.7),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  text,
-                  style: PMT.appStyle(
-                    size: 16,
-                    fontWeight: FontWeight.w700,
-                    fontColor: Colors.white,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget _buildDaySelector() {
     return SizedBox(

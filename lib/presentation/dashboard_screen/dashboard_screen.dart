@@ -47,12 +47,12 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'route': AppRoutes.importScreenRoute,
         'color': const Color(0xFF1CA7AF),
       },
-      // {
-      //   'title': 'Today\'s Menu',
-      //   'icon': 'assets/images/invoice.png',
-      //   'route': AppRoutes.menuScreenRoute,
-      //   'color': const Color(0xFF5E59B3),
-      // },
+      {
+        'title': 'Today\'s Menu',
+        'icon': 'assets/images/invoice.png',
+        'route': AppRoutes.menuScreenRoute,
+        'color': const Color(0xFF5E59B3),
+      },
       {
         'title': 'Logout',
         'icon': 'assets/images/exit.png',
@@ -148,12 +148,12 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'route': AppRoutes.dayDetailsListScreenRoute,
         'color': const Color(0xFF1ABC9C),
       },
-      // {
-      //   'title': 'Today\'s Menu',
-      //   'icon': 'assets/images/invoice.png',
-      //   'route': AppRoutes.menuScreenRoute,
-      //   'color': const Color(0xFF5E59B3),
-      // },
+      {
+        'title': 'Today\'s Menu',
+        'icon': 'assets/images/invoice.png',
+        'route': AppRoutes.menuScreenRoute,
+        'color': const Color(0xFF5E59B3),
+      },
       {
         'title': 'Logout',
         'icon': 'assets/images/exit.png',

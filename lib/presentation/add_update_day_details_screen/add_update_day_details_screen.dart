@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:pg_managment/core/utils/appRichText.dart';
 import 'package:pg_managment/core/utils/app_fonts.dart';
 import 'package:pg_managment/core/utils/color_constant.dart';
+import 'package:pg_managment/core/utils/navigation_service.dart';
+import 'package:pg_managment/core/utils/progress_dialog_utils.dart';
 import 'package:pg_managment/core/utils/size_utils.dart';
 import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 import 'package:pg_managment/widgets/custom_elavated_button.dart';
@@ -312,9 +314,15 @@ class AddUpdateDayDetailsScreen
                           buttonName:
                               controller.isAdd.value == 1 ? 'Update ' : 'Save',
                           onPressed: () {
-                            controller.updateAddStudentDetails(
-                                id: controller.dataGet.value.id.toString());
-                          },
+                            if( controller.isAdd.value == 1 && controller.dataGet.value.status == 'generated'){
+                              AppFlushBars.appCommonFlushBar(
+                                  context: NavigationService.navigatorKey.currentContext!,
+                                  message: 'Please first lock (Finalize) your bill , after enter paid entry!',
+                                  success: false);
+                            }else {
+                              controller.updateAddStudentDetails(
+                                  id: controller.dataGet.value.id.toString());
+                            }  },
                         )
                       : SizedBox.shrink()
                 ],
