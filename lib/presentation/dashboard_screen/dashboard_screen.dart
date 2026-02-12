@@ -276,7 +276,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                   context, staffSecretary, adminMenu, studentMenuItems),
             const SizedBox(height: 30),
             Text(
-              'V(1.0.8)',
+              'V(1.0.0)',
               textAlign: TextAlign.center,
               style: PMT.appStyle(
                 size: 16,

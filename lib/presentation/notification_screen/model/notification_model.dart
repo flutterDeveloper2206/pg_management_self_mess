@@ -209,7 +209,7 @@ class Student {
         userId: NotificationData._toInt(json["user_id"]),
         createdAt: NotificationData._toDate(json["created_at"]),
         updatedAt: NotificationData._toDate(json["updated_at"]),
-        profileImageUrl: json["profile_image_url"],
+        profileImageUrl: json["profile_image"],
         user: json["user"] == null ? null : User.fromJson(json["user"]),
       );
 
@@ -236,7 +236,7 @@ class Student {
         "user_id": userId,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
-        "profile_image_url": profileImageUrl,
+        "profile_image": profileImageUrl,
         "user": user?.toJson(),
       };
 }

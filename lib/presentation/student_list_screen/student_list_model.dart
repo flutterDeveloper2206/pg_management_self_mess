@@ -4,31 +4,34 @@
 
 import 'dart:convert';
 
-StudentListModel studentListModelFromJson(String str) => StudentListModel.fromJson(json.decode(str));
+StudentListModel studentListModelFromJson(String str) =>
+    StudentListModel.fromJson(json.decode(str));
 
-String studentListModelToJson(StudentListModel data) => json.encode(data.toJson());
+String studentListModelToJson(StudentListModel data) =>
+    json.encode(data.toJson());
 
 class StudentListModel {
   final int? stateCode;
   final String? message;
   final List<Data>? data;
 
-  StudentListModel({
-    this.stateCode,
-    this.message,
-    this.data,
-  });
+  StudentListModel({this.stateCode, this.message, this.data});
 
-  factory StudentListModel.fromJson(Map<String, dynamic> json) => StudentListModel(
-    stateCode: json["state_code"],
-    message: json["message"],
-    data: json["data"] == null ? [] : List<Data>.from(json["data"]!.map((x) => Data.fromJson(x))),
-  );
+  factory StudentListModel.fromJson(Map<String, dynamic> json) =>
+      StudentListModel(
+        stateCode: json["state_code"],
+        message: json["message"],
+        data: json["data"] == null
+            ? []
+            : List<Data>.from(json["data"]!.map((x) => Data.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
     "state_code": stateCode,
     "message": message,
-    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+    "data": data == null
+        ? []
+        : List<dynamic>.from(data!.map((x) => x.toJson())),
   };
 }
 
@@ -51,6 +54,7 @@ class Data {
   final String? bloodGroup;
   final double? deposit;
   final int? userId;
+  final String? profileImage;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -73,6 +77,7 @@ class Data {
     this.userId,
     this.collageName,
     this.registrationNumber,
+    this.profileImage,
     this.createdAt,
     this.updatedAt,
   });
@@ -86,18 +91,23 @@ class Data {
     residentialAddress: json["residential_address"],
     currentlyPursuing: json["currently_pursuing"],
     currentlyStudyingYear: json["currently_studying_year"],
-    date: json["date"] ,
+    date: json["date"],
     year: json["year"],
     mobile: json["mobile"],
     alternativeMobile: json["alternative_mobile"],
     advisorGuide: json["advisor_guide"],
     bloodGroup: json["blood_group"],
-    deposit: json["deposit"].toDouble(),
+    deposit: json["deposit"]?.toDouble(),
     userId: json["user_id"],
     registrationNumber: json["registration_no"],
     collageName: json["college_name"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    profileImage: json["profile_image_url"],
+    createdAt: json["created_at"] == null
+        ? null
+        : DateTime.parse(json["created_at"]),
+    updatedAt: json["updated_at"] == null
+        ? null
+        : DateTime.parse(json["updated_at"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -119,6 +129,7 @@ class Data {
     "blood_group": bloodGroup,
     "deposit": deposit,
     "user_id": userId,
+    "profile_image_url": profileImage,
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
   };

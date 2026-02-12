@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg_managment/core/utils/appRichText.dart';
@@ -17,304 +18,427 @@ class StudentListScreen extends GetWidget<StudentListScreenController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorConstant.primaryWhite,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: ColorConstant.primary,
-          leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CustomImageView(
-                  height: 40,
-                  width: 40,
-                  imagePath: 'assets/images/left-arrow.png',
-                  color: ColorConstant.primaryWhite),
+      backgroundColor: ColorConstant.primaryWhite,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: ColorConstant.primary,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomImageView(
+              height: 40,
+              width: 40,
+              imagePath: 'assets/images/left-arrow.png',
+              color: ColorConstant.primaryWhite,
             ),
           ),
-          title: Text(
-            'All Students',
-            style: PMT.appStyle(
-                size: 20,
-                // fontWeight: FontWeight.w600,
-                fontColor: ColorConstant.primaryWhite),
+        ),
+        title: Text(
+          'All Students',
+          style: PMT.appStyle(
+            size: 20,
+            // fontWeight: FontWeight.w600,
+            fontColor: ColorConstant.primaryWhite,
           ),
         ),
-        body: SafeArea(
-          child: Obx(
-            () => controller.isLoading.value
-                ? Center(
-                    child: CircularProgressIndicator(
-                      color: ColorConstant.primary,
+      ),
+      body: SafeArea(
+        child: Obx(
+          () => controller.isLoading.value
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: ColorConstant.primary,
+                  ),
+                )
+              : Column(
+                  children: [
+                    vBox(10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                      child: CustomAppTextFormField(
+                        variant: TextFormFieldVariant.OutlineGray200,
+                        hintText: 'Search Student',
+                        onChanged: (value) {
+                          controller.searchStudent(value);
+                        },
+                      ),
                     ),
-                  )
-                : Column(
-                    children: [
-                      vBox(10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16),
-                        child: CustomAppTextFormField(
-                          variant: TextFormFieldVariant.OutlineGray200,
-                          hintText: 'Search Student',
-                          onChanged: (value) {
-                            controller.searchStudent(value);
-                          },
-                        ),
+                    vBox(10),
+                    Text(
+                      'Total Student :- ${controller.studentListModel.value.data?.length}',
+                      style: PMT.appStyle(
+                        size: 16,
+                        fontColor: ColorConstant.primaryBlack,
                       ),
-                      vBox(10),
-                      Text(
-                        'Total Student :- ${controller.studentListModel.value.data?.length}',
-                        style: PMT.appStyle(
-                            size: 16, fontColor: ColorConstant.primaryBlack),
-                      ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              controller.studentListSearch.isEmpty == true
-                                  ? Column(
-                                      children: [
-                                        vBox(250),
-                                        Center(
-                                          child: Text(
-                                            'Student Not found',
-                                            style: PMT.appStyle(
-                                                size: 16,
-                                                fontColor:
-                                                    ColorConstant.primaryBlack),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            controller.studentListSearch.isEmpty == true
+                                ? Column(
+                                    children: [
+                                      vBox(250),
+                                      Center(
+                                        child: Text(
+                                          'Student Not found',
+                                          style: PMT.appStyle(
+                                            size: 16,
+                                            fontColor:
+                                                ColorConstant.primaryBlack,
                                           ),
                                         ),
-                                      ],
-                                    )
-                                  : Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 16),
-                                      child: ListView.builder(
-                                        itemCount:
-                                            controller.studentListSearch.length,
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          Data? data = controller
-                                              .studentListSearch[index];
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                border: Border.all(
-                                                    color:
-                                                        ColorConstant.primary)),
-                                            padding: const EdgeInsets.all(8),
-                                            margin: const EdgeInsets.only(
-                                                bottom: 10),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                AppRichText(
-                                                    title: 'Name : ',
-                                                    value: data.name ?? ''),
-                                                vBox(5),
-                                                AppRichText(
-                                                    title: 'Student Id : ',
-                                                    value: '${data.id ?? 0}'),
-                                                vBox(5),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                        child: AppRichText(
-                                                            title:
-                                                                'Room no. : ',
-                                                            value:
-                                                                data.roomNo ??
-                                                                    '')),
-                                                    Expanded(
-                                                        child: AppRichText(
-                                                            title: 'Year : ',
-                                                            value:
-                                                                '${data.year ?? ' '}')),
-                                                  ],
-                                                ),
-                                                vBox(5),
-                                                AppRichText(
-                                                    title: 'Deposit : ',
-                                                    value:
-                                                        '${data.deposit ?? ' '}'),
-                                                vBox(5),
-                                                AppRichText(
-                                                    title: 'Mobile No. : ',
-                                                    value: data.mobile ?? ''),
-                                                vBox(5),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    if (CommonConstant.instance
-                                                                .isStudent !=
-                                                            2 &&
-                                                        CommonConstant.instance
-                                                                .isStudent !=
-                                                            3)
-                                                      Expanded(
-                                                          child: IconButton(
-                                                        style: IconButton.styleFrom(
-                                                            backgroundColor:
-                                                                ColorConstant
-                                                                    .primaryBlack
-                                                                    .withOpacity(
-                                                                        0.3)),
-                                                        onPressed: () {
-                                                          Get.toNamed(
-                                                              AppRoutes
-                                                                  .studentProfileScreenRoute,
-                                                              arguments: {
-                                                                "studentId": data
-                                                                    .id
-                                                                    .toString(),
-                                                                "data": data,
-                                                                "isViewMode":
-                                                                    true,
-                                                              });
-                                                        },
-                                                        icon: CustomImageView(
-                                                            height: 20,
-                                                            width: 20,
-                                                            imagePath:
-                                                                'assets/images/list.png',
-                                                            color: ColorConstant
-                                                                .primaryBlack),
-                                                      )),
-                                                    hBox(10),
-                                                    if (CommonConstant.instance
-                                                                .isStudent !=
-                                                            2 &&
-                                                        CommonConstant.instance
-                                                                .isStudent !=
-                                                            3)
-                                                      Expanded(
-                                                          child: IconButton(
-                                                              style: IconButton.styleFrom(
-                                                                  backgroundColor:
-                                                                      ColorConstant
-                                                                          .primary
-                                                                          .withOpacity(
-                                                                              0.3)),
-                                                              onPressed: () {
-                                                                Get.toNamed(
-                                                                    AppRoutes
-                                                                        .addStudentScreenRoute,
-                                                                    arguments: {
-                                                                      "data":
-                                                                          data,
-                                                                      "isAddEdit":
-                                                                          1
-                                                                    })?.then(
-                                                                    (value) {
-                                                                  controller
-                                                                      .getStudentList();
-                                                                });
-                                                              },
-                                                              icon:
-                                                                  CustomImageView(
-                                                                height: 20,
-                                                                width: 20,
-                                                                imagePath:
-                                                                    'assets/images/pencil.png',
-                                                                color:
-                                                                    ColorConstant
+                                      ),
+                                    ],
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 16,
+                                    ),
+                                    child: ListView.builder(
+                                      itemCount:
+                                          controller.studentListSearch.length,
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        Data? data =
+                                            controller.studentListSearch[index];
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            border: Border.all(
+                                              color: ColorConstant.primary,
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.all(12),
+                                          margin: const EdgeInsets.only(
+                                            bottom: 12,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: ColorConstant
+                                                          .primary
+                                                          .withOpacity(0.1),
+                                                      border: Border.all(
+                                                        color: ColorConstant
+                                                            .primary,
+                                                        width: 1,
+                                                      ),
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            30,
+                                                          ),
+                                                      child:
+                                                          (data.profileImage !=
+                                                                  null &&
+                                                              data
+                                                                  .profileImage!
+                                                                  .isNotEmpty)
+                                                          ? CachedNetworkImage(
+                                                              imageUrl: data
+                                                                  .profileImage!,
+                                                              fit: BoxFit.cover,
+                                                              placeholder:
+                                                                  (
+                                                                    context,
+                                                                    url,
+                                                                  ) => const Center(
+                                                                    child: CircularProgressIndicator(
+                                                                      strokeWidth:
+                                                                          2,
+                                                                    ),
+                                                                  ),
+                                                              errorWidget:
+                                                                  (
+                                                                    context,
+                                                                    url,
+                                                                    error,
+                                                                  ) => Icon(
+                                                                    Icons
+                                                                        .person,
+                                                                    size: 30,
+                                                                    color: ColorConstant
                                                                         .primary,
-                                                              ))),
-                                                    hBox(10),
-                                                    Expanded(
-                                                        child: IconButton(
-                                                            style: IconButton.styleFrom(
-                                                                backgroundColor:
-                                                                    ColorConstant
-                                                                        .green
-                                                                        .withOpacity(
-                                                                            0.3)),
-                                                            onPressed: () {
-                                                              Get.toNamed(
-                                                                  AppRoutes
-                                                                      .addUpdateDayDetailsScreenRoute,
-                                                                  arguments: {
-                                                                    'student_id':
-                                                                        data.id ??
-                                                                            '',
-                                                                    'name':
-                                                                        data.name ??
-                                                                            '',
-                                                                    'isAdd': 0,
-                                                                  });
-                                                            },
-                                                            icon:
-                                                                CustomImageView(
-                                                              height: 20,
-                                                              width: 20,
-                                                              imagePath:
-                                                                  'assets/images/add.png',
+                                                                  ),
+                                                            )
+                                                          : Icon(
+                                                              Icons.person,
+                                                              size: 30,
                                                               color:
                                                                   ColorConstant
-                                                                      .green,
-                                                            ))),
-                                                    hBox(10),
-                                                    if (CommonConstant.instance
-                                                                .isStudent !=
-                                                            2 &&
-                                                        CommonConstant.instance
-                                                                .isStudent !=
-                                                            3)
-                                                      Expanded(
-                                                          child: IconButton(
-                                                              style: IconButton.styleFrom(
-                                                                  backgroundColor:
-                                                                      ColorConstant
-                                                                          .red
-                                                                          .withOpacity(
-                                                                              0.3)),
-                                                              onPressed: () {
-                                                                controller
-                                                                    .showDeleteConfirmationDialog(
-                                                                  context,
-                                                                  () {
-                                                                    controller
-                                                                        .deleteStudent(
-                                                                            '${data.id ?? 0}');
-                                                                  },
-                                                                );
-                                                              },
-                                                              icon:
-                                                                  CustomImageView(
-                                                                height: 20,
-                                                                width: 20,
-                                                                imagePath:
-                                                                    'assets/images/delete.png',
-                                                                color:
-                                                                    ColorConstant
-                                                                        .red,
-                                                              ))),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      ),
+                                                                      .primary,
+                                                            ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 15),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        AppRichText(
+                                                          title: 'Name : ',
+                                                          value:
+                                                              data.name ?? '',
+                                                        ),
+                                                        vBox(5),
+                                                        AppRichText(
+                                                          title:
+                                                              'Student Id : ',
+                                                          value:
+                                                              '${data.id ?? 0}',
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              vBox(10),
+                                              const Divider(height: 1),
+                                              vBox(10),
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: AppRichText(
+                                                      title: 'Room no. : ',
+                                                      value: data.roomNo ?? '',
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: AppRichText(
+                                                      title: 'Year : ',
+                                                      value:
+                                                          '${data.year ?? ' '}',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              vBox(5),
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: AppRichText(
+                                                      title: 'Deposit : ',
+                                                      value: '${data.deposit ?? ' '}',
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: AppRichText(
+                                                      title: 'Mobile No. : ',
+                                                      value: data.mobile ?? '',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              vBox(5),
+                                              
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  if (CommonConstant
+                                                              .instance
+                                                              .isStudent !=
+                                                          2 &&
+                                                      CommonConstant
+                                                              .instance
+                                                              .isStudent !=
+                                                          3)
+                                                    Expanded(
+                                                      child: IconButton(
+                                                        style: IconButton.styleFrom(
+                                                          backgroundColor:
+                                                              ColorConstant
+                                                                  .primaryBlack
+                                                                  .withOpacity(
+                                                                    0.3,
+                                                                  ),
+                                                        ),
+                                                        onPressed: () {
+                                                          Get.toNamed(
+                                                            AppRoutes
+                                                                .studentProfileScreenRoute,
+                                                            arguments: {
+                                                              "studentId": data
+                                                                  .id
+                                                                  .toString(),
+                                                              "data": data,
+                                                              "isViewMode":
+                                                                  true,
+                                                            },
+                                                          );
+                                                        },
+                                                        icon: CustomImageView(
+                                                          height: 20,
+                                                          width: 20,
+                                                          imagePath:
+                                                              'assets/images/list.png',
+                                                          color: ColorConstant
+                                                              .primaryBlack,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  hBox(10),
+                                                  if (CommonConstant
+                                                              .instance
+                                                              .isStudent !=
+                                                          2 &&
+                                                      CommonConstant
+                                                              .instance
+                                                              .isStudent !=
+                                                          3)
+                                                    Expanded(
+                                                      child: IconButton(
+                                                        style: IconButton.styleFrom(
+                                                          backgroundColor:
+                                                              ColorConstant
+                                                                  .primary
+                                                                  .withOpacity(
+                                                                    0.3,
+                                                                  ),
+                                                        ),
+                                                        onPressed: () {
+                                                          Get.toNamed(
+                                                            AppRoutes
+                                                                .addStudentScreenRoute,
+                                                            arguments: {
+                                                              "data": data,
+                                                              "isAddEdit": 1,
+                                                            },
+                                                          )?.then((value) {
+                                                            controller
+                                                                .getStudentList();
+                                                          });
+                                                        },
+                                                        icon: CustomImageView(
+                                                          height: 20,
+                                                          width: 20,
+                                                          imagePath:
+                                                              'assets/images/pencil.png',
+                                                          color: ColorConstant
+                                                              .primary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  hBox(10),
+                                                  Expanded(
+                                                    child: IconButton(
+                                                      style:
+                                                          IconButton.styleFrom(
+                                                            backgroundColor:
+                                                                ColorConstant
+                                                                    .green
+                                                                    .withOpacity(
+                                                                      0.3,
+                                                                    ),
+                                                          ),
+                                                      onPressed: () {
+                                                        Get.toNamed(
+                                                          AppRoutes
+                                                              .addUpdateDayDetailsScreenRoute,
+                                                          arguments: {
+                                                            'student_id':
+                                                                data.id ?? '',
+                                                            'name':
+                                                                data.name ?? '',
+                                                            'isAdd': 0,
+                                                          },
+                                                        );
+                                                      },
+                                                      icon: CustomImageView(
+                                                        height: 20,
+                                                        width: 20,
+                                                        imagePath:
+                                                            'assets/images/add.png',
+                                                        color:
+                                                            ColorConstant.green,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  hBox(10),
+                                                  if (CommonConstant
+                                                              .instance
+                                                              .isStudent !=
+                                                          2 &&
+                                                      CommonConstant
+                                                              .instance
+                                                              .isStudent !=
+                                                          3)
+                                                    Expanded(
+                                                      child: IconButton(
+                                                        style: IconButton.styleFrom(
+                                                          backgroundColor:
+                                                              ColorConstant.red
+                                                                  .withOpacity(
+                                                                    0.3,
+                                                                  ),
+                                                        ),
+                                                        onPressed: () {
+                                                          controller.showDeleteConfirmationDialog(
+                                                            context,
+                                                            () {
+                                                              controller
+                                                                  .deleteStudent(
+                                                                    '${data.id ?? 0}',
+                                                                  );
+                                                            },
+                                                          );
+                                                        },
+                                                        icon: CustomImageView(
+                                                          height: 20,
+                                                          width: 20,
+                                                          imagePath:
+                                                              'assets/images/delete.png',
+                                                          color:
+                                                              ColorConstant.red,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     ),
-                            ],
-                          ),
+                                  ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-          ),
-        ));
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
   }
 }
+
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 // import 'package:pg_managment/core/utils/appRichText.dart';

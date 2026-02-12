@@ -29,17 +29,19 @@ class ApiService extends GetConnect {
       headers = {"Accept": "application/json"};
       headersWithToken = {
         "Accept": "application/json",
-        "Authorization": "Bearer $authToken"
+        "Authorization": "Bearer $authToken",
       };
       contentType = "application/json";
     });
   }
 
-  Future<dynamic> callPostApi(
-      {required body,
-      required url,
-      bool showLoader = true,
-      bool headerWithToken = true}) async {
+  Future<dynamic> callPostApi({
+    required body,
+    required url,
+    bool showLoader = true,
+    String? contentType,
+    bool headerWithToken = true,
+  }) async {
     try {
       if (showLoader) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -55,7 +57,8 @@ class ApiService extends GetConnect {
         url,
         body,
         headers: headerWithToken ? headersWithToken : headers,
-        contentType: contentType,
+        contentType:
+            contentType ?? (body is FormData ? null : this.contentType),
       );
       if (isLogPrint) {
         log("RESPONSE :- ${response.body}");
@@ -74,31 +77,36 @@ class ApiService extends GetConnect {
         ProgressDialogUtils.hideProgressDialog();
         if (response.statusCode == 422) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else if (response.body['state_code'] == 404 &&
             response.body['message'] == 'Unauthenticated') {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
           Get.toNamed(AppRoutes.loginScreenRoute);
         } else if (response.body['state_code'] == 401) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else if (response.body['state_code'] == 404) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else if (response.body['state_code'] == 409) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else {
           return response;
         }
@@ -108,17 +116,20 @@ class ApiService extends GetConnect {
         log("ERROR :- $e");
       }
       AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentState!.context,
-          message: 'Something went wrong',
-          success: false);
+        context: NavigationService.navigatorKey.currentState!.context,
+        message: 'Something went wrong',
+        success: false,
+      );
     }
   }
 
-  Future<dynamic> callPutApi(
-      {required body,
-      required url,
-      bool showLoader = true,
-      bool headerWithToken = true}) async {
+  Future<dynamic> callPutApi({
+    required body,
+    required url,
+    bool showLoader = true,
+    String? contentType,
+    bool headerWithToken = true,
+  }) async {
     try {
       if (showLoader) {
         ProgressDialogUtils.showProgressDialog(isCancellable: false);
@@ -132,7 +143,8 @@ class ApiService extends GetConnect {
         url,
         body,
         headers: headerWithToken ? headersWithToken : headers,
-        contentType: contentType,
+        contentType:
+            contentType ?? (body is FormData ? null : this.contentType),
       );
       if (isLogPrint) {
         log("RESPONSE :- ${response.body}");
@@ -151,26 +163,30 @@ class ApiService extends GetConnect {
         ProgressDialogUtils.hideProgressDialog();
         if (response.statusCode == 422) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else if (response.body['state_code'] == 404 &&
             response.body['message'] == 'Unauthenticated') {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
           Get.toNamed(AppRoutes.loginScreenRoute);
         } else if (response.body['state_code'] == 401) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else if (response.body['state_code'] == 404) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else {
           return response;
         }
@@ -180,17 +196,19 @@ class ApiService extends GetConnect {
         log("ERROR :- $e");
       }
       AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Something went wrong',
-          success: false);
+        context: NavigationService.navigatorKey.currentContext!,
+        message: 'Something went wrong',
+        success: false,
+      );
     }
   }
 
-  Future<dynamic> callGetApi(
-      {required dynamic body,
-      required url,
-      bool showLoader = true,
-      bool headerWithToken = true}) async {
+  Future<dynamic> callGetApi({
+    required dynamic body,
+    required url,
+    bool showLoader = true,
+    bool headerWithToken = true,
+  }) async {
     try {
       if (isLogPrint) {
         log("API :- $url");
@@ -224,26 +242,30 @@ class ApiService extends GetConnect {
         ProgressDialogUtils.hideProgressDialog();
         if (response.statusCode == 422) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else if (response.body['state_code'] == 404 &&
             response.body['message'] == 'Unauthenticated') {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
           Get.toNamed(AppRoutes.loginScreenRoute);
         } else if (response.statusCode == 401) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else if (response.body['state_code'] == 404) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else {
           return response;
         }
@@ -253,9 +275,10 @@ class ApiService extends GetConnect {
         log("ERROR :- $e");
       }
       AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Something went wrong',
-          success: false);
+        context: NavigationService.navigatorKey.currentContext!,
+        message: 'Something went wrong',
+        success: false,
+      );
     }
 
     //  if (response.status.hasError) {
@@ -271,11 +294,12 @@ class ApiService extends GetConnect {
     // }
   }
 
-  Future<dynamic> callDeleteApi(
-      {required dynamic body,
-      required url,
-      bool showLoader = true,
-      bool headerWithToken = true}) async {
+  Future<dynamic> callDeleteApi({
+    required dynamic body,
+    required url,
+    bool showLoader = true,
+    bool headerWithToken = true,
+  }) async {
     try {
       if (isLogPrint) {
         log("API :- $url");
@@ -309,26 +333,30 @@ class ApiService extends GetConnect {
         ProgressDialogUtils.hideProgressDialog();
         if (response.statusCode == 422) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else if (response.body['state_code'] == 404 &&
             response.body['message'] == 'Unauthenticated') {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
           Get.toNamed(AppRoutes.loginScreenRoute);
         } else if (response.statusCode == 401) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else if (response.body['state_code'] == 404) {
           AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: response.body['message'],
-              success: false);
+            context: NavigationService.navigatorKey.currentContext!,
+            message: response.body['message'],
+            success: false,
+          );
         } else {
           return response;
         }
@@ -338,9 +366,10 @@ class ApiService extends GetConnect {
         log("ERROR :- $e");
       }
       AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Something went wrong',
-          success: false);
+        context: NavigationService.navigatorKey.currentContext!,
+        message: 'Something went wrong',
+        success: false,
+      );
     }
 
     //  if (response.status.hasError) {

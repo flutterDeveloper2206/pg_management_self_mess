@@ -68,7 +68,7 @@ class NotificationService {
     try {
       String? token = await _firebaseMessaging.getToken();
       Logger.log("FCM Token: $token");
-    }catch(e){
+    } catch (e) {
       Logger.log("FCM Getting Error: $e");
     }
     // 5. Handle messages
