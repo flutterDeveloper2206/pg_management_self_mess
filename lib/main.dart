@@ -18,11 +18,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pg_managment/core/utils/notification_service.dart';
 import 'firebase_options.dart';
 
+import 'package:upgrader/upgrader.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await PrefUtils.init(); // Initialize it properly before app starts
   if (kIsWeb) {
     PrefUtils.clearPreferencesData();
@@ -34,12 +34,12 @@ Future<void> main() async {
   await NotificationService.init();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  ErrorWidget.builder =
-      (FlutterErrorDetails details) => AppFlutterErrorScreen(details: details);
+  ErrorWidget.builder = (FlutterErrorDetails details) =>
+      AppFlutterErrorScreen(details: details);
 
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]).then((value) {
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((
+    value,
+  ) {
     Logger.init(kReleaseMode ? LogMode.live : LogMode.debug);
     runApp(MyApp());
   });
@@ -50,9 +50,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        visualDensity: VisualDensity.standard,
-      ),
+      theme: ThemeData(visualDensity: VisualDensity.standard),
       navigatorKey: NavigationService.navigatorKey,
 
       //for setting localization strings
@@ -61,6 +59,22 @@ class MyApp extends StatelessWidget {
       initialBinding: InitialBindings(),
       initialRoute: AppRoutes.splashScreenRoute,
       getPages: AppRoutes.pages,
+      builder: (context, child) {
+        return UpgradeAlert(
+          showIgnore: false,
+          showLater: false,
+          barrierDismissible: false,
+
+          upgrader: Upgrader(
+            debugDisplayAlways: false,
+
+            durationUntilAlertAgain: const Duration(days: 1),
+
+            // Force update settings:
+          ),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
     );
   }
 }
