@@ -19,10 +19,10 @@ class NotificationScreenController extends GetxController {
     isLoading.value = true;
     try {
       // Try to get userId first, then fallback to isStudent
-      var idValue = PrefUtils.getInt(StringConstants.userId);
-      if (idValue == 0) {
-        idValue = PrefUtils.getInt(StringConstants.isStudent);
-      }
+      // var idValue = PrefUtils.getInt(StringConstants.userId);
+      // if (idValue == 0) {
+    var    idValue = PrefUtils.getInt(StringConstants.isStudent);
+      // }
 
       String url = "${NetworkUrls.getNotificationsUrl}$idValue";
       print("Fetching notifications from: $url");

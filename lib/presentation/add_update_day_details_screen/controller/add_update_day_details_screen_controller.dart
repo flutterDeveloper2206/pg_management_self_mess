@@ -40,8 +40,9 @@ class AddUpdateDayDetailsScreenController extends GetxController {
   TextEditingController feastGuestController = TextEditingController();
   TextEditingController feastGuestAmountController = TextEditingController();
   TextEditingController penaltyAmountController = TextEditingController();
-  TextEditingController totalAmountController =
-      TextEditingController(text: '0.0');
+  TextEditingController totalAmountController = TextEditingController(
+    text: '0.0',
+  );
   TextEditingController paidAmountController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
   TextEditingController remainController = TextEditingController();
@@ -61,9 +62,10 @@ class AddUpdateDayDetailsScreenController extends GetxController {
         DateTime previousMonth = DateTime(now.year, now.month - 1, now.day);
 
         getStudentPreviousMonthDetails(
-            month: '${previousMonth.month}',
-            year: '${previousMonth.year}',
-            studentId: '${studentId.value}');
+          month: '${previousMonth.month}',
+          year: '${previousMonth.year}',
+          studentId: '${studentId.value}',
+        );
       }
 
       if (isAdd.value == 2) {
@@ -77,8 +79,8 @@ class AddUpdateDayDetailsScreenController extends GetxController {
             : PrefUtils.getString(StringConstants.totalDays);
         String eatenDays =
             PrefUtils.getString(StringConstants.eatenDays).isEmpty
-                ? '0.0'
-                : PrefUtils.getString(StringConstants.eatenDays);
+            ? '0.0'
+            : PrefUtils.getString(StringConstants.eatenDays);
         String penaltyS = PrefUtils.getString(StringConstants.penalty).isEmpty
             ? '0.0'
             : PrefUtils.getString(StringConstants.penalty);
@@ -99,29 +101,34 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     super.onInit();
   }
 
-  Future<void> getStudentPreviousMonthDetails(
-      {String? month, String? year, String? studentId}) async {
+  Future<void> getStudentPreviousMonthDetails({
+    String? month,
+    String? year,
+    String? studentId,
+  }) async {
     isGetLoading.value = true;
 
-    await ApiService().callGetApi(
-        body: {},
-        headerWithToken: true,
-        showLoader: false,
-        url:
-            '${NetworkUrls.dayDetailsListUrl}month=$month&year=$year&student_id=$studentId').then(
-        (value) async {
-      isGetLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        isGetLoading.value = false;
-        StudentAllDetailsModel allStudentListModel =
-            StudentAllDetailsModel.fromJson(value.body);
-        if (allStudentListModel.data != null &&
-            allStudentListModel.data!.isNotEmpty) {
-          remainController.text =
-              '${allStudentListModel.data?[0].remainAmount ?? 0.0}';
-        }
-      }
-    });
+    await ApiService()
+        .callGetApi(
+          body: {},
+          headerWithToken: true,
+          showLoader: false,
+          url:
+              '${NetworkUrls.dayDetailsListUrl}month=$month&year=$year&student_id=$studentId',
+        )
+        .then((value) async {
+          isGetLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            isGetLoading.value = false;
+            StudentAllDetailsModel allStudentListModel =
+                StudentAllDetailsModel.fromJson(value.body);
+            if (allStudentListModel.data != null &&
+                allStudentListModel.data!.isNotEmpty) {
+              remainController.text =
+                  '${allStudentListModel.data?[0].remainAmount ?? 0.0}';
+            }
+          }
+        });
   }
 
   setDate() {
@@ -155,22 +162,24 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     double val = doubleParse(value);
     totalAmountController.clear();
     if (value.isNotEmpty) {
-      totalAmountController.text = (doubleParse(totalAmountController.text) +
-              val +
-              (dataGet.value.dueAmount ?? 0.0) +
-              doubleParse(feastGuestAmountController.text) +
-              (dataGet.value.amount ?? 0.0) +
-              doubleParse(simpleGuestAmountController.text))
-          .toString();
+      totalAmountController.text =
+          (doubleParse(totalAmountController.text) +
+                  val +
+                  (dataGet.value.dueAmount ?? 0.0) +
+                  doubleParse(feastGuestAmountController.text) +
+                  (dataGet.value.amount ?? 0.0) +
+                  doubleParse(simpleGuestAmountController.text))
+              .toString();
     } else {
       penaltyAmountController.text = '0';
-      totalAmountController.text = (doubleParse(totalAmountController.text) +
-              (dataGet.value.dueAmount ?? 0.0) +
-              doubleParse(penaltyAmountController.text) +
-              doubleParse(feastGuestAmountController.text) +
-              (dataGet.value.amount ?? 0.0) +
-              doubleParse(simpleGuestAmountController.text))
-          .toString();
+      totalAmountController.text =
+          (doubleParse(totalAmountController.text) +
+                  (dataGet.value.dueAmount ?? 0.0) +
+                  doubleParse(penaltyAmountController.text) +
+                  doubleParse(feastGuestAmountController.text) +
+                  (dataGet.value.amount ?? 0.0) +
+                  doubleParse(simpleGuestAmountController.text))
+              .toString();
     }
     setRemainingAmount();
   }
@@ -179,22 +188,24 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     double val = doubleParse(value);
     totalAmountController.clear();
     if (value.isNotEmpty) {
-      totalAmountController.text = (doubleParse(totalAmountController.text) +
-              val +
-              (dataGet.value.dueAmount ?? 0.0) +
-              (dataGet.value.amount ?? 0.0) +
-              doubleParse(feastGuestAmountController.text) +
-              doubleParse(penaltyAmountController.text))
-          .toString();
+      totalAmountController.text =
+          (doubleParse(totalAmountController.text) +
+                  val +
+                  (dataGet.value.dueAmount ?? 0.0) +
+                  (dataGet.value.amount ?? 0.0) +
+                  doubleParse(feastGuestAmountController.text) +
+                  doubleParse(penaltyAmountController.text))
+              .toString();
     } else {
       simpleGuestAmountController.text = '0';
-      totalAmountController.text = (doubleParse(totalAmountController.text) +
-              (dataGet.value.dueAmount ?? 0.0) +
-              doubleParse(penaltyAmountController.text) +
-              doubleParse(feastGuestAmountController.text) +
-              (dataGet.value.amount ?? 0.0) +
-              doubleParse(simpleGuestAmountController.text))
-          .toString();
+      totalAmountController.text =
+          (doubleParse(totalAmountController.text) +
+                  (dataGet.value.dueAmount ?? 0.0) +
+                  doubleParse(penaltyAmountController.text) +
+                  doubleParse(feastGuestAmountController.text) +
+                  (dataGet.value.amount ?? 0.0) +
+                  doubleParse(simpleGuestAmountController.text))
+              .toString();
     }
     setRemainingAmount();
   }
@@ -203,22 +214,24 @@ class AddUpdateDayDetailsScreenController extends GetxController {
     double val = doubleParse(value);
     totalAmountController.clear();
     if (value.isNotEmpty) {
-      totalAmountController.text = (doubleParse(totalAmountController.text) +
-              val +
-              (dataGet.value.dueAmount ?? 0.0) +
-              (dataGet.value.amount ?? 0.0) +
-              doubleParse(simpleGuestAmountController.text) +
-              doubleParse(penaltyAmountController.text))
-          .toString();
+      totalAmountController.text =
+          (doubleParse(totalAmountController.text) +
+                  val +
+                  (dataGet.value.dueAmount ?? 0.0) +
+                  (dataGet.value.amount ?? 0.0) +
+                  doubleParse(simpleGuestAmountController.text) +
+                  doubleParse(penaltyAmountController.text))
+              .toString();
     } else {
       feastGuestAmountController.text = '0';
-      totalAmountController.text = (doubleParse(totalAmountController.text) +
-              (dataGet.value.dueAmount ?? 0.0) +
-              doubleParse(penaltyAmountController.text) +
-              doubleParse(feastGuestAmountController.text) +
-              (dataGet.value.amount ?? 0.0) +
-              doubleParse(simpleGuestAmountController.text))
-          .toString();
+      totalAmountController.text =
+          (doubleParse(totalAmountController.text) +
+                  (dataGet.value.dueAmount ?? 0.0) +
+                  doubleParse(penaltyAmountController.text) +
+                  doubleParse(feastGuestAmountController.text) +
+                  (dataGet.value.amount ?? 0.0) +
+                  doubleParse(simpleGuestAmountController.text))
+              .toString();
     }
     setRemainingAmount();
   }
@@ -261,8 +274,8 @@ class AddUpdateDayDetailsScreenController extends GetxController {
       String amount = PrefUtils.getString(StringConstants.feastGuest).isEmpty
           ? '0.0'
           : PrefUtils.getString(StringConstants.feastGuest);
-      feastGuestAmountController.text =
-          (int.parse(value) * doubleParse(amount)).toString();
+      feastGuestAmountController.text = (int.parse(value) * doubleParse(amount))
+          .toString();
     } else {
       feastGuestAmountController.clear();
     }
@@ -270,47 +283,53 @@ class AddUpdateDayDetailsScreenController extends GetxController {
 
   setRemainAmountCalculate() {
     if (paidAmountController.text.isNotEmpty) {
-      remainController.text = (doubleParse(totalAmountController.text) -
-              doubleParse(paidAmountController.text))
-          .toString();
+      remainController.text =
+          (doubleParse(totalAmountController.text) -
+                  doubleParse(paidAmountController.text))
+              .toString();
     } else {
       remainController.text = '0.0';
     }
   }
 
   setRemainingAmount() {
-    remainController.text = (doubleParse(totalAmountController.text) -
-            doubleParse(paidAmountController.text))
-        .toString();
+    remainController.text =
+        (doubleParse(totalAmountController.text) -
+                doubleParse(paidAmountController.text))
+            .toString();
   }
 
   setData() {
     totalDayController.text = dataGet.value.totalDay.toString();
     totalEatDayController.text = dataGet.value.totalEatDay.toString();
     cutDayController.text = dataGet.value.cutDay.toString();
-    dateController.text =
-        DateFormat("yyyy-MM-dd").format(dataGet.value.date ?? DateTime.now());
+    dateController.text = DateFormat(
+      "yyyy-MM-dd",
+    ).format(dataGet.value.date ?? DateTime.now());
     simpleGuestController.text = dataGet.value.simpleGuest.toString();
-    simpleGuestAmountController.text =
-        dataGet.value.simpleGuestAmount.toString();
+    simpleGuestAmountController.text = dataGet.value.simpleGuestAmount
+        .toString();
     feastGuestController.text = dataGet.value.feastGuest.toString();
     feastGuestAmountController.text = dataGet.value.feastGuestAmount.toString();
     penaltyAmountController.text = dataGet.value.penaltyAmount.toString();
     paidAmountController.text = dataGet.value.paidAmount.toString();
     remarkController.text = dataGet.value.remark ?? '';
-    totalAmountController.text = ((dataGet.value.amount ?? 0.0) +
-            (dataGet.value.penaltyAmount ?? 0.0) +
-            (dataGet.value.dueAmount ?? 0.0) +
-            (dataGet.value.feastGuestAmount ?? 0.0) +
-            (dataGet.value.simpleGuestAmount ?? 0.0))
-        .toString();
+    totalAmountController.text =
+        ((dataGet.value.amount ?? 0.0) +
+                (dataGet.value.penaltyAmount ?? 0.0) +
+                (dataGet.value.dueAmount ?? 0.0) +
+                (dataGet.value.feastGuestAmount ?? 0.0) +
+                (dataGet.value.simpleGuestAmount ?? 0.0))
+            .toString();
     finalAmount.value = doubleParse(totalAmountController.text);
     setRemainAmountCalculate();
   }
 
   Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked =
-        await MonthYearPicker.show(context, initialDate: DateTime.now());
+    final DateTime? picked = await MonthYearPicker.show(
+      context,
+      initialDate: DateTime.now(),
+    );
 
     if (picked != null) {
       String formattedDate =
@@ -329,79 +348,120 @@ class AddUpdateDayDetailsScreenController extends GetxController {
         feastGuestController.text.isEmpty ||
         feastGuestAmountController.text.isEmpty) {
       AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Please fill all the fields',
-          success: false);
+        context: NavigationService.navigatorKey.currentContext!,
+        message: 'Please fill all the fields',
+        success: false,
+      );
       return;
     }
 
     if (isAdd.value == 0) {
-      await ApiService().callPostApi(
-          body: {
-            "student_id": studentId.value,
-            "total_day": int.parse(totalDayController.text),
-            "total_eat_day": int.parse(totalEatDayController.text),
-            "cut_day": int.parse(cutDayController.text),
-            "date": dateController.text,
-            "simple_guest": int.parse(simpleGuestController.text),
-            "remain_amount": doubleParse(remainController.text),
-            "simple_guest_amount":
-                doubleParse(simpleGuestAmountController.text),
-            "feast_guest": int.parse(feastGuestController.text),
-            "paid_amount": doubleParse(paidAmountController.text),
-            "penalty_amount": doubleParse(penaltyAmountController.text),
-            "feast_guest_amount": doubleParse(feastGuestAmountController.text),
-            "remark": remarkController.text
-          },
-          headerWithToken: true,
-          showLoader: true,
-          url: NetworkUrls.dayDetailsAddUrl).then((value) async {
-        if (value != null &&
-            (value.statusCode == 200 || value.statusCode == 201)) {
-          Get.back();
+      await ApiService()
+          .callPostApi(
+            body: {
+              "student_id": studentId.value,
+              "total_day": int.parse(totalDayController.text),
+              "total_eat_day": int.parse(totalEatDayController.text),
+              "cut_day": int.parse(cutDayController.text),
+              "date": dateController.text,
+              "simple_guest": int.parse(simpleGuestController.text),
+              "remain_amount": doubleParse(remainController.text),
+              "simple_guest_amount": doubleParse(
+                simpleGuestAmountController.text,
+              ),
+              "feast_guest": int.parse(feastGuestController.text),
+              "paid_amount": doubleParse(paidAmountController.text),
+              "penalty_amount": doubleParse(penaltyAmountController.text),
+              "feast_guest_amount": doubleParse(
+                feastGuestAmountController.text,
+              ),
+              "remark": remarkController.text,
+            },
+            headerWithToken: true,
+            showLoader: true,
+            url: NetworkUrls.dayDetailsAddUrl,
+          )
+          .then((value) async {
+            if (value != null &&
+                (value.statusCode == 200 || value.statusCode == 201)) {
+              Get.back();
 
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            AppFlushBars.appCommonFlushBar(
-                context: NavigationService.navigatorKey.currentContext!,
-                message: 'Student details added successfully',
-                success: true);
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                AppFlushBars.appCommonFlushBar(
+                  context: NavigationService.navigatorKey.currentContext!,
+                  message: 'Student details added successfully',
+                  success: true,
+                );
+              });
+            }
           });
-        }
-      });
     } else {
-      await ApiService().callPutApi(
-          body: {
-            "student_id": studentId.value,
-            "total_day": int.parse(totalDayController.text),
-            "total_eat_day": int.parse(totalEatDayController.text),
-            "cut_day": int.parse(cutDayController.text),
-            "date": dateController.text,
-            "simple_guest": int.parse(simpleGuestController.text),
-            "simple_guest_amount":
-                doubleParse(simpleGuestAmountController.text),
-            "feast_guest": int.parse(feastGuestController.text),
-            "paid_amount": doubleParse(paidAmountController.text),
-            "remain_amount": doubleParse(remainController.text),
-            "penalty_amount": doubleParse(penaltyAmountController.text),
-            "feast_guest_amount": doubleParse(feastGuestAmountController.text),
-            "remark": remarkController.text,
-            if (dataGet.value.status == 'lock') ...{"status": 'finalize'}
-          },
-          headerWithToken: true,
-          showLoader: true,
-          url: NetworkUrls.dayDetailsUpdateUrl + id!).then((value) async {
-        if (value != null &&
-            (value.statusCode == 200 || value.statusCode == 201)) {
-          Get.back();
+      await ApiService()
+          .callPutApi(
+            body: {
+              "student_id": studentId.value,
+              "total_day": int.parse(totalDayController.text),
+              "total_eat_day": int.parse(totalEatDayController.text),
+              "cut_day": int.parse(cutDayController.text),
+              "date": dateController.text,
+              "simple_guest": int.parse(simpleGuestController.text),
+              "simple_guest_amount": doubleParse(
+                simpleGuestAmountController.text,
+              ),
+              "feast_guest": int.parse(feastGuestController.text),
+              "paid_amount": doubleParse(paidAmountController.text),
+              "remain_amount": doubleParse(remainController.text),
+              "penalty_amount": doubleParse(penaltyAmountController.text),
+              "feast_guest_amount": doubleParse(
+                feastGuestAmountController.text,
+              ),
+              "remark": remarkController.text,
+              if (dataGet.value.status == 'lock') ...{"status": 'finalize'},
+            },
+            headerWithToken: true,
+            showLoader: true,
+            url: NetworkUrls.dayDetailsUpdateUrl + id!,
+          )
+          .then((value) async {
+            if (value != null &&
+                (value.statusCode == 200 || value.statusCode == 201)) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                if (doubleParse(paidAmountController.text) > 0) {
+                  sendNotification();
+                }
+              });
+              await Future.delayed(Duration(milliseconds: 100));
+              Get.back();
 
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            AppFlushBars.appCommonFlushBar(
-                context: NavigationService.navigatorKey.currentContext!,
-                message: 'Student details updated successfully',
-                success: true);
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                AppFlushBars.appCommonFlushBar(
+                  context: NavigationService.navigatorKey.currentContext!,
+                  message: 'Student details updated successfully',
+                  success: true,
+                );
+              });
+            }
           });
-        }
-      });
     }
+  }
+
+  Future<void> sendNotification() async {
+    dateController.text = DateTime.now().toString().split(' ')[0];
+
+    Map<String, dynamic> body = {
+      "student_id": studentId.value,
+      'title': 'Your monthly bill is ready',
+      'body': 'Your monthly bill ${paidAmountController.text} Paid  ',
+      'type': 'announcement',
+      'payload': {'date': dateController.text},
+    };
+
+    await ApiService()
+        .callPostApi(
+          body: body,
+          url: NetworkUrls.sendNotificationUrl,
+          showLoader: true,
+        )
+        .then((value) {});
   }
 }

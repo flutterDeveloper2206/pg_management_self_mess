@@ -179,6 +179,8 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
             ),
           ),
           actions: [
+            if(!(CommonConstant.instance.isStudent == 1 ||CommonConstant.instance.isStudent == 2 ||
+                CommonConstant.instance.isStudent == 3))
             IconButton(
               onPressed: () => Get.toNamed(AppRoutes.notificationScreenRoute),
               icon: const Icon(Icons.notifications, color: Colors.white),
