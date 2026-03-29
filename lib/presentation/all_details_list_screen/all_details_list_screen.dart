@@ -57,8 +57,13 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
           child: Obx(
             () => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: SingleChildScrollView(
-                child: Column(
+              child:  controller.isLoading.value
+                  ? Center(
+                child: CircularProgressIndicator(
+                  color: ColorConstant.primary,
+                ),
+              ):SingleChildScrollView(
+                child:  Column(
                   children: [
                     Row(
                       children: [
@@ -96,18 +101,148 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
                       ],
                     ),
                     vBox(20),
-                    controller.isLoading.value
-                        ? Column(
-                            children: [
-                              vBox(MediaQuery.of(context).size.height / 2.7),
-                              Center(
-                                child: CircularProgressIndicator(
-                                  color: ColorConstant.primary,
-                                ),
-                              ),
-                            ],
-                          )
-                        : controller.studentListSearch.isEmpty == true
+                    // controller.isLoading.value
+                    //     ? Column(
+                    //         children: [
+                    //           vBox(MediaQuery.of(context).size.height / 2.7),
+                    //           Center(
+                    //             child: CircularProgressIndicator(
+                    //               color: ColorConstant.primary,
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       )
+                    //     :
+                    CustomAppTextFormField(
+                      variant:
+                      TextFormFieldVariant.OutlineGray200,
+                      hintText: 'Search Student',
+                      onChanged: (value) {
+                        controller.searchStudent(value);
+                      },
+                    ),
+                    vBox(10),
+                    Row(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                            width: getWidth(120),
+                            child: Text('Total Collection :',
+                                style: PMT.appStyle(
+                                    size: 14,
+                                    fontColor:
+                                    Colors.grey.shade700))),
+                        Expanded(
+                          child: Text(
+                            '${controller.totalCollection.value.toStringAsFixed(2)}',
+                            // '20000.00',
+                            style: PMT.appStyle(
+                                size: 14,
+                                fontColor: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                            width: getWidth(120),
+                            child: Text('Total Remaining :',
+                                style: PMT.appStyle(
+                                    size: 14,
+                                    fontColor:
+                                    Colors.grey.shade700))),
+                        Expanded(
+                          child: Text(
+                            '${controller.totalRemaining.value.toStringAsFixed(2)}',
+                            // '20000.00',
+                            style: PMT.appStyle(
+                                size: 14,
+                                fontColor: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    Row(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                            width: getWidth(120),
+                            child: Text('Total MealDay :',
+                                style: PMT.appStyle(
+                                    size: 14,
+                                    fontColor:
+                                    Colors.grey.shade700))),
+                        Expanded(
+                          child: Text(
+                            '${controller.totalMealDay.value}',
+                            // '20000.00',
+                            style: PMT.appStyle(
+                                size: 14,
+                                fontColor: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                            width: getWidth(120),
+                            child: Text(
+                                'Total Attended MealDay :',
+                                style: PMT.appStyle(
+                                    size: 14,
+                                    fontColor:
+                                    Colors.grey.shade700))),
+                        Expanded(
+                          child: Text(
+                            '${controller.totalMealDay.value - controller.totalCutDay.value}',
+                            // '20000.00',
+                            style: PMT.appStyle(
+                                size: 14,
+                                fontColor: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                            width: getWidth(120),
+                            child: Text('Total CutDay :',
+                                style: PMT.appStyle(
+                                    size: 14,
+                                    fontColor:
+                                    Colors.grey.shade700))),
+                        Expanded(
+                          child: Text(
+                            '${controller.totalCutDay.value}',
+                            // '20000.00',
+                            style: PMT.appStyle(
+                                size: 14,
+                                fontColor: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    controller.studentListSearch.isEmpty == true
                             ? Column(
                                 children: [
                                   vBox(
@@ -119,135 +254,7 @@ class AllDetailsListScreen extends GetWidget<AllDetailsListScreenController> {
                               )
                             : Column(
                                 children: [
-                                  CustomAppTextFormField(
-                                    variant:
-                                        TextFormFieldVariant.OutlineGray200,
-                                    hintText: 'Search Student',
-                                    onChanged: (value) {
-                                      controller.searchStudent(value);
-                                    },
-                                  ),
-                                  vBox(10),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                          width: getWidth(120),
-                                          child: Text('Total Collection :',
-                                              style: PMT.appStyle(
-                                                  size: 14,
-                                                  fontColor:
-                                                      Colors.grey.shade700))),
-                                      Expanded(
-                                        child: Text(
-                                          '${controller.totalCollection.value.toStringAsFixed(2)}',
-                                          // '20000.00',
-                                          style: PMT.appStyle(
-                                              size: 14,
-                                              fontColor: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                          width: getWidth(120),
-                                          child: Text('Total Remaining :',
-                                              style: PMT.appStyle(
-                                                  size: 14,
-                                                  fontColor:
-                                                      Colors.grey.shade700))),
-                                      Expanded(
-                                        child: Text(
-                                          '${controller.totalRemaining.value.toStringAsFixed(2)}',
-                                          // '20000.00',
-                                          style: PMT.appStyle(
-                                              size: 14,
-                                              fontColor: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Divider(),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                          width: getWidth(120),
-                                          child: Text('Total MealDay :',
-                                              style: PMT.appStyle(
-                                                  size: 14,
-                                                  fontColor:
-                                                      Colors.grey.shade700))),
-                                      Expanded(
-                                        child: Text(
-                                          '${controller.totalMealDay.value}',
-                                          // '20000.00',
-                                          style: PMT.appStyle(
-                                              size: 14,
-                                              fontColor: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                          width: getWidth(120),
-                                          child: Text(
-                                              'Total Attended MealDay :',
-                                              style: PMT.appStyle(
-                                                  size: 14,
-                                                  fontColor:
-                                                      Colors.grey.shade700))),
-                                      Expanded(
-                                        child: Text(
-                                          '${controller.totalMealDay.value - controller.totalCutDay.value}',
-                                          // '20000.00',
-                                          style: PMT.appStyle(
-                                              size: 14,
-                                              fontColor: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                          width: getWidth(120),
-                                          child: Text('Total CutDay :',
-                                              style: PMT.appStyle(
-                                                  size: 14,
-                                                  fontColor:
-                                                      Colors.grey.shade700))),
-                                      Expanded(
-                                        child: Text(
-                                          '${controller.totalCutDay.value}',
-                                          // '20000.00',
-                                          style: PMT.appStyle(
-                                              size: 14,
-                                              fontColor: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
+
                                   ListView.builder(
                                     physics:
                                         const NeverScrollableScrollPhysics(),

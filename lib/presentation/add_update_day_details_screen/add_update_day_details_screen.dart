@@ -111,8 +111,8 @@ class AddUpdateDayDetailsScreen
                   titleWidget(
                       readOnly: true,
                       textInputType: TextInputType.number,
-                      title: 'Par Day Rate (₹)',
-                      hintText: 'Par Day Rate',
+                      title: 'Per Day Rate (₹)',
+                      hintText: 'Per Day Rate',
                       controller: TextEditingController(
                           text: '${controller.dataGet.value.rate ?? ' '}')),
                   titleWidget(

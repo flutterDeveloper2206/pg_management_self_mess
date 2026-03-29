@@ -20,6 +20,13 @@ import 'firebase_options.dart';
 
 import 'package:upgrader/upgrader.dart';
 
+/// Single [Upgrader] instance so version checks are not reset on rebuilds.
+final Upgrader appUpgrader = Upgrader(
+  minAppVersion: StringConstants.minSupportedAppVersion,
+  durationUntilAlertAgain: Duration.zero,
+  debugLogging: kDebugMode,
+);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -60,19 +67,18 @@ class MyApp extends StatelessWidget {
       initialRoute: AppRoutes.splashScreenRoute,
       getPages: AppRoutes.pages,
       builder: (context, child) {
+        final content = child ?? const SizedBox.shrink();
+        if (kIsWeb) {
+          return content;
+        }
         return UpgradeAlert(
+          upgrader: appUpgrader,
+          navigatorKey: NavigationService.navigatorKey,
           showIgnore: false,
           showLater: false,
           barrierDismissible: false,
-
-          upgrader: Upgrader(
-            debugDisplayAlways: false,
-
-            durationUntilAlertAgain: const Duration(days: 1),
-
-            // Force update settings:
-          ),
-          child: child ?? const SizedBox.shrink(),
+          shouldPopScope: () => false,
+          child: content,
         );
       },
     );

@@ -58,7 +58,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
         'icon': 'assets/images/exit.png',
         'route': '',
         'color': const Color(0xFFE74C3C),
-      }
+      },
     ];
     final adminMenu = [
       {
@@ -179,12 +179,13 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
             ),
           ),
           actions: [
-            if(!(CommonConstant.instance.isStudent == 1 ||CommonConstant.instance.isStudent == 2 ||
+            if (!(CommonConstant.instance.isStudent == 1 ||
+                CommonConstant.instance.isStudent == 2 ||
                 CommonConstant.instance.isStudent == 3))
-            IconButton(
-              onPressed: () => Get.toNamed(AppRoutes.notificationScreenRoute),
-              icon: const Icon(Icons.notifications, color: Colors.white),
-            ),
+              IconButton(
+                onPressed: () => Get.toNamed(AppRoutes.notificationScreenRoute),
+                icon: const Icon(Icons.notifications, color: Colors.white),
+              ),
           ],
         ),
         body: IndexedStack(
@@ -212,10 +213,14 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                   backgroundColor: Colors.white,
                   selectedItemColor: ColorConstant.primary,
                   unselectedItemColor: Colors.grey,
-                  selectedLabelStyle:
-                      PMT.appStyle(fontWeight: FontWeight.w600, size: 12),
-                  unselectedLabelStyle:
-                      PMT.appStyle(fontWeight: FontWeight.w500, size: 12),
+                  selectedLabelStyle: PMT.appStyle(
+                    fontWeight: FontWeight.w600,
+                    size: 12,
+                  ),
+                  unselectedLabelStyle: PMT.appStyle(
+                    fontWeight: FontWeight.w500,
+                    size: 12,
+                  ),
                   type: BottomNavigationBarType.fixed,
                   items: const [
                     BottomNavigationBarItem(
@@ -236,8 +241,12 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
     });
   }
 
-  Widget _buildHomeTab(BuildContext context, List staffSecretary,
-      List adminMenu, List studentMenuItems) {
+  Widget _buildHomeTab(
+    BuildContext context,
+    List staffSecretary,
+    List adminMenu,
+    List studentMenuItems,
+  ) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -261,13 +270,15 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                   children: [
                     DashboardChart(
                       data: controller.chartStatsModel.value.data!,
-                      title: "Monthly Income & Expense",
+                      metric: ChartMetric.income,
+                      title: "Monthly Income",
                       initialType: ChartType.bar,
                     ),
                     const SizedBox(height: 30),
                     DashboardChart(
                       data: controller.chartStatsModel.value.data!,
-                      title: "Growth Trend",
+                      metric: ChartMetric.expense,
+                      title: "Monthly Expense",
                       initialType: ChartType.line,
                     ),
                   ],
@@ -275,7 +286,11 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
               }),
             if (CommonConstant.instance.isStudent != 1)
               _buildMenuTab(
-                  context, staffSecretary, adminMenu, studentMenuItems),
+                context,
+                staffSecretary,
+                adminMenu,
+                studentMenuItems,
+              ),
             const SizedBox(height: 30),
             Text(
               'V(1.0.0)',
@@ -337,10 +352,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
             Text(
               "We don't have enough data to generate charts yet.",
               textAlign: TextAlign.center,
-              style: PMT.appStyle(
-                size: 14,
-                fontColor: Colors.grey.shade600,
-              ),
+              style: PMT.appStyle(size: 14, fontColor: Colors.grey.shade600),
             ),
           ],
         ),
@@ -370,11 +382,13 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
             children: [
               Container(width: 120, height: 20, color: Colors.white),
               Container(
-                  width: 100,
-                  height: 35,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12))),
+                width: 100,
+                height: 35,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 20),
@@ -419,8 +433,12 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
   }
 
   Widget _buildSummaryCard(
-      String title, String subtitle, IconData icon, Color color,
-      {VoidCallback? onTap}) {
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color, {
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -453,9 +471,10 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                 Text(
                   title,
                   style: PMT.appStyle(
-                      size: 14,
-                      fontWeight: FontWeight.w700,
-                      fontColor: Colors.black87),
+                    size: 14,
+                    fontWeight: FontWeight.w700,
+                    fontColor: Colors.black87,
+                  ),
                 ),
                 Text(
                   subtitle,
@@ -469,42 +488,45 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
     );
   }
 
-  Widget _buildMenuTab(BuildContext context, List staffSecretary,
-      List adminMenu, List studentMenuItems) {
+  Widget _buildMenuTab(
+    BuildContext context,
+    List staffSecretary,
+    List adminMenu,
+    List studentMenuItems,
+  ) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: LayoutBuilder(
           builder: (context, constraints) {
             // Check if "Impport Data" is already there to avoid duplicates
-            bool hasImport =
-                adminMenu.any((item) => item['title'] == 'Impport Data');
+            bool hasImport = adminMenu.any(
+              (item) => item['title'] == 'Impport Data',
+            );
             if (CommonConstant.instance.isStudent == 1 &&
                 !kIsWeb &&
                 !hasImport) {
-              adminMenu.add(
-                {
-                  'title': 'Impport Data',
-                  'icon': 'assets/images/import.png',
-                  'route': AppRoutes.importScreenRoute,
-                  'color': const Color(0xFF1CA7AF),
-                },
-              );
+              adminMenu.add({
+                'title': 'Impport Data',
+                'icon': 'assets/images/import.png',
+                'route': AppRoutes.importScreenRoute,
+                'color': const Color(0xFF1CA7AF),
+              });
             }
             int crossAxisCount = constraints.maxWidth > 800
                 ? 4
                 : constraints.maxWidth > 600
-                    ? 3
-                    : 2;
+                ? 3
+                : 2;
             return GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: CommonConstant.instance.isStudent == 1
                   ? adminMenu.length
                   : CommonConstant.instance.isStudent == 2 ||
-                          CommonConstant.instance.isStudent == 3
-                      ? staffSecretary.length
-                      : studentMenuItems.length,
+                        CommonConstant.instance.isStudent == 3
+                  ? staffSecretary.length
+                  : studentMenuItems.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: 20,
@@ -515,9 +537,9 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                 final item = CommonConstant.instance.isStudent == 1
                     ? adminMenu[index]
                     : CommonConstant.instance.isStudent == 2 ||
-                            CommonConstant.instance.isStudent == 3
-                        ? staffSecretary[index]
-                        : studentMenuItems[index];
+                          CommonConstant.instance.isStudent == 3
+                    ? staffSecretary[index]
+                    : studentMenuItems[index];
                 return TweenAnimationBuilder<double>(
                   duration: Duration(milliseconds: 300 + (index * 50)),
                   tween: Tween(begin: 0.0, end: 1.0),

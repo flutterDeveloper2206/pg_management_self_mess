@@ -1,18 +1,26 @@
+import 'dart:math' as math;
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:pg_managment/core/utils/app_fonts.dart';
+import 'package:pg_managment/core/utils/color_constant.dart';
 import '../model/chart_stats_model.dart';
 
 enum ChartType { line, bar, pie }
+
+/// Which value from [ChartData] this chart displays (income vs expense only).
+enum ChartMetric { income, expense }
 
 class DashboardChart extends StatefulWidget {
   final List<ChartData> data;
   final String title;
   final ChartType initialType;
+  final ChartMetric metric;
 
   const DashboardChart({
     super.key,
     required this.data,
+    required this.metric,
     this.title = "Statistics",
     this.initialType = ChartType.bar,
   });
@@ -23,6 +31,76 @@ class DashboardChart extends StatefulWidget {
 
 class _DashboardChartState extends State<DashboardChart> {
   late ChartType _selectedType;
+
+  int _valueFor(ChartData d) =>
+      widget.metric == ChartMetric.income ? (d.income ?? 0) : (d.expense ?? 0);
+
+  String get _metricLabel =>
+      widget.metric == ChartMetric.income ? 'Income' : 'Expense';
+
+  Color get _metricColor => widget.metric == ChartMetric.income
+      ? const Color(0xFF0F766E)
+      : const Color(0xFFC2410C);
+
+  Color get _metricLightSurface => widget.metric == ChartMetric.income
+      ? const Color(0xFFCCFBF1)
+      : const Color(0xFFFFEDD5);
+
+  int get _periodTotal =>
+      widget.data.fold(0, (sum, d) => sum + _valueFor(d));
+
+  /// Headroom above max value so bars/lines do not touch the top edge.
+  double _maxYAxis() {
+    double maxVal = 0;
+    for (final d in widget.data) {
+      final v = _valueFor(d).toDouble();
+      if (v > maxVal) maxVal = v;
+    }
+    if (maxVal <= 0) return 100;
+    final padded = maxVal * 1.18;
+    final exp = (math.log(padded) / math.ln10).floor();
+    final step = math.pow(10.0, math.max(0, exp - 1)).toDouble();
+    return ((padded / step).ceil() * step).toDouble();
+  }
+
+  String _formatAxisRupee(double value) {
+    final v = value.abs();
+    if (v >= 10000000) return '${(v / 10000000).toStringAsFixed(1)}Cr';
+    if (v >= 100000) return '${(v / 100000).toStringAsFixed(1)}L';
+    if (v >= 1000) return '${(v / 1000).toStringAsFixed(0)}k';
+    return v.toInt().toString();
+  }
+
+  String _formatTooltipRupee(double value) {
+    final n = value.round();
+    final sign = n < 0 ? '-' : '';
+    final abs = n.abs();
+    final s = abs.toString();
+    if (s.length <= 3) return '$sign₹$abs';
+    final parts = <String>[];
+    var i = s.length;
+    parts.add(s.substring(i - 3, i));
+    i -= 3;
+    while (i > 0) {
+      final len = i >= 2 ? 2 : i;
+      parts.insert(0, s.substring(i - len, i));
+      i -= len;
+    }
+    return '$sign₹${parts.join(',')}';
+  }
+
+  String _monthShortLabel(ChartData d) {
+    final raw = d.monthName?.trim();
+    if (raw == null || raw.isEmpty) return '—';
+    final parts = raw.split(RegExp(r'\s+'));
+    if (parts.length >= 2) {
+      final mon = parts[0].length > 3
+          ? parts[0].substring(0, 3)
+          : parts[0];
+      return '$mon\n${parts[1].length > 2 ? parts[1].substring(parts[1].length - 2) : parts[1]}';
+    }
+    return parts.first.length > 4 ? parts.first.substring(0, 4) : parts.first;
+  }
 
   @override
   void initState() {
@@ -36,130 +114,293 @@ class _DashboardChartState extends State<DashboardChart> {
       return const SizedBox.shrink();
     }
 
+    final maxY = _maxYAxis();
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              widget.title,
-              style: PMT.appStyle(
-                size: 18,
-                fontWeight: FontWeight.w700,
-                fontColor: Colors.black87,
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 5,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: DropdownButton<ChartType>(
-                value: _selectedType,
-                underline: const SizedBox(),
-                items: const [
-                  DropdownMenuItem(
-                    value: ChartType.bar,
-                    child: Text("Bar Chart"),
-                  ),
-                  DropdownMenuItem(
-                    value: ChartType.line,
-                    child: Text("Line Chart"),
-                  ),
-                  DropdownMenuItem(
-                    value: ChartType.pie,
-                    child: Text("Pie Chart"),
-                  ),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedType = value;
-                    });
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
+        _buildHeader(context),
+        const SizedBox(height: 14),
         Container(
-          height: 320,
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xFFE8ECF1)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
+                color: ColorConstant.shadowColor.withValues(alpha: 0.06),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
-          child: _buildChart(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+                child: Row(
+                  children: [
+                    Icon(
+                      widget.metric == ChartMetric.income
+                          ? Icons.trending_up_rounded
+                          : Icons.trending_down_rounded,
+                      size: 20,
+                      color: _metricColor,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Tap chart for details · Y-axis in ₹ (k = thousand, L = lakh)',
+                        style: PMT.appStyle(
+                          size: 11,
+                          fontColor: ColorConstant.textGreyColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(19),
+                ),
+                child: Container(
+                  height: 300,
+                  width: double.infinity,
+                  color: ColorConstant.lightGrey,
+                  padding: const EdgeInsets.only(
+                    left: 4,
+                    right: 12,
+                    top: 12,
+                    bottom: 8,
+                  ),
+                  child: _buildChartBody(maxY),
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
         _buildLegend(),
       ],
     );
   }
 
-  Widget _buildChart() {
+  Widget _buildHeader(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: PMT.appStyle(
+                      size: 19,
+                      fontWeight: FontWeight.w700,
+                      fontColor: ColorConstant.textDarkBrown,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _metricLightSurface,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: _metricColor.withValues(alpha: 0.25),
+                      ),
+                    ),
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: [
+                        Text(
+                          'Total (all months)',
+                          style: PMT.appStyle(
+                            size: 12,
+                            fontColor: ColorConstant.textGreyColor,
+                          ),
+                        ),
+                        Text(
+                          _formatTooltipRupee(_periodTotal.toDouble()),
+                          style: PMT.appStyle(
+                            size: 15,
+                            fontWeight: FontWeight.w700,
+                            fontColor: _metricColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.topRight,
+              child: _buildChartTypeControl(),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChartTypeControl() {
+    return Material(
+      color: Colors.transparent,
+      child: SegmentedButton<ChartType>(
+        style: ButtonStyle(
+          visualDensity: VisualDensity.compact,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          padding: WidgetStateProperty.all(
+            const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          ),
+        ),
+        showSelectedIcon: false,
+        segments: [
+          ButtonSegment<ChartType>(
+            value: ChartType.bar,
+            icon: const Icon(Icons.bar_chart_rounded, size: 18),
+            label: Text(
+              'Bar',
+              style: PMT.appStyle(size: 11, fontWeight: FontWeight.w600),
+            ),
+          ),
+          ButtonSegment<ChartType>(
+            value: ChartType.line,
+            icon: const Icon(Icons.show_chart_rounded, size: 18),
+            label: Text(
+              'Line',
+              style: PMT.appStyle(size: 11, fontWeight: FontWeight.w600),
+            ),
+          ),
+          ButtonSegment<ChartType>(
+            value: ChartType.pie,
+            icon: const Icon(Icons.pie_chart_outline_rounded, size: 18),
+            label: Text(
+              'Pie',
+              style: PMT.appStyle(size: 11, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+        selected: {_selectedType},
+        onSelectionChanged: (Set<ChartType> next) {
+          if (next.isEmpty) return;
+          setState(() => _selectedType = next.first);
+        },
+      ),
+    );
+  }
+
+  Widget _buildChartBody(double maxY) {
     switch (_selectedType) {
       case ChartType.line:
-        return _buildLineChart();
+        return _buildLineChart(maxY);
       case ChartType.bar:
-        return _buildBarChart();
+        return _buildBarChart(maxY);
       case ChartType.pie:
         return _buildPieChart();
     }
   }
 
-  Widget _buildLineChart() {
+  Widget _buildLineChart(double maxY) {
+    final color = _metricColor;
     return LineChart(
       LineChartData(
+        minX: -0.05,
+        maxX: (widget.data.length - 1).toDouble() + 0.05,
+        minY: 0,
+        maxY: maxY,
         lineTouchData: LineTouchData(
+          enabled: true,
+          handleBuiltInTouches: true,
           touchTooltipData: LineTouchTooltipData(
+            fitInsideHorizontally: true,
+            fitInsideVertically: true,
+            maxContentWidth: 220,
+            tooltipBorderRadius: BorderRadius.circular(10),
+            tooltipPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 10,
+            ),
+            getTooltipColor: (_) => const Color(0xFF1E293B),
             getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
               return touchedBarSpots.map((barSpot) {
-                final flSpot = barSpot;
+                final i = barSpot.x.round().clamp(0, widget.data.length - 1);
+                final month = widget.data[i].monthName ?? '';
                 return LineTooltipItem(
-                  '${barSpot.barIndex == 0 ? "Income" : "Expense"}: ₹${flSpot.y.toInt()}',
-                  const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12),
+                  '',
+                  const TextStyle(fontSize: 0, height: 0),
+                  children: [
+                    TextSpan(
+                      text: '$month\n',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 11,
+                        height: 1.3,
+                      ),
+                    ),
+                    TextSpan(
+                      text:
+                          '$_metricLabel  ${_formatTooltipRupee(barSpot.y)}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                        height: 1.35,
+                      ),
+                    ),
+                  ],
                 );
               }).toList();
             },
           ),
         ),
-        gridData: const FlGridData(show: true, drawVerticalLine: false),
+        gridData: FlGridData(
+          show: true,
+          drawVerticalLine: false,
+          horizontalInterval: maxY > 0 ? maxY / 4 : null,
+          getDrawingHorizontalLine: (v) => FlLine(
+            color: const Color(0xFFCBD5E1).withValues(alpha: 0.6),
+            strokeWidth: 1,
+          ),
+        ),
         titlesData: FlTitlesData(
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 30,
+              reservedSize: 36,
+              interval: 1,
               getTitlesWidget: (value, meta) {
-                int index = value.toInt();
-                if (index < 0 || index >= widget.data.length)
+                final index = value.toInt();
+                if (index < 0 || index >= widget.data.length) {
                   return const SizedBox();
+                }
                 return Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: 6),
                   child: Text(
-                    widget.data[index].monthName?.split(" ").first ?? "",
-                    style: PMT.appStyle(size: 10, fontColor: Colors.grey),
+                    _monthShortLabel(widget.data[index]),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    style: PMT.appStyle(
+                      size: 10,
+                      fontColor: ColorConstant.textGreyColor,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 );
               },
@@ -168,11 +409,19 @@ class _DashboardChartState extends State<DashboardChart> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 40,
+              reservedSize: 44,
+              interval: maxY > 0 ? maxY / 4 : null,
               getTitlesWidget: (value, meta) {
-                return Text(
-                  '₹${(value / 1000).toStringAsFixed(0)}k',
-                  style: PMT.appStyle(size: 10, fontColor: Colors.grey),
+                return Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: Text(
+                    '₹${_formatAxisRupee(value)}',
+                    textAlign: TextAlign.end,
+                    style: PMT.appStyle(
+                      size: 10,
+                      fontColor: ColorConstant.textGreyColor,
+                    ),
+                  ),
                 );
               },
             ),
@@ -188,52 +437,95 @@ class _DashboardChartState extends State<DashboardChart> {
             spots: widget.data
                 .asMap()
                 .entries
-                .map((e) =>
-                    FlSpot(e.key.toDouble(), (e.value.income ?? 0).toDouble()))
+                .map(
+                  (e) => FlSpot(
+                    e.key.toDouble(),
+                    _valueFor(e.value).toDouble(),
+                  ),
+                )
                 .toList(),
             isCurved: true,
-            color: Colors.green,
-            barWidth: 4,
+            curveSmoothness: 0.22,
+            color: color,
+            barWidth: 3.5,
             isStrokeCapRound: true,
-            dotData: const FlDotData(show: true),
-            belowBarData:
-                BarAreaData(show: true, color: Colors.green.withOpacity(0.1)),
-          ),
-          LineChartBarData(
-            spots: widget.data
-                .asMap()
-                .entries
-                .map((e) =>
-                    FlSpot(e.key.toDouble(), (e.value.expense ?? 0).toDouble()))
-                .toList(),
-            isCurved: true,
-            color: Colors.red,
-            barWidth: 4,
-            isStrokeCapRound: true,
-            dotData: const FlDotData(show: true),
-            belowBarData:
-                BarAreaData(show: true, color: Colors.red.withOpacity(0.1)),
+            dotData: FlDotData(
+              show: true,
+              getDotPainter: (spot, percent, barData, index) {
+                return FlDotCirclePainter(
+                  radius: 5,
+                  color: Colors.white,
+                  strokeWidth: 2.5,
+                  strokeColor: color,
+                );
+              },
+            ),
+            belowBarData: BarAreaData(
+              show: true,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  color.withValues(alpha: 0.22),
+                  color.withValues(alpha: 0.02),
+                ],
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildBarChart() {
+  Widget _buildBarChart(double maxY) {
+    final c = _metricColor;
     return BarChart(
       BarChartData(
+        minY: 0,
+        maxY: maxY,
         alignment: BarChartAlignment.spaceAround,
+        groupsSpace: 10,
         barTouchData: BarTouchData(
+          enabled: true,
           touchTooltipData: BarTouchTooltipData(
-            tooltipPadding: EdgeInsets.zero,
+            maxContentWidth: 220,
+            tooltipBorderRadius: BorderRadius.circular(10),
+            tooltipPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 10,
+            ),
             tooltipMargin: 8,
+            getTooltipColor: (_) => const Color(0xFF1E293B),
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
+              final i = group.x.toInt();
+              if (i < 0 || i >= widget.data.length) {
+                return null;
+              }
+              final month = widget.data[i].monthName ?? '';
               return BarTooltipItem(
-                '₹${rod.toY.toInt()}',
-                TextStyle(
-                  color: rod.color,
-                  fontWeight: FontWeight.bold,
-                ),
+                '',
+                const TextStyle(fontSize: 0, height: 0),
+                textAlign: TextAlign.start,
+                children: [
+                  TextSpan(
+                    text: '$month\n',
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 11,
+                      height: 1.3,
+                    ),
+                  ),
+                  TextSpan(
+                    text:
+                        '$_metricLabel  ${_formatTooltipRupee(rod.toY)}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
               );
             },
           ),
@@ -242,16 +534,23 @@ class _DashboardChartState extends State<DashboardChart> {
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 30,
+              reservedSize: 38,
               getTitlesWidget: (value, meta) {
-                int index = value.toInt();
-                if (index < 0 || index >= widget.data.length)
+                final index = value.toInt();
+                if (index < 0 || index >= widget.data.length) {
                   return const SizedBox();
+                }
                 return Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: 6),
                   child: Text(
-                    widget.data[index].monthName?.split(" ").first ?? "",
-                    style: PMT.appStyle(size: 10, fontColor: Colors.grey),
+                    _monthShortLabel(widget.data[index]),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    style: PMT.appStyle(
+                      size: 10,
+                      fontColor: ColorConstant.textGreyColor,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 );
               },
@@ -260,11 +559,19 @@ class _DashboardChartState extends State<DashboardChart> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 40,
+              reservedSize: 44,
+              interval: maxY > 0 ? maxY / 4 : null,
               getTitlesWidget: (value, meta) {
-                return Text(
-                  '₹${(value / 1000).toStringAsFixed(0)}k',
-                  style: PMT.appStyle(size: 10, fontColor: Colors.grey),
+                return Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: Text(
+                    '₹${_formatAxisRupee(value)}',
+                    textAlign: TextAlign.end,
+                    style: PMT.appStyle(
+                      size: 10,
+                      fontColor: ColorConstant.textGreyColor,
+                    ),
+                  ),
                 );
               },
             ),
@@ -278,21 +585,28 @@ class _DashboardChartState extends State<DashboardChart> {
         barGroups: widget.data.asMap().entries.map((e) {
           return BarChartGroupData(
             x: e.key,
-            showingTooltipIndicators: [0, 1],
+            showingTooltipIndicators: [0],
             barRods: [
               BarChartRodData(
-                toY: (e.value.income ?? 0).toDouble(),
-                color: Colors.green,
-                width: 12,
+                toY: _valueFor(e.value).toDouble(),
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    c.withValues(alpha: 0.85),
+                    c,
+                  ],
+                ),
+                width: 22,
                 borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(6), topRight: Radius.circular(6)),
-              ),
-              BarChartRodData(
-                toY: (e.value.expense ?? 0).toDouble(),
-                color: Colors.red,
-                width: 12,
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(6), topRight: Radius.circular(6)),
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
+                ),
+                backDrawRodData: BackgroundBarChartRodData(
+                  show: true,
+                  toY: maxY,
+                  color: Colors.white.withValues(alpha: 0.5),
+                ),
               ),
             ],
           );
@@ -302,72 +616,177 @@ class _DashboardChartState extends State<DashboardChart> {
   }
 
   Widget _buildPieChart() {
-    final latestData = widget.data.last;
-    return PieChart(
-      PieChartData(
-        pieTouchData: PieTouchData(
-          touchCallback: (FlTouchEvent event, pieTouchResponse) {
-            // Handle touch if needed
-          },
+    final base = _metricColor;
+    final positive = widget.data
+        .asMap()
+        .entries
+        .where((e) => _valueFor(e.value) > 0)
+        .toList();
+    if (positive.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.pie_chart_outline_rounded,
+              size: 48,
+              color: ColorConstant.textGreyColor.withValues(alpha: 0.5),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'No $_metricLabel to show',
+              style: PMT.appStyle(
+                size: 14,
+                fontWeight: FontWeight.w600,
+                fontColor: ColorConstant.textGreyColor,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Amounts are zero for every month in this view.',
+              textAlign: TextAlign.center,
+              style: PMT.appStyle(
+                size: 12,
+                fontColor: ColorConstant.textGreyColor,
+              ),
+            ),
+          ],
         ),
-        sectionsSpace: 4,
-        centerSpaceRadius: 40,
-        sections: [
-          PieChartSectionData(
-            value: (latestData.income ?? 0).toDouble(),
-            title: '₹${latestData.income}',
-            color: Colors.green,
-            radius: 60,
-            titleStyle: PMT.appStyle(
-                size: 12, fontWeight: FontWeight.bold, fontColor: Colors.white),
-          ),
-          PieChartSectionData(
-            value: (latestData.expense ?? 0).toDouble(),
-            title: '₹${latestData.expense}',
-            color: Colors.red,
-            radius: 60,
-            titleStyle: PMT.appStyle(
-                size: 12, fontWeight: FontWeight.bold, fontColor: Colors.white),
-          ),
-          PieChartSectionData(
-            value: (latestData.profit ?? 0).toDouble(),
-            title: '₹${latestData.profit}',
-            color: Colors.blue,
-            radius: 60,
-            titleStyle: PMT.appStyle(
-                size: 12, fontWeight: FontWeight.bold, fontColor: Colors.white),
-          ),
-        ],
-      ),
+      );
+    }
+
+    final total = positive.fold<double>(
+      0,
+      (s, e) => s + _valueFor(e.value).toDouble(),
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final radius = math.min(constraints.maxWidth, constraints.maxHeight) *
+            0.28;
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            PieChart(
+              PieChartData(
+                pieTouchData: PieTouchData(
+                  enabled: true,
+                  touchCallback: (event, response) {},
+                ),
+                sectionsSpace: 2,
+                centerSpaceRadius: radius * 0.55,
+                sections: positive.asMap().entries.map((me) {
+                  final e = me.value;
+                  final idx = me.key;
+                  final v = _valueFor(e.value).toDouble();
+                  final label =
+                      e.value.monthName?.split(' ').first ?? '${e.key + 1}';
+                  final pct = total > 0 ? (v / total * 100) : 0.0;
+                  final t = v >= 100000
+                      ? '₹${(v / 100000).toStringAsFixed(1)}L'
+                      : '₹${(v / 1000).toStringAsFixed(1)}k';
+                  return PieChartSectionData(
+                    value: v,
+                    title: '$label\n$t\n${pct.toStringAsFixed(0)}%',
+                    color: Color.lerp(
+                      base,
+                      Colors.white,
+                      (idx % 6) * 0.1,
+                    )!,
+                    radius: radius,
+                    titleStyle: PMT.appStyle(
+                      size: 9,
+                      fontWeight: FontWeight.w700,
+                      fontColor: Colors.white,
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Total',
+                  style: PMT.appStyle(
+                    size: 11,
+                    fontColor: ColorConstant.textGreyColor,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  _formatTooltipRupee(total),
+                  style: PMT.appStyle(
+                    size: 14,
+                    fontWeight: FontWeight.w800,
+                    fontColor: _metricColor,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 
   Widget _buildLegend() {
-    return Wrap(
-      spacing: 20,
-      runSpacing: 10,
-      alignment: WrapAlignment.center,
-      children: [
-        _legendItem("Income", Colors.green),
-        _legendItem("Expense", Colors.red),
-        if (_selectedType == ChartType.pie) _legendItem("Profit", Colors.blue),
-      ],
-    );
-  }
-
-  Widget _legendItem(String label, Color color) {
+    if (_selectedType == ChartType.pie) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: Row(
+          children: [
+            Icon(
+              Icons.info_outline_rounded,
+              size: 16,
+              color: ColorConstant.textGreyColor,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Pie slices are share of total $_metricLabel for months that have data.',
+                style: PMT.appStyle(
+                  size: 12,
+                  fontColor: ColorConstant.textGreyColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: PMT.appStyle(size: 12, fontColor: Colors.black54),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: _metricLightSurface,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: _metricColor,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                _metricLabel,
+                style: PMT.appStyle(
+                  size: 13,
+                  fontWeight: FontWeight.w600,
+                  fontColor: ColorConstant.textDarkBrown,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
