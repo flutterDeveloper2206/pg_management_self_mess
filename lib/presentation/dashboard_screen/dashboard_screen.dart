@@ -311,7 +311,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                 ),
               const SizedBox(height: 30),
               Text(
-                'V(1.0.4)',
+                'V(1.0.5)',
                 textAlign: TextAlign.center,
                 style: PMT.appStyle(
                   size: 16,

@@ -10,6 +10,8 @@ import 'package:pg_managment/core/utils/string_constant.dart';
 import 'package:pg_managment/core/utils/commonConstant.dart';
 import '../model/chart_stats_model.dart';
 
+import 'package:pg_managment/core/utils/version_check_helper.dart';
+
 class DashboardScreenController extends GetxController {
   Rx<ConfigModel> model = ConfigModel().obs;
   Rx<ChartStatsModel> chartStatsModel = ChartStatsModel().obs;
@@ -22,6 +24,7 @@ class DashboardScreenController extends GetxController {
 
   @override
   void onInit() {
+    VersionCheckHelper.checkAndShowUpdateDialog();
     NotificationService.updateFcmToken();
     getConfig();
     if (CommonConstant.instance.isStudent == 1) {
