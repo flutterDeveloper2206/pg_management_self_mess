@@ -1,9 +1,5 @@
-
 /// Checks if string consist only Alphabet. (No Whitespace)
-bool isText(
-  String? inputString, {
-  bool isRequired = false,
-}) {
+bool isText(String? inputString, {bool isRequired = false}) {
   bool isInputStringValid = false;
 
   if (!isRequired && (inputString == null ? true : inputString.isEmpty)) {
@@ -20,9 +16,6 @@ bool isText(
 
   return isInputStringValid;
 }
-
-
-
 
 /// [ValidationHelpers] is an abstract class for manage validation
 ///
@@ -57,7 +50,6 @@ abstract class ValidationHelpers {
     return null;
   }
 
-
   /// Check name field
   static String? nameField(String? value) {
     if (value!.trim().isEmpty) {
@@ -87,8 +79,9 @@ abstract class ValidationHelpers {
 
   /// Check value is More than 8 Characters
   static String? passwordCheckValidate(String? value) {
-    RegExp regex =
-    RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,16}$');
+    RegExp regex = RegExp(
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,16}$',
+    );
     if (value!.trim().isEmpty) {
       return ('p_enter_pass');
     } else if (!regex.hasMatch(value)) {

@@ -14,9 +14,7 @@ class ProgressDialogUtils {
         Center(
           child: CircularProgressIndicator.adaptive(
             strokeWidth: 4,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Colors.white,
-            ),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
           ),
         ),
         barrierDismissible: isCancellable,
@@ -33,11 +31,14 @@ class ProgressDialogUtils {
 
   static void showSnackBar({headerText, bodyText}) {
     Get.closeAllSnackbars();
-    Get.snackbar(headerText, bodyText,
-        snackPosition: SnackPosition.TOP,
-        colorText: ColorConstant.primaryBlack,
-        backgroundColor: ColorConstant.lightOrangeOutline,
-        margin: EdgeInsets.only(top: 26, left: 16, right: 16));
+    Get.snackbar(
+      headerText,
+      bodyText,
+      snackPosition: SnackPosition.TOP,
+      colorText: ColorConstant.primaryBlack,
+      backgroundColor: ColorConstant.lightOrangeOutline,
+      margin: EdgeInsets.only(top: 26, left: 16, right: 16),
+    );
   }
 }
 
@@ -54,9 +55,7 @@ class AppFlushBars {
     return Flushbar(
       messageText: Text(
         message,
-        style: TextStyle(
-          color: ColorConstant.primaryWhite,
-        ),
+        style: TextStyle(color: ColorConstant.primaryWhite),
       ),
       icon: Image.asset(
         success
@@ -65,9 +64,7 @@ class AppFlushBars {
         height: getWidth(25),
         width: getWidth(25),
       ),
-      margin: EdgeInsets.all(
-        getWidth(18),
-      ),
+      margin: EdgeInsets.all(getWidth(18)),
       backgroundColor: success ? Colors.green : Colors.red,
       isDismissible: true,
       animationDuration: const Duration(milliseconds: 300),

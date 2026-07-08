@@ -11,7 +11,8 @@ import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/navigation_service.dart';
 import 'package:pg_managment/core/utils/progress_dialog_utils.dart';
 import 'package:pg_managment/presentation/monthly_transaction_screen/transaction_model.dart';
-import 'package:pg_managment/presentation/student_list_screen/student_list_model.dart'as s;
+import 'package:pg_managment/presentation/student_list_screen/student_list_model.dart'
+    as s;
 import 'package:pg_managment/widgets/month_year_picker.dart';
 
 class MonthlyTransactionScreenController extends GetxController {
@@ -34,7 +35,13 @@ class MonthlyTransactionScreenController extends GetxController {
   }
 
   Future<void> selectMonth(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(yearController.text), int.parse(monthController.text)));
+    final DateTime? picked = await MonthYearPicker.show(
+      context,
+      initialDate: DateTime(
+        int.parse(yearController.text),
+        int.parse(monthController.text),
+      ),
+    );
 
     if (picked != null) {
       monthController.text = picked.month.toString().padLeft(2, '0');
@@ -44,7 +51,13 @@ class MonthlyTransactionScreenController extends GetxController {
   }
 
   Future<void> selectYear(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(yearController.text), int.parse(monthController.text)));
+    final DateTime? picked = await MonthYearPicker.show(
+      context,
+      initialDate: DateTime(
+        int.parse(yearController.text),
+        int.parse(monthController.text),
+      ),
+    );
 
     if (picked != null) {
       monthController.text = picked.month.toString().padLeft(2, '0');
@@ -56,50 +69,58 @@ class MonthlyTransactionScreenController extends GetxController {
   Future<void> getMonthlyTransaction() async {
     if (yearController.text.isEmpty || monthController.text.isEmpty) {
       AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Please enter both year and month',
-          success: false);
+        context: NavigationService.navigatorKey.currentContext!,
+        message: 'Please enter both year and month',
+        success: false,
+      );
       return;
     }
     isLoading.value = true;
 
-    await ApiService().callPostApi(
-        body: {"year": yearController.text, "month": monthController.text},
-        url: NetworkUrls.monthlyTransactionUrl,
-        headerWithToken: true,
-        showLoader: false).then((value) async {
-      isLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        monthlyTransactionList.value =
-            MonthlyTransactionModel.fromJson(value.body);
-        isLoading.value = false;
-      } else {
-        isLoading.value = false;
-        monthlyTransactionList.value = MonthlyTransactionModel();
-      }
-    });
+    await ApiService()
+        .callPostApi(
+          body: {"year": yearController.text, "month": monthController.text},
+          url: NetworkUrls.monthlyTransactionUrl,
+          headerWithToken: true,
+          showLoader: false,
+        )
+        .then((value) async {
+          isLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            monthlyTransactionList.value = MonthlyTransactionModel.fromJson(
+              value.body,
+            );
+            isLoading.value = false;
+          } else {
+            isLoading.value = false;
+            monthlyTransactionList.value = MonthlyTransactionModel();
+          }
+        });
   }
-
-
 
   Future getStudentList() async {
     isLoading.value = true;
 
-    await ApiService().callGetApi(
-        body: {},
-        headerWithToken: true,
-        showLoader: false,
-        url: NetworkUrls.studentListUrl).then((value) async {
-      isLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        studentListModel.value = s.StudentListModel.fromJson(value.body);
-        if(studentListModel.value.data!=null &&studentListModel.value.data!.isNotEmpty) {
-          studentListModel.value.data!.forEach((element) {
-            totalDeposit.value = totalDeposit.value+element.deposit!.toDouble()??0.0;
-          },);
-        }
-      }
-    });
+    await ApiService()
+        .callGetApi(
+          body: {},
+          headerWithToken: true,
+          showLoader: false,
+          url: NetworkUrls.studentListUrl,
+        )
+        .then((value) async {
+          isLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            studentListModel.value = s.StudentListModel.fromJson(value.body);
+            if (studentListModel.value.data != null &&
+                studentListModel.value.data!.isNotEmpty) {
+              studentListModel.value.data!.forEach((element) {
+                totalDeposit.value =
+                    totalDeposit.value + element.deposit!.toDouble() ?? 0.0;
+              });
+            }
+          }
+        });
   }
 
   // Future<Uint8List> generatePdf() async {
@@ -191,14 +212,22 @@ class MonthlyTransactionScreenController extends GetxController {
   //
 
   Future<Uint8List> generatePdf() async {
-      Data data = monthlyTransactionList.value.data!;
+    Data data = monthlyTransactionList.value.data!;
 
     final pdf = pw.Document();
-    final currencyFormat = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 0);
-    final currencyFormatDecimal = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2);
-      final font = pw.Font.ttf(
-        await rootBundle.load("assets/fonts/Inter_28pt-Regular.ttf"),
-      );
+    final currencyFormat = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 0,
+    );
+    final currencyFormatDecimal = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 2,
+    );
+    final font = pw.Font.ttf(
+      await rootBundle.load("assets/fonts/Inter_28pt-Regular.ttf"),
+    );
     // --- Helper functions for safe parsing and calculation ---
     double p(String? s) => double.tryParse(s ?? '0') ?? 0;
 
@@ -211,9 +240,12 @@ class MonthlyTransactionScreenController extends GetxController {
     // --- Calculations from your provided logic ---
     final totalInflow = prevMonthCashGuest + prevMonthCOH + prevMonthCollection;
     final currentMonthCOH = totalInflow - currentMonthExpense;
-    final perDayExpense = totalEatenDays > 0 ? currentMonthExpense / totalEatenDays : 0;
-    final profit = totalInflow - totalDeposit.value; // Using the new 'studentDeposit' field
-
+    final perDayExpense = totalEatenDays > 0
+        ? currentMonthExpense / totalEatenDays
+        : 0;
+    final profit =
+        totalInflow -
+        totalDeposit.value; // Using the new 'studentDeposit' field
 
     pdf.addPage(
       pw.Page(
@@ -236,14 +268,26 @@ class MonthlyTransactionScreenController extends GetxController {
               pw.Row(
                 children: [
                   pw.Expanded(
-                    child: _buildKeyValue('4.Total Days', data.currentMonthTotalDay ?? '0',  valueStyle: pw.TextStyle(font: font,),),
+                    child: _buildKeyValue(
+                      '4.Total Days',
+                      data.currentMonthTotalDay ?? '0',
+                      valueStyle: pw.TextStyle(font: font),
+                    ),
                   ),
                   pw.SizedBox(width: 20),
                   pw.Expanded(
                     child: pw.Column(
                       children: [
-                        _buildKeyValue('5.Eaten Days', data.currentMonthTotalEatDay ?? '0',  valueStyle: pw.TextStyle(font: font,),),
-                        _buildKeyValue('6.Cut Days (sr. no 4 - 5)', data.currentMonthTotalCutDay ?? '0',  valueStyle: pw.TextStyle(font: font,),),
+                        _buildKeyValue(
+                          '5.Eaten Days',
+                          data.currentMonthTotalEatDay ?? '0',
+                          valueStyle: pw.TextStyle(font: font),
+                        ),
+                        _buildKeyValue(
+                          '6.Cut Days (sr. no 4 - 5)',
+                          data.currentMonthTotalCutDay ?? '0',
+                          valueStyle: pw.TextStyle(font: font),
+                        ),
                       ],
                     ),
                   ),
@@ -251,28 +295,62 @@ class MonthlyTransactionScreenController extends GetxController {
               ),
               pw.SizedBox(height: 15),
 
-
               // 4. Main Financial Details
-              _buildKeyValue('7.Current Month Expense', currencyFormat.format(currentMonthExpense),  valueStyle: pw.TextStyle(font: font,),),
-              _buildKeyValue('8.Previous Month Cash Guest', currencyFormat.format(prevMonthCashGuest),  valueStyle: pw.TextStyle(font: font,),),
-              _buildKeyValue('9.Previous Month COH', currencyFormat.format(prevMonthCOH),  valueStyle: pw.TextStyle(font: font,),),
-              _buildKeyValue('10.Previous Month Collection', currencyFormat.format(prevMonthCollection),  valueStyle: pw.TextStyle(font: font,),),
+              _buildKeyValue(
+                '7.Current Month Expense',
+                currencyFormat.format(currentMonthExpense),
+                valueStyle: pw.TextStyle(font: font),
+              ),
+              _buildKeyValue(
+                '8.Previous Month Cash Guest',
+                currencyFormat.format(prevMonthCashGuest),
+                valueStyle: pw.TextStyle(font: font),
+              ),
+              _buildKeyValue(
+                '9.Previous Month COH',
+                currencyFormat.format(prevMonthCOH),
+                valueStyle: pw.TextStyle(font: font),
+              ),
+              _buildKeyValue(
+                '10.Previous Month Collection',
+                currencyFormat.format(prevMonthCollection),
+                valueStyle: pw.TextStyle(font: font),
+              ),
 
               pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(vertical: 8),
                 child: pw.Divider(),
               ),
 
-              _buildKeyValue('11.Total Inflow (sr. no 8 + 9 + 10)', currencyFormat.format(totalInflow),  valueStyle: pw.TextStyle(font: font,),),
-              _buildKeyValue('12.Current Month COH  (sr. no 11 - 7)', currencyFormat.format(currentMonthCOH),  valueStyle: pw.TextStyle(font: font,),),
-              _buildKeyValue('13.Cash Guest (Current)', currencyFormat.format(p(data.currentMonthTotalGuestAmount)),  valueStyle: pw.TextStyle(font: font,),),
-              _buildKeyValue('14.Per Day Expense (sr. no 7 / 6) ', currencyFormatDecimal.format(perDayExpense),  valueStyle: pw.TextStyle(font: font,),),
-              _buildKeyValue('15.Deposit (Students)', currencyFormat.format(totalDeposit.value),  valueStyle: pw.TextStyle(font: font,),),
+              _buildKeyValue(
+                '11.Total Inflow (sr. no 8 + 9 + 10)',
+                currencyFormat.format(totalInflow),
+                valueStyle: pw.TextStyle(font: font),
+              ),
+              _buildKeyValue(
+                '12.Current Month COH  (sr. no 11 - 7)',
+                currencyFormat.format(currentMonthCOH),
+                valueStyle: pw.TextStyle(font: font),
+              ),
+              _buildKeyValue(
+                '13.Cash Guest (Current)',
+                currencyFormat.format(p(data.currentMonthTotalGuestAmount)),
+                valueStyle: pw.TextStyle(font: font),
+              ),
+              _buildKeyValue(
+                '14.Per Day Expense (sr. no 7 / 6) ',
+                currencyFormatDecimal.format(perDayExpense),
+                valueStyle: pw.TextStyle(font: font),
+              ),
+              _buildKeyValue(
+                '15.Deposit (Students)',
+                currencyFormat.format(totalDeposit.value),
+                valueStyle: pw.TextStyle(font: font),
+              ),
               pw.SizedBox(height: 15),
               pw.Divider(thickness: 1.5),
 
               // 5. Profit (with red color for negative values)
-
               _buildKeyValue(
                 '16.Surplus Amount (sr. no 11 - 15)',
                 currencyFormat.format(profit),
@@ -281,28 +359,33 @@ class MonthlyTransactionScreenController extends GetxController {
                   font: font,
                   color: profit < 0 ? PdfColors.red : PdfColors.black,
                 ),
-              ), _buildKeyValue(
+              ),
+              _buildKeyValue(
                 '17.Current Month Total Collection',
-                currencyFormat.format(double.parse(data.currentTotalCollection??'0.0')),
+                currencyFormat.format(
+                  double.parse(data.currentTotalCollection ?? '0.0'),
+                ),
                 valueStyle: pw.TextStyle(
                   fontWeight: pw.FontWeight.bold,
                   font: font,
                   color: PdfColors.black,
                 ),
-              ), _buildKeyValue(
+              ),
+              _buildKeyValue(
                 '18.Current Month Total Remaining',
-                currencyFormat.format(double.parse(data.currentTotalRemaining??'0.0')),
+                currencyFormat.format(
+                  double.parse(data.currentTotalRemaining ?? '0.0'),
+                ),
                 valueStyle: pw.TextStyle(
                   fontWeight: pw.FontWeight.bold,
                   font: font,
-                  color:  PdfColors.black,
+                  color: PdfColors.black,
                 ),
               ),
 
               pw.Spacer(), // Pushes the remarks to the bottom
 
               // 6. Remarks Section
-
             ],
           );
         },
@@ -312,7 +395,7 @@ class MonthlyTransactionScreenController extends GetxController {
     return pdf.save();
   }
 
-// --- Helper Widgets ---
+  // --- Helper Widgets ---
 
   pw.Widget _buildTitle(font) {
     return pw.Column(
@@ -322,7 +405,11 @@ class MonthlyTransactionScreenController extends GetxController {
           padding: const pw.EdgeInsets.symmetric(vertical: 4),
           child: pw.Text(
             'Monthly Mess Transition',
-            style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold,font: font),
+            style: pw.TextStyle(
+              fontSize: 18,
+              fontWeight: pw.FontWeight.bold,
+              font: font,
+            ),
           ),
         ),
         pw.Divider(thickness: 1.5),
@@ -347,21 +434,27 @@ class MonthlyTransactionScreenController extends GetxController {
     );
   }
 
-  pw.Widget _buildKeyValue(String key, String value, {pw.TextStyle? valueStyle,}) {
-
+  pw.Widget _buildKeyValue(
+    String key,
+    String value, {
+    pw.TextStyle? valueStyle,
+  }) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 3.0),
       child: pw.Row(
         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
         children: [
-          pw.Text(key + ':', style: pw.TextStyle(fontWeight: pw.FontWeight.bold,)),
+          pw.Text(
+            key + ':',
+            style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+          ),
           pw.Text(value, style: valueStyle),
         ],
       ),
     );
   }
 
-// --- Helper Functions ---
+  // --- Helper Functions ---
 
   String _formatDate(DateTime? dateTime) {
     if (dateTime == null) return 'N/A';
@@ -370,13 +463,22 @@ class MonthlyTransactionScreenController extends GetxController {
 
   String _getMonthName(int month) {
     const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
     if (month >= 1 && month <= 12) {
       return monthNames[month - 1];
     }
     return 'N/A';
   }
-
 }

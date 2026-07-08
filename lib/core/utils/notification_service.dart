@@ -7,10 +7,10 @@ import 'package:pg_managment/core/utils/app_network_urls.dart';
 import 'package:pg_managment/firebase_options.dart';
 import 'package:pg_managment/core/utils/logger.dart';
 import 'package:pg_managment/routes/app_routes.dart';
+import 'package:flutter/foundation.dart';
 
 class NotificationService {
-  static final FirebaseMessaging _firebaseMessaging =
-      FirebaseMessaging.instance;
+  static FirebaseMessaging get _firebaseMessaging => FirebaseMessaging.instance;
   static final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -18,6 +18,10 @@ class NotificationService {
   static String? pendingRoute;
 
   static Future<void> init() async {
+    if (kIsWeb) {
+      Logger.log('Push notifications skipped on Web platform.');
+      return;
+    }
     // 1. Request permission (iOS/Android 13+)
     NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,
@@ -40,9 +44,9 @@ class NotificationService {
 
     const InitializationSettings initializationSettings =
         InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS,
+        );
 
     await _localNotificationsPlugin.initialize(
       initializationSettings,
@@ -61,7 +65,8 @@ class NotificationService {
 
     await _localNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(channel);
 
     // 4. Get Token
@@ -138,21 +143,34 @@ class NotificationService {
   }
 
   static Future<String?> getFcmToken() async {
-    return await _firebaseMessaging.getToken();
+    if (kIsWeb) return null;
+    try {
+      return await _firebaseMessaging.getToken();
+    } catch (e) {
+      Logger.log("FCM getToken Error: $e");
+      return null;
+    }
   }
 
   static Future<void> updateFcmToken() async {
-    String? token = await getFcmToken();
-    if (token != null) {
-      await ApiService().callPostApi(
-        body: {'fcm_token': token},
-        url: NetworkUrls.updateFcmTokenUrl,
-        showLoader: false,
-      ).then((value) {
-        if (value != null && value.statusCode == 200) {
-          Logger.log("FCM Token updated successfully");
-        }
-      });
+    if (kIsWeb) return;
+    try {
+      String? token = await getFcmToken();
+      if (token != null) {
+        await ApiService()
+            .callPostApi(
+              body: {'fcm_token': token},
+              url: NetworkUrls.updateFcmTokenUrl,
+              showLoader: false,
+            )
+            .then((value) {
+              if (value != null && value.statusCode == 200) {
+                Logger.log("FCM Token updated successfully");
+              }
+            });
+      }
+    } catch (e) {
+      Logger.log("FCM updateFcmToken Error: $e");
     }
   }
 }

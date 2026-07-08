@@ -28,20 +28,31 @@ class DayDetailsListScreenController extends GetxController {
       studentId.value = argument['student_id'];
       studentName.value = argument['name'];
     }
-    if(CommonConstant.instance.isStudent!=1&&CommonConstant.instance.isStudent!=2&&CommonConstant.instance.isStudent!=3){
-      studentId.value = int.parse(PrefUtils.getString(StringConstants.studentId));
+    if (CommonConstant.instance.isStudent != 1 &&
+        CommonConstant.instance.isStudent != 2 &&
+        CommonConstant.instance.isStudent != 3) {
+      studentId.value = int.parse(
+        PrefUtils.getString(StringConstants.studentId),
+      );
     }
     month.text = DateTime.now().month.toString().padLeft(2, '0');
     year.text = DateTime.now().year.toString();
     getAllStudentDetails(
-        month: '',
-        year: year.text,
-        studentId: studentId.value.toString());
+      month: '',
+      year: year.text,
+      studentId: studentId.value.toString(),
+    );
     super.onInit();
   }
 
   Future<void> selectYear(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context, initialDate: DateTime(int.parse(year.text), month.text.isEmpty?1:int.parse(month.text)));
+    final DateTime? picked = await MonthYearPicker.show(
+      context,
+      initialDate: DateTime(
+        int.parse(year.text),
+        month.text.isEmpty ? 1 : int.parse(month.text),
+      ),
+    );
 
     if (picked != null) {
       month.text = picked.month.toString().padLeft(2, '0');
@@ -49,55 +60,73 @@ class DayDetailsListScreenController extends GetxController {
     }
   }
 
-  Future<void> getAllStudentDetails(
-      {String? month, String? year, String? studentId}) async {
+  Future<void> getAllStudentDetails({
+    String? month,
+    String? year,
+    String? studentId,
+  }) async {
     isLoading.value = true;
 
-    await ApiService().callGetApi(
-        body: {},
-        headerWithToken: true,
-        showLoader: false,
-        url: month?.isEmpty == true
-            ? '${NetworkUrls.dayDetailsListUrl}year=$year&student_id=$studentId'
-            : '${NetworkUrls.dayDetailsListUrl}month=$month&year=$year&student_id=$studentId').then(
-        (value) async {
-      isLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        isLoading.value = false;
-        allStudentListModel.value = StudentAllDetailsModel.fromJson(value.body);
-      }
-    });
+    await ApiService()
+        .callGetApi(
+          body: {},
+          headerWithToken: true,
+          showLoader: false,
+          url: month?.isEmpty == true
+              ? '${NetworkUrls.dayDetailsListUrl}year=$year&student_id=$studentId'
+              : '${NetworkUrls.dayDetailsListUrl}month=$month&year=$year&student_id=$studentId',
+        )
+        .then((value) async {
+          isLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            isLoading.value = false;
+            allStudentListModel.value = StudentAllDetailsModel.fromJson(
+              value.body,
+            );
+          }
+        });
   }
 
   deleteStudentDetails(String? studentId) async {
     isLoading.value = true;
-    await ApiService().callDeleteApi(
-        body: {},
-        headerWithToken: true,
-        showLoader: true,
-        url: '${NetworkUrls.dayDetailsDeleteUrl}$studentId').then((value) {
-      isLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        isLoading.value = false;
-        AppFlushBars.appCommonFlushBar(
-            context: NavigationService.navigatorKey.currentContext!,
-            message: 'Student details deleted successfully',
-            success: true);
-        getAllStudentDetails(
-            month: '',
-            year: year.text,
-            studentId: studentId.toString());
-      }
-    });
+    await ApiService()
+        .callDeleteApi(
+          body: {},
+          headerWithToken: true,
+          showLoader: true,
+          url: '${NetworkUrls.dayDetailsDeleteUrl}$studentId',
+        )
+        .then((value) {
+          isLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            isLoading.value = false;
+            AppFlushBars.appCommonFlushBar(
+              context: NavigationService.navigatorKey.currentContext!,
+              message: 'Student details deleted successfully',
+              success: true,
+            );
+            getAllStudentDetails(
+              month: '',
+              year: year.text,
+              studentId: studentId.toString(),
+            );
+          }
+        });
   }
-  void showDeleteConfirmationDialog(BuildContext context, VoidCallback onYesPressed) {
+
+  void showDeleteConfirmationDialog(
+    BuildContext context,
+    VoidCallback onYesPressed,
+  ) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text("Confirm Delete"),
           content: Text("Are you sure you want to delete this Entry?"),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           actionsAlignment: MainAxisAlignment.end,
           actions: [
@@ -105,7 +134,7 @@ class DayDetailsListScreenController extends GetxController {
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text("No",style: TextStyle(color: Colors.black),),
+              child: Text("No", style: TextStyle(color: Colors.black)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -115,12 +144,11 @@ class DayDetailsListScreenController extends GetxController {
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorConstant.primary,
               ),
-              child: Text("Yes",style: TextStyle(color: Colors.white),),
+              child: Text("Yes", style: TextStyle(color: Colors.white)),
             ),
           ],
         );
       },
     );
   }
-
 }

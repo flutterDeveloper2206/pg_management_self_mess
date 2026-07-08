@@ -243,6 +243,7 @@ import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'package:printing/printing.dart';
 import 'controller/monthly_transaction_screen_controller.dart';
 import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
+import 'package:pg_managment/widgets/responsive_layout.dart';
 
 class MonthlyTransactionScreen
     extends GetWidget<MonthlyTransactionScreenController> {
@@ -260,156 +261,272 @@ class MonthlyTransactionScreen
           icon: Padding(
             padding: const EdgeInsets.all(8.0),
             child: CustomImageView(
-                height: 40,
-                width: 40,
-                imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
+              height: 40,
+              width: 40,
+              imagePath: 'assets/images/left-arrow.png',
+              color: ColorConstant.primaryWhite,
+            ),
           ),
         ),
-        title: Text('Monthly Transaction', style: PMT.appStyle(size: 20, fontColor: ColorConstant.primaryWhite)),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: CustomAppTextFormField(
-                      controller: controller.monthController,
-                      onTap: () => controller.selectMonth(context),
-                      readOnly: true,
-                      variant: TextFormFieldVariant.OutlineGray200,
-                      hintText: 'Select Month',
-                    ),
-                  ),
-                  hBox(10),
-                  Expanded(
-                    child: CustomAppTextFormField(
-                      controller: controller.yearController,
-                      onTap: () => controller.selectYear(context),
-                      readOnly: true,
-                      variant: TextFormFieldVariant.OutlineGray200,
-                      hintText: 'Select Year',
-                    ),
-                  ),
-                  hBox(10),
-                  TextButton(
-                    onPressed: () => controller.getMonthlyTransaction(),
-                    style: TextButton.styleFrom(
-                      backgroundColor: ColorConstant.primary,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: Text('GO', style: PMT.appStyle(size: 16, fontWeight: FontWeight.bold, fontColor: ColorConstant.primaryWhite)),
-                  ),
-                ],
-              ),
-            ),
-            hBox(10),
-            Expanded(
-              child: Obx(() {
-                if (controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                // Using `!` because we handle the null case right below.
-                final responseData = controller.monthlyTransactionList.value.data;
-
-                if (responseData == null) {
-                  return const Center(child: Text('No data found for the selected period.'));
-                }
-
-                // --- NEW: Perform calculations based on your requirements ---
-                // NOTE: Assuming your data model has these fields. You may need to add them.
-                // For example: studentDeposit and remarks might be new fields from your API.
-                final currentExpense = _parseDouble(responseData.currentMonthExpense);
-                final prevMonthGuest = _parseDouble(responseData.lastMonthTotalCashGuestAmount);
-                final prevMonthCOH = _parseDouble(responseData.lastMonthTotalCaseOnHand);
-                final prevMonthCollection = _parseDouble(responseData.lastMonthTotalCollection);
-                final eatDays = _parseDouble(responseData.currentMonthTotalEatDay);
-
-                // Assuming a new field 'studentDeposit' exists in your data model
-                final studentDeposit = controller.totalDeposit.value;
-                // final studentDeposit = _parseDouble( '0');
-
-                final totalInflow = prevMonthGuest + prevMonthCOH + prevMonthCollection;
-                final currentMonthCOH = totalInflow - currentExpense;
-                final perDayExpense = (eatDays > 0) ? (currentExpense / eatDays) : 0.0;
-                final profit = totalInflow - studentDeposit;
-
-                // --- NEW: Report-style ListView ---
-                return ListView(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                  children: [
-                    _buildTitle('Monthly Mess Transition'),
-                    _buildSeparator(),
-
-                    _buildDataRow(
-                        '1.Year', responseData.year.toString(),
-                        '2.Month', _formatMonthName(responseData.month)
-                    ),
-                    _buildSingleDataRow(
-                        '3.Bill Date', _formatDate(DateTime(responseData.year ?? 2000, responseData.month ?? 1).add(Duration(days: -1)))
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    _buildDataRow(
-                        '4.Total Days', _formatNumber(responseData.currentMonthTotalDay),
-                        '5.Eaten Days', _formatNumber(responseData.currentMonthTotalEatDay)
-                    ),
-                    _buildSingleDataRow(
-                        '6.Cut Days (sr. no 4 - 5)', _formatNumber(responseData.currentMonthTotalCutDay)
-                    ),
-
-                    _buildSeparator(),
-
-                    _buildSingleDataRow('7.Current Month Expense', _formatCurrency(currentExpense)),
-                    _buildSingleDataRow('8.Previous Month Cash Guest', _formatCurrency(prevMonthGuest)),
-                    _buildSingleDataRow('9.Previous Month COH', _formatCurrency(prevMonthCOH)),
-                    _buildSingleDataRow('10.Previous Month Collection', _formatCurrency(prevMonthCollection)),
-
-                    _buildSeparator(),
-
-                    _buildSingleDataRow('11.Total Inflow (sr. no 8 + 9 + 10)', _formatCurrency(totalInflow), isImportant: true),
-                    _buildSingleDataRow('12.Current Month COH  (sr. no 11 - 7)', _formatCurrency(currentMonthCOH)),
-                    _buildSingleDataRow('13.Cash Guest (Current)', _formatCurrency(_parseDouble(responseData.currentMonthTotalGuestAmount))),
-                    _buildSingleDataRow('14.Per Day Expense (sr. no 7 / 6) ', _formatCurrency(perDayExpense, decimalDigits: 2)),
-                    _buildSingleDataRow('15.Deposit (Students)', _formatCurrency(studentDeposit)),
-
-                    _buildSeparator(),
-
-                    _buildSingleDataRow('16.Surplus Amount (sr. no 11 - 15)', _formatCurrency(profit), isImportant: true),
-                    _buildSingleDataRow('17.Current Month Total Collection', _formatCurrency(double.parse(responseData.currentTotalCollection??'0.0')), isImportant: true),
-                    _buildSingleDataRow('18.Current Month Total Remaining', _formatCurrency(double.parse(responseData.currentTotalRemaining??'0.0')), isImportant: true),
-
-                    // NOTE: Assuming a 'remarks' field exists in your data model
-                    // _buildRemarks(responseData.remarks),
-                  ],
-                );
-              }),
-            ),
-          ],
+        title: Text(
+          'Monthly Transaction',
+          style: PMT.appStyle(size: 20, fontColor: ColorConstant.primaryWhite),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 10, top: 5),
-        child: AppElevatedButton(
-          buttonName: 'Download PDF',
-          onPressed: () async {
-            if (controller.monthlyTransactionList.value.data == null) {
-              Get.snackbar("Notice", "No data available to download.",
-                  snackPosition: SnackPosition.BOTTOM);
-              return;
-            }
-            final pdfData = await controller.generatePdf();
-            await Printing.sharePdf(
-              bytes: pdfData,
-              filename: 'Monthly_Report_${controller.yearController.text}_${controller.monthController.text}.pdf',
-            );
-          },
+      body: SafeArea(
+        child: ResponsiveWrapper(
+          maxWidth: 1000,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CustomAppTextFormField(
+                          controller: controller.monthController,
+                          onTap: () => controller.selectMonth(context),
+                          readOnly: true,
+                          variant: TextFormFieldVariant.OutlineGray200,
+                          hintText: 'Select Month',
+                        ),
+                      ),
+                      hBox(10),
+                      Expanded(
+                        child: CustomAppTextFormField(
+                          controller: controller.yearController,
+                          onTap: () => controller.selectYear(context),
+                          readOnly: true,
+                          variant: TextFormFieldVariant.OutlineGray200,
+                          hintText: 'Select Year',
+                        ),
+                      ),
+                      hBox(10),
+                      TextButton(
+                        onPressed: () => controller.getMonthlyTransaction(),
+                        style: TextButton.styleFrom(
+                          backgroundColor: ColorConstant.primary,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          'GO',
+                          style: PMT.appStyle(
+                            size: 16,
+                            fontWeight: FontWeight.bold,
+                            fontColor: ColorConstant.primaryWhite,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                hBox(10),
+                Expanded(
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    // Using `!` because we handle the null case right below.
+                    final responseData =
+                        controller.monthlyTransactionList.value.data;
+
+                    if (responseData == null) {
+                      return const Center(
+                        child: Text('No data found for the selected period.'),
+                      );
+                    }
+
+                    // --- NEW: Perform calculations based on your requirements ---
+                    // NOTE: Assuming your data model has these fields. You may need to add them.
+                    // For example: studentDeposit and remarks might be new fields from your API.
+                    final currentExpense = _parseDouble(
+                      responseData.currentMonthExpense,
+                    );
+                    final prevMonthGuest = _parseDouble(
+                      responseData.lastMonthTotalCashGuestAmount,
+                    );
+                    final prevMonthCOH = _parseDouble(
+                      responseData.lastMonthTotalCaseOnHand,
+                    );
+                    final prevMonthCollection = _parseDouble(
+                      responseData.lastMonthTotalCollection,
+                    );
+                    final eatDays = _parseDouble(
+                      responseData.currentMonthTotalEatDay,
+                    );
+
+                    // Assuming a new field 'studentDeposit' exists in your data model
+                    final studentDeposit = controller.totalDeposit.value;
+                    // final studentDeposit = _parseDouble( '0');
+
+                    final totalInflow =
+                        prevMonthGuest + prevMonthCOH + prevMonthCollection;
+                    final currentMonthCOH = totalInflow - currentExpense;
+                    final perDayExpense = (eatDays > 0)
+                        ? (currentExpense / eatDays)
+                        : 0.0;
+                    final profit = totalInflow - studentDeposit;
+
+                    // --- NEW: Report-style ListView ---
+                    return ListView(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 8,
+                      ),
+                      children: [
+                        _buildTitle('Monthly Mess Transition'),
+                        _buildSeparator(),
+
+                        _buildDataRow(
+                          '1.Year',
+                          responseData.year.toString(),
+                          '2.Month',
+                          _formatMonthName(responseData.month),
+                        ),
+                        _buildSingleDataRow(
+                          '3.Bill Date',
+                          _formatDate(
+                            DateTime(
+                              responseData.year ?? 2000,
+                              responseData.month ?? 1,
+                            ).add(Duration(days: -1)),
+                          ),
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        _buildDataRow(
+                          '4.Total Days',
+                          _formatNumber(responseData.currentMonthTotalDay),
+                          '5.Eaten Days',
+                          _formatNumber(responseData.currentMonthTotalEatDay),
+                        ),
+                        _buildSingleDataRow(
+                          '6.Cut Days (sr. no 4 - 5)',
+                          _formatNumber(responseData.currentMonthTotalCutDay),
+                        ),
+
+                        _buildSeparator(),
+
+                        _buildSingleDataRow(
+                          '7.Current Month Expense',
+                          _formatCurrency(currentExpense),
+                        ),
+                        _buildSingleDataRow(
+                          '8.Previous Month Cash Guest',
+                          _formatCurrency(prevMonthGuest),
+                        ),
+                        _buildSingleDataRow(
+                          '9.Previous Month COH',
+                          _formatCurrency(prevMonthCOH),
+                        ),
+                        _buildSingleDataRow(
+                          '10.Previous Month Collection',
+                          _formatCurrency(prevMonthCollection),
+                        ),
+
+                        _buildSeparator(),
+
+                        _buildSingleDataRow(
+                          '11.Total Inflow (sr. no 8 + 9 + 10)',
+                          _formatCurrency(totalInflow),
+                          isImportant: true,
+                        ),
+                        _buildSingleDataRow(
+                          '12.Current Month COH  (sr. no 11 - 7)',
+                          _formatCurrency(currentMonthCOH),
+                        ),
+                        _buildSingleDataRow(
+                          '13.Cash Guest (Current)',
+                          _formatCurrency(
+                            _parseDouble(
+                              responseData.currentMonthTotalGuestAmount,
+                            ),
+                          ),
+                        ),
+                        _buildSingleDataRow(
+                          '14.Per Day Expense (sr. no 7 / 6) ',
+                          _formatCurrency(perDayExpense, decimalDigits: 2),
+                        ),
+                        _buildSingleDataRow(
+                          '15.Deposit (Students)',
+                          _formatCurrency(studentDeposit),
+                        ),
+
+                        _buildSeparator(),
+
+                        _buildSingleDataRow(
+                          '16.Surplus Amount (sr. no 11 - 15)',
+                          _formatCurrency(profit),
+                          isImportant: true,
+                        ),
+                        _buildSingleDataRow(
+                          '17.Current Month Total Collection',
+                          _formatCurrency(
+                            double.parse(
+                              responseData.currentTotalCollection ?? '0.0',
+                            ),
+                          ),
+                          isImportant: true,
+                        ),
+                        _buildSingleDataRow(
+                          '18.Current Month Total Remaining',
+                          _formatCurrency(
+                            double.parse(
+                              responseData.currentTotalRemaining ?? '0.0',
+                            ),
+                          ),
+                          isImportant: true,
+                        ),
+
+                        // NOTE: Assuming a 'remarks' field exists in your data model
+                        // _buildRemarks(responseData.remarks),
+                      ],
+                    );
+                  }),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: ResponsiveWrapper(
+        maxWidth: 600,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            bottom: 10,
+            top: 5,
+          ),
+          child: AppElevatedButton(
+            buttonName: 'Download PDF',
+            onPressed: () async {
+              if (controller.monthlyTransactionList.value.data == null) {
+                Get.snackbar(
+                  "Notice",
+                  "No data available to download.",
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+                return;
+              }
+              final pdfData = await controller.generatePdf();
+              await Printing.sharePdf(
+                bytes: pdfData,
+                filename:
+                    'Monthly_Report_${controller.yearController.text}_${controller.monthController.text}.pdf',
+              );
+            },
+          ),
         ),
       ),
     );
@@ -423,7 +540,11 @@ class MonthlyTransactionScreen
       child: Text(
         title,
         textAlign: TextAlign.center,
-        style: PMT.appStyle(size: 20, fontWeight: FontWeight.bold, fontColor: ColorConstant.primary),
+        style: PMT.appStyle(
+          size: 20,
+          fontWeight: FontWeight.bold,
+          fontColor: ColorConstant.primary,
+        ),
       ),
     );
   }
@@ -435,7 +556,12 @@ class MonthlyTransactionScreen
     );
   }
 
-  Widget _buildDataRow(String label1, String value1, String label2, String value2) {
+  Widget _buildDataRow(
+    String label1,
+    String value1,
+    String label2,
+    String value2,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Row(
@@ -448,9 +574,15 @@ class MonthlyTransactionScreen
     );
   }
 
-  Widget _buildSingleDataRow(String label, String value, {bool isImportant = false}) {
+  Widget _buildSingleDataRow(
+    String label,
+    String value, {
+    bool isImportant = false,
+  }) {
     final isNegative = value.contains('-');
-    final valueColor = isNegative ? Colors.red.shade700 : (isImportant ? ColorConstant.primary : Colors.black87);
+    final valueColor = isNegative
+        ? Colors.red.shade700
+        : (isImportant ? ColorConstant.primary : Colors.black87);
     final valueWeight = isImportant ? FontWeight.bold : FontWeight.w600;
 
     return Padding(
@@ -459,11 +591,18 @@ class MonthlyTransactionScreen
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-
-              child: Text('$label:', style: PMT.appStyle(size: 15, fontColor: Colors.black54))),
+            child: Text(
+              '$label:',
+              style: PMT.appStyle(size: 15, fontColor: Colors.black54),
+            ),
+          ),
           Text(
             value,
-            style: PMT.appStyle(size: 15, fontWeight: valueWeight, fontColor: valueColor),
+            style: PMT.appStyle(
+              size: 15,
+              fontWeight: valueWeight,
+              fontColor: valueColor,
+            ),
           ),
         ],
       ),
@@ -478,7 +617,11 @@ class MonthlyTransactionScreen
         children: [
           TextSpan(
             text: value,
-            style: PMT.appStyle(size: 15, fontWeight: FontWeight.w600, fontColor: Colors.black87),
+            style: PMT.appStyle(
+              size: 15,
+              fontWeight: FontWeight.w600,
+              fontColor: Colors.black87,
+            ),
           ),
         ],
       ),
@@ -524,7 +667,8 @@ class MonthlyTransactionScreen
   }
 
   String _formatMonthName(int? monthNumber) {
-    if (monthNumber == null || monthNumber < 1 || monthNumber > 12) return 'N/A';
+    if (monthNumber == null || monthNumber < 1 || monthNumber > 12)
+      return 'N/A';
     return DateFormat.MMMM().format(DateTime(2000, monthNumber));
   }
 }

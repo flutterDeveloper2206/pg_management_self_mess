@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-LoginModel loginModelFromJson(String str) => LoginModel.fromJson(json.decode(str));
+LoginModel loginModelFromJson(String str) =>
+    LoginModel.fromJson(json.decode(str));
 
 String loginModelToJson(LoginModel data) => json.encode(data.toJson());
 
@@ -13,11 +14,7 @@ class LoginModel {
   final String? message;
   final Data? data;
 
-  LoginModel({
-    this.stateCode,
-    this.message,
-    this.data,
-  });
+  LoginModel({this.stateCode, this.message, this.data});
 
   factory LoginModel.fromJson(Map<String, dynamic> json) => LoginModel(
     stateCode: json["state_code"],
@@ -37,11 +34,7 @@ class Data {
   final String? tokenType;
   final User? user;
 
-  Data({
-    this.accessToken,
-    this.tokenType,
-    this.user,
-  });
+  Data({this.accessToken, this.tokenType, this.user});
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     accessToken: json["access_token"],
@@ -87,8 +80,12 @@ class User {
     mobile: json["mobile"],
     emailVerifiedAt: json["email_verified_at"],
     roleId: json["role_id"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    createdAt: json["created_at"] == null
+        ? null
+        : DateTime.parse(json["created_at"]),
+    updatedAt: json["updated_at"] == null
+        ? null
+        : DateTime.parse(json["updated_at"]),
   );
 
   Map<String, dynamic> toJson() => {

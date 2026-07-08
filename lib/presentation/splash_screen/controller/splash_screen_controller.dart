@@ -11,8 +11,9 @@ import 'package:pg_managment/routes/app_routes.dart';
 class SplashScreenController extends GetxController {
   @override
   void onInit() {
-    CommonConstant.instance.isStudent =
-        PrefUtils.getInt(StringConstants.isStudent);
+    CommonConstant.instance.isStudent = PrefUtils.getInt(
+      StringConstants.isStudent,
+    );
     Timer(const Duration(seconds: 3), () {
       if (NotificationService.pendingRoute != null) {
         String route = NotificationService.pendingRoute!;

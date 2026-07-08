@@ -6,26 +6,25 @@ import 'dart:convert';
 
 import '../student_list_screen/student_list_model.dart';
 
-StudentProfileModel studentProfileModelFromJson(String str) => StudentProfileModel.fromJson(json.decode(str));
+StudentProfileModel studentProfileModelFromJson(String str) =>
+    StudentProfileModel.fromJson(json.decode(str));
 
-String studentProfileModelToJson(StudentProfileModel data) => json.encode(data.toJson());
+String studentProfileModelToJson(StudentProfileModel data) =>
+    json.encode(data.toJson());
 
 class StudentProfileModel {
   final int? stateCode;
   final String? message;
   final Data? data;
 
-  StudentProfileModel({
-    this.stateCode,
-    this.message,
-    this.data,
-  });
+  StudentProfileModel({this.stateCode, this.message, this.data});
 
-  factory StudentProfileModel.fromJson(Map<String, dynamic> json) => StudentProfileModel(
-    stateCode: json["state_code"],
-    message: json["message"],
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
-  );
+  factory StudentProfileModel.fromJson(Map<String, dynamic> json) =>
+      StudentProfileModel(
+        stateCode: json["state_code"],
+        message: json["message"],
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+      );
 
   Map<String, dynamic> toJson() => {
     "state_code": stateCode,
@@ -33,6 +32,7 @@ class StudentProfileModel {
     "data": data?.toJson(),
   };
 }
+
 //
 // class Data {
 //   final int? id;

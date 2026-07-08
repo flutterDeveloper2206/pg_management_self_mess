@@ -10,9 +10,9 @@ import 'package:pg_managment/presentation/expense_list_screen/expense_list_model
 class AddExpenseScreenController extends GetxController {
   TextEditingController itemController = TextEditingController();
   TextEditingController dateController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController amountController = TextEditingController();
-    TextEditingController remarkController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
+  TextEditingController remarkController = TextEditingController();
 
   dynamic argumentData = Get.arguments;
 
@@ -67,93 +67,100 @@ class AddExpenseScreenController extends GetxController {
     isLoading.value = true;
     if (itemController.text.isEmpty) {
       AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Please enter item',
-          success: false);
+        context: NavigationService.navigatorKey.currentContext!,
+        message: 'Please enter item',
+        success: false,
+      );
       isLoading.value = false;
       return;
     } else if (amountController.text.isEmpty) {
       AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Please enter amount',
-          success: false);
+        context: NavigationService.navigatorKey.currentContext!,
+        message: 'Please enter amount',
+        success: false,
+      );
       isLoading.value = false;
       return;
     } else if (dateController.text.isEmpty) {
       AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Please enter date',
-          success: false);
+        context: NavigationService.navigatorKey.currentContext!,
+        message: 'Please enter date',
+        success: false,
+      );
       isLoading.value = false;
       return;
     } else {
       isLoading.value = false;
       if (isAddEdit.value == 1) {
-        await ApiService().callPutApi(
-            body: {
-              'item': itemController.text,
-              'amount': amountController.text,
-              'date': dateController.text,
-              'remark': remarkController.text,
-            },
-            headerWithToken: true,
-            showLoader: true,
-            url: isAddEdit.value == 1
-                ? NetworkUrls.expenseUpdateUrl + model.value.id.toString()
-                : NetworkUrls.expenseAddUrl).then((value) async {
-          if (value != null &&
-              (value.statusCode == 200 || value.statusCode == 201)) {
-            if (isAddEdit.value == 1) {
-              Get.back();
+        await ApiService()
+            .callPutApi(
+              body: {
+                'item': itemController.text,
+                'amount': amountController.text,
+                'date': dateController.text,
+                'remark': remarkController.text,
+              },
+              headerWithToken: true,
+              showLoader: true,
+              url: isAddEdit.value == 1
+                  ? NetworkUrls.expenseUpdateUrl + model.value.id.toString()
+                  : NetworkUrls.expenseAddUrl,
+            )
+            .then((value) async {
+              if (value != null &&
+                  (value.statusCode == 200 || value.statusCode == 201)) {
+                if (isAddEdit.value == 1) {
+                  Get.back();
+                } else {}
 
-            }else{
-
-            }
-
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              AppFlushBars.appCommonFlushBar(
-                  context: NavigationService.navigatorKey.currentContext!,
-                  message: isAddEdit.value == 0
-                      ? 'Expense Added successfully'
-                      : 'Expense Updated successfully',
-                  success: true);
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  AppFlushBars.appCommonFlushBar(
+                    context: NavigationService.navigatorKey.currentContext!,
+                    message: isAddEdit.value == 0
+                        ? 'Expense Added successfully'
+                        : 'Expense Updated successfully',
+                    success: true,
+                  );
+                });
+              }
             });
-          }
-        });
       } else {
-        await ApiService().callPostApi(
-            body: {
-              'item': itemController.text,
-              'amount': amountController.text,
-              'date': dateController.text,
-              'remark': remarkController.text,
-            },
-            headerWithToken: true,
-            showLoader: true,
-            url: isAddEdit.value == 1
-                ? NetworkUrls.expenseUpdateUrl + model.value.id.toString()
-                : NetworkUrls.expenseAddUrl).then((value) async {
-          if (value != null &&
-              (value.statusCode == 200 || value.statusCode == 201)) {
-            if (isAddEdit.value == 1) {
-              Get.back();
+        await ApiService()
+            .callPostApi(
+              body: {
+                'item': itemController.text,
+                'amount': amountController.text,
+                'date': dateController.text,
+                'remark': remarkController.text,
+              },
+              headerWithToken: true,
+              showLoader: true,
+              url: isAddEdit.value == 1
+                  ? NetworkUrls.expenseUpdateUrl + model.value.id.toString()
+                  : NetworkUrls.expenseAddUrl,
+            )
+            .then((value) async {
+              if (value != null &&
+                  (value.statusCode == 200 || value.statusCode == 201)) {
+                if (isAddEdit.value == 1) {
+                  Get.back();
+                } else {
+                  itemController.clear();
+                  amountController.clear();
+                  remarkController.clear();
+                }
 
-            }else{
-              itemController.clear();
-          amountController.clear();
-          remarkController.clear();
-            }
-
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              AppFlushBars.appCommonFlushBar(
-                  context: NavigationService.navigatorKey.currentContext!,
-                  message: isAddEdit.value == 0
-                      ? 'Expense Added successfully'
-                      : 'Expense Updated successfully',
-                  success: true);
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  AppFlushBars.appCommonFlushBar(
+                    context: NavigationService.navigatorKey.currentContext!,
+                    message: isAddEdit.value == 0
+                        ? 'Expense Added successfully'
+                        : 'Expense Updated successfully',
+                    success: true,
+                  );
+                });
+              }
             });
-          }
-        });
       }
     }
   }

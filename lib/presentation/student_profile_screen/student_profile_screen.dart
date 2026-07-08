@@ -12,6 +12,7 @@ import 'package:pg_managment/widgets/custom_elavated_button.dart';
 import 'package:pg_managment/core/utils/commonConstant.dart';
 import '../../routes/app_routes.dart';
 import 'controller/student_profile_screen_controller.dart';
+import 'package:pg_managment/widgets/responsive_layout.dart';
 
 class StudentProfileScreen extends GetWidget<StudentProfileScreenController> {
   const StudentProfileScreen({super.key});
@@ -80,62 +81,48 @@ Shared via Self Mess App
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F5F9),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return _buildShimmerProfile(context);
-        }
+      body: ResponsiveWrapper(
+        maxWidth: 700,
+        child: Obx(() {
+          if (controller.isLoading.value) {
+            return _buildShimmerProfile(context);
+          }
 
-        final data = controller.model.value.data;
+          final data = controller.model.value.data;
 
-        if (data == null) {
-          return const Center(child: Text("No student data found"));
-        }
+          if (data == null) {
+            return const Center(child: Text("No student data found"));
+          }
 
-        return Stack(
-          children: [
-            // Header Gradient Background
-            Container(
-              height: 300,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    ColorConstant.primary,
-                    ColorConstant.primary.withOpacity(0.85),
-                  ],
-                ),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
-                  bottomRight: Radius.circular(32),
+          return Stack(
+            children: [
+              // Header Gradient Background
+              Container(
+                height: 300,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      ColorConstant.primary,
+                      ColorConstant.primary.withOpacity(0.85),
+                    ],
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(32),
+                    bottomRight: Radius.circular(32),
+                  ),
                 ),
               ),
-            ),
 
-            SafeArea(
-              child: CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                slivers: [
-                  SliverAppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    leading: IconButton(
-                      icon: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                      onPressed: () => Get.back(),
-                    ),
-                    actions: [
-                      IconButton(
+              SafeArea(
+                child: CustomScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  slivers: [
+                    SliverAppBar(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      leading: IconButton(
                         icon: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
@@ -143,168 +130,185 @@ Shared via Self Mess App
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
-                            Icons.share_rounded,
+                            Icons.arrow_back_ios_new_rounded,
                             color: Colors.white,
                             size: 18,
                           ),
                         ),
-                        onPressed: () {
-                          _shareProfile(data);
-                        },
+                        onPressed: () => Get.back(),
                       ),
-                    ],
-                  ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        children: [
-                          _buildPremiumAvatar(
-                            imageUrl: data.profileImage,
-                            canEdit: false,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            data.name ?? 'No Name',
-                            style: PMT.appStyle(
-                              size: 24,
-                              fontWeight: FontWeight.w800,
-                              fontColor: Colors.white,
+                      actions: [
+                        IconButton(
+                          icon: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.share_rounded,
+                              color: Colors.white,
+                              size: 18,
                             ),
                           ),
-                          Text(
-                            "Student ID: ${data.id ?? 'N/A'}",
-                            style: PMT.appStyle(
-                              size: 14,
-                              fontWeight: FontWeight.w500,
-                              fontColor: Colors.white.withOpacity(0.8),
+                          onPressed: () {
+                            _shareProfile(data);
+                          },
+                        ),
+                      ],
+                    ),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: [
+                            _buildPremiumAvatar(
+                              imageUrl: data.profileImage,
+                              canEdit: false,
                             ),
-                          ),
-                          const SizedBox(height: 30),
-
-                          // Basic Information Card
-                          _buildModernCard(
-                            context,
-                            "Personal Details",
-                            Icons.person_rounded,
-                            [
-                              _buildInteractiveTile(
-                                Icons.email_outlined,
-                                "Email Address",
-                                data.email,
-                                onTap: () => _sendEmail(data.email),
+                            const SizedBox(height: 16),
+                            Text(
+                              data.name ?? 'No Name',
+                              style: PMT.appStyle(
+                                size: 24,
+                                fontWeight: FontWeight.w800,
+                                fontColor: Colors.white,
                               ),
-                              _buildInteractiveTile(
-                                Icons.phone_android_rounded,
-                                "Mobile Number",
-                                data.mobile,
-                                onTap: () => _makeCall(data.mobile),
-                                onLongPress: () =>
-                                    _copyToClipboard("Mobile", data.mobile),
-                              ),
-                              _buildInteractiveTile(
-                                Icons.bloodtype_outlined,
-                                "Blood Group",
-                                data.bloodGroup,
-                                isLast: true,
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          // Residency Information
-                          _buildModernCard(
-                            context,
-                            "Residency",
-                            Icons.home_work_rounded,
-                            [
-                              _buildInteractiveTile(
-                                Icons.business_rounded,
-                                "Hostel Name",
-                                data.hostelName,
-                              ),
-                              _buildInteractiveTile(
-                                Icons.meeting_room_rounded,
-                                "Room Number",
-                                data.roomNo,
-                              ),
-                              _buildInteractiveTile(
-                                Icons.location_on_outlined,
-                                "Full Address",
-                                data.residentialAddress,
-                                isLast: true,
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          // Academic Information
-                          _buildModernCard(
-                            context,
-                            "Academic Profile",
-                            Icons.school_rounded,
-                            [
-                              _buildInteractiveTile(
-                                Icons.book_outlined,
-                                "Currently Pursuing",
-                                data.currentlyPursuing,
-                              ),
-                              _buildInteractiveTile(
-                                Icons.calendar_today_rounded,
-                                "Current Year",
-                                data.currentlyStudyingYear?.toString(),
-                                isLast: true,
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 20),
-                          _buildModernCard(
-                            context,
-                            "Financial Summary",
-                            Icons.account_balance_wallet_rounded,
-                            [
-                              _buildInteractiveTile(
-                                Icons.currency_rupee_rounded,
-                                "Refundable Deposit",
-                                "₹${data.deposit}",
-                                isLast: true,
-                                isHighlight: true,
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 35),
-                          if (Get.arguments == null ||
-                              Get.arguments['isViewMode'] != true)
-                            AppElevatedButton(
-                              buttonName: 'Edit Profile Information',
-                              onPressed: () {
-                                Get.toNamed(
-                                  AppRoutes.addStudentScreenRoute,
-                                  arguments: {
-                                    "data": data,
-                                    "isAddEdit": 1,
-                                    "isStudentShow": true,
-                                  },
-                                )?.then((value) {
-                                  controller.getStudentProfile();
-                                });
-                              },
                             ),
-                          const SizedBox(height: 40),
-                        ],
+                            Text(
+                              "Student ID: ${data.id ?? 'N/A'}",
+                              style: PMT.appStyle(
+                                size: 14,
+                                fontWeight: FontWeight.w500,
+                                fontColor: Colors.white.withOpacity(0.8),
+                              ),
+                            ),
+                            const SizedBox(height: 30),
+
+                            // Basic Information Card
+                            _buildModernCard(
+                              context,
+                              "Personal Details",
+                              Icons.person_rounded,
+                              [
+                                _buildInteractiveTile(
+                                  Icons.email_outlined,
+                                  "Email Address",
+                                  data.email,
+                                  onTap: () => _sendEmail(data.email),
+                                ),
+                                _buildInteractiveTile(
+                                  Icons.phone_android_rounded,
+                                  "Mobile Number",
+                                  data.mobile,
+                                  onTap: () => _makeCall(data.mobile),
+                                  onLongPress: () =>
+                                      _copyToClipboard("Mobile", data.mobile),
+                                ),
+                                _buildInteractiveTile(
+                                  Icons.bloodtype_outlined,
+                                  "Blood Group",
+                                  data.bloodGroup,
+                                  isLast: true,
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 20),
+
+                            // Residency Information
+                            _buildModernCard(
+                              context,
+                              "Residency",
+                              Icons.home_work_rounded,
+                              [
+                                _buildInteractiveTile(
+                                  Icons.business_rounded,
+                                  "Hostel Name",
+                                  data.hostelName,
+                                ),
+                                _buildInteractiveTile(
+                                  Icons.meeting_room_rounded,
+                                  "Room Number",
+                                  data.roomNo,
+                                ),
+                                _buildInteractiveTile(
+                                  Icons.location_on_outlined,
+                                  "Full Address",
+                                  data.residentialAddress,
+                                  isLast: true,
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 20),
+
+                            // Academic Information
+                            _buildModernCard(
+                              context,
+                              "Academic Profile",
+                              Icons.school_rounded,
+                              [
+                                _buildInteractiveTile(
+                                  Icons.book_outlined,
+                                  "Currently Pursuing",
+                                  data.currentlyPursuing,
+                                ),
+                                _buildInteractiveTile(
+                                  Icons.calendar_today_rounded,
+                                  "Current Year",
+                                  data.currentlyStudyingYear?.toString(),
+                                  isLast: true,
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 20),
+                            _buildModernCard(
+                              context,
+                              "Financial Summary",
+                              Icons.account_balance_wallet_rounded,
+                              [
+                                _buildInteractiveTile(
+                                  Icons.currency_rupee_rounded,
+                                  "Refundable Deposit",
+                                  "₹${data.deposit}",
+                                  isLast: true,
+                                  isHighlight: true,
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 35),
+                            if (Get.arguments == null ||
+                                Get.arguments['isViewMode'] != true)
+                              AppElevatedButton(
+                                buttonName: 'Edit Profile Information',
+                                onPressed: () {
+                                  Get.toNamed(
+                                    AppRoutes.addStudentScreenRoute,
+                                    arguments: {
+                                      "data": data,
+                                      "isAddEdit": 1,
+                                      "isStudentShow": true,
+                                    },
+                                  )?.then((value) {
+                                    controller.getStudentProfile();
+                                  });
+                                },
+                              ),
+                            const SizedBox(height: 40),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        );
-      }),
+            ],
+          );
+        }),
+      ),
     );
   }
 

@@ -64,6 +64,14 @@ fvm flutter run
   ```bash
   fvm flutter build appbundle --release
   ```
+- **Web Build**:
+  ```bash
+  fvm flutter build web --base-href /frontend/
+  ```
+- **Clean & Build Web**:
+  ```bash
+  fvm flutter clean && fvm flutter pub get && fvm flutter build web --base-href /frontend/
+  ```
 
 ## 📝 License
 

@@ -40,7 +40,7 @@ class SendNotificationScreenController extends GetxController {
       );
       return;
     }
-        dateController.text = DateTime.now().toString().split(' ')[0];
+    dateController.text = DateTime.now().toString().split(' ')[0];
 
     isLoading.value = true;
 
@@ -48,35 +48,34 @@ class SendNotificationScreenController extends GetxController {
       'title': titleController.text,
       'body': bodyController.text,
       'type': selectedType.value,
-      'payload': {
-        'date': dateController.text,
-      }
+      'payload': {'date': dateController.text},
     };
 
     await ApiService()
         .callPostApi(
-      body: body,
-      url: NetworkUrls.sendNotificationUrl,
-      showLoader: true,
-    )
+          body: body,
+          url: NetworkUrls.sendNotificationUrl,
+          showLoader: true,
+        )
         .then((value) {
-      isLoading.value = false;
-      if (value != null && (value.statusCode == 200|| value.statusCode == 201)) {
-        titleController.clear();
-        bodyController.clear();
-        AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Notification sent successfully',
-          success: true,
-        );
-      } else {
-        AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Failed to send notification',
-          success: false,
-        );
-      }
-    });
+          isLoading.value = false;
+          if (value != null &&
+              (value.statusCode == 200 || value.statusCode == 201)) {
+            titleController.clear();
+            bodyController.clear();
+            AppFlushBars.appCommonFlushBar(
+              context: NavigationService.navigatorKey.currentContext!,
+              message: 'Notification sent successfully',
+              success: true,
+            );
+          } else {
+            AppFlushBars.appCommonFlushBar(
+              context: NavigationService.navigatorKey.currentContext!,
+              message: 'Failed to send notification',
+              success: false,
+            );
+          }
+        });
   }
 
   @override

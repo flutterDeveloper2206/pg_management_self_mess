@@ -28,18 +28,20 @@ class ImportDataScreen extends GetWidget<ImportDataScreenController> {
           icon: Padding(
             padding: const EdgeInsets.all(8.0),
             child: CustomImageView(
-                height: 40,
-                width: 40,
-                imagePath: 'assets/images/left-arrow.png',
-                color: ColorConstant.primaryWhite),
+              height: 40,
+              width: 40,
+              imagePath: 'assets/images/left-arrow.png',
+              color: ColorConstant.primaryWhite,
+            ),
           ),
         ),
         title: Text(
           'Import Data',
           style: PMT.appStyle(
-              size: 20,
-              // fontWeight: FontWeight.w600,
-              fontColor: ColorConstant.primaryWhite),
+            size: 20,
+            // fontWeight: FontWeight.w600,
+            fontColor: ColorConstant.primaryWhite,
+          ),
         ),
       ),
       body: Obx(() {
@@ -62,7 +64,9 @@ class ImportDataScreen extends GetWidget<ImportDataScreenController> {
                       backgroundColor: ColorConstant.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 12),
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
                       textStyle: const TextStyle(fontSize: 16),
                     ),
                   ),
@@ -73,7 +77,9 @@ class ImportDataScreen extends GetWidget<ImportDataScreenController> {
                           : '📄 ${controller.fileName.value}',
                       textAlign: TextAlign.end,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ],
@@ -91,9 +97,7 @@ class ImportDataScreen extends GetWidget<ImportDataScreenController> {
                     )
                   : _buildDataTable(),
             ),
-            SizedBox(
-              height: 20,
-            )
+            SizedBox(height: 20),
           ],
         );
       }),
@@ -182,27 +186,38 @@ class ImportDataScreen extends GetWidget<ImportDataScreenController> {
       scrollDirection: Axis.horizontal,
       child: SingleChildScrollView(
         child: DataTable(
-          headingRowColor:
-              MaterialStateProperty.all(ColorConstant.primary.withOpacity(0.2)),
+          headingRowColor: MaterialStateProperty.all(
+            ColorConstant.primary.withOpacity(0.2),
+          ),
           border: TableBorder.all(color: Colors.grey.shade300),
           columns: headers
-              .map((key) => DataColumn(
-                    label: Text(
-                      key,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 13),
+              .map(
+                (key) => DataColumn(
+                  label: Text(
+                    key,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
                     ),
-                  ))
+                  ),
+                ),
+              )
               .toList(),
           rows: data
-              .map((row) => DataRow(
-                    cells: headers
-                        .map((key) => DataCell(Text(
-                              row[key]?.toString() ?? '',
-                              style: const TextStyle(fontSize: 12),
-                            )))
-                        .toList(),
-                  ))
+              .map(
+                (row) => DataRow(
+                  cells: headers
+                      .map(
+                        (key) => DataCell(
+                          Text(
+                            row[key]?.toString() ?? '',
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              )
               .toList(),
         ),
       ),

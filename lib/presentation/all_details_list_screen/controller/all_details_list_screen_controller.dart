@@ -42,10 +42,15 @@ class AllDetailsListScreenController extends GetxController {
     if (search.isEmpty) {
       studentListSearch.value = allStudentListModel.value.data ?? [];
     } else {
-      studentListSearch.value = allStudentListModel.value.data
-              ?.where((element) =>
-                  element.studentName!.toLowerCase().contains(search) ||
-                  element.studentId!.toString().toLowerCase().contains(search))
+      studentListSearch.value =
+          allStudentListModel.value.data
+              ?.where(
+                (element) =>
+                    element.studentName!.toLowerCase().contains(search) ||
+                    element.studentId!.toString().toLowerCase().contains(
+                      search,
+                    ),
+              )
               .toList() ??
           [];
     }
@@ -53,8 +58,10 @@ class AllDetailsListScreenController extends GetxController {
   }
 
   Future<void> selectMonth(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context,
-        initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
+    final DateTime? picked = await MonthYearPicker.show(
+      context,
+      initialDate: DateTime(int.parse(year.text), int.parse(month.text)),
+    );
 
     if (picked != null) {
       month.text = picked.month.toString().padLeft(2, '0');
@@ -64,8 +71,10 @@ class AllDetailsListScreenController extends GetxController {
   }
 
   Future<void> selectYear(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context,
-        initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
+    final DateTime? picked = await MonthYearPicker.show(
+      context,
+      initialDate: DateTime(int.parse(year.text), int.parse(month.text)),
+    );
 
     if (picked != null) {
       month.text = picked.month.toString().padLeft(2, '0');
@@ -77,49 +86,52 @@ class AllDetailsListScreenController extends GetxController {
   Future<void> getAllStudentDetails({String? month, String? year}) async {
     isLoading.value = true;
 
-    await ApiService().callGetApi(
-        body: {},
-        headerWithToken: true,
-        showLoader: false,
-        url:
-            '${NetworkUrls.dayDetailsListUrl}month=$month&year=$year').then(
-        (value) async {
-      isLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        isLoading.value = false;
-        allStudentListModel.value = StudentAllDetailsModel.fromJson(value.body);
-        if (allStudentListModel.value.data != null &&
-            allStudentListModel.value.data!.isNotEmpty) {
-          totalCollection.value = 0.0;
-          totalRemaining.value = 0.0;
-          totalMealDay.value = 0;
-          totalCutDay.value = 0;
-          studentMonthlyStudentList.value =
-              generateStudentTableList(allStudentListModel.value) ?? [];
-          studentMonthlyStudentListForExel.value =
-              generateStudentTableListExel(allStudentListModel.value)
-                      ?.reversed
-                      .toList() ??
+    await ApiService()
+        .callGetApi(
+          body: {},
+          headerWithToken: true,
+          showLoader: false,
+          url: '${NetworkUrls.dayDetailsListUrl}month=$month&year=$year',
+        )
+        .then((value) async {
+          isLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            isLoading.value = false;
+            allStudentListModel.value = StudentAllDetailsModel.fromJson(
+              value.body,
+            );
+            if (allStudentListModel.value.data != null &&
+                allStudentListModel.value.data!.isNotEmpty) {
+              totalCollection.value = 0.0;
+              totalRemaining.value = 0.0;
+              totalMealDay.value = 0;
+              totalCutDay.value = 0;
+              studentMonthlyStudentList.value =
+                  generateStudentTableList(allStudentListModel.value) ?? [];
+              studentMonthlyStudentListForExel.value =
+                  generateStudentTableListExel(
+                    allStudentListModel.value,
+                  )?.reversed.toList() ??
                   [];
-          studentListSearch.value = allStudentListModel.value.data ?? [];
+              studentListSearch.value = allStudentListModel.value.data ?? [];
 
-          allStudentListModel.value.data?.forEach(
-            (element) {
-              totalCollection.value = totalCollection.value +
-                      (element.paidAmount ?? 0).toDouble() ??
-                  0.0;
-              totalRemaining.value = totalRemaining.value +
-                      (element.remainAmount ?? 0).toDouble() ??
-                  0.0;
-              totalMealDay.value =
-                  totalMealDay.value + (element.totalDay ?? 0) ?? 0;
-              totalCutDay.value =
-                  totalCutDay.value + (element.cutDay ?? 0) ?? 0;
-            },
-          );
-        }
-      }
-    });
+              allStudentListModel.value.data?.forEach((element) {
+                totalCollection.value =
+                    totalCollection.value +
+                        (element.paidAmount ?? 0).toDouble() ??
+                    0.0;
+                totalRemaining.value =
+                    totalRemaining.value +
+                        (element.remainAmount ?? 0).toDouble() ??
+                    0.0;
+                totalMealDay.value =
+                    totalMealDay.value + (element.totalDay ?? 0) ?? 0;
+                totalCutDay.value =
+                    totalCutDay.value + (element.cutDay ?? 0) ?? 0;
+              });
+            }
+          }
+        });
   }
 
   List<List<String>>? generateStudentTableList(StudentAllDetailsModel model) {
@@ -143,7 +155,8 @@ class AllDetailsListScreenController extends GetxController {
   }
 
   List<List<TextCellValue>>? generateStudentTableListExel(
-      StudentAllDetailsModel model) {
+    StudentAllDetailsModel model,
+  ) {
     return model.data?.asMap().entries.map((entry) {
           final student = entry.value;
           return [
@@ -173,8 +186,9 @@ class AllDetailsListScreenController extends GetxController {
     final pdf = pw.Document();
 
     // Load optional image from assets
-    final ByteData logoBytes =
-        await rootBundle.load('assets/images/ic_launcher.png');
+    final ByteData logoBytes = await rootBundle.load(
+      'assets/images/ic_launcher.png',
+    );
     final Uint8List logoUint8List = logoBytes.buffer.asUint8List();
     final image = pw.MemoryImage(logoUint8List);
 
@@ -184,9 +198,10 @@ class AllDetailsListScreenController extends GetxController {
         build: (context) => [
           pw.Center(child: pw.Image(image, width: 100)), // Optional logo
           pw.SizedBox(height: 20),
-          pw.Text('Student Monthly Report',
-              style:
-                  pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold)),
+          pw.Text(
+            'Student Monthly Report',
+            style: pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold),
+          ),
           pw.SizedBox(height: 16),
           pw.Text('Date: ${DateTime.now().toLocal()}'),
           pw.SizedBox(height: 16),
@@ -213,7 +228,7 @@ class AllDetailsListScreenController extends GetxController {
               'Rate',
               'Penalty Amount',
               'Paid Amount',
-              'Total Amount'
+              'Total Amount',
             ],
             data: studentMonthlyStudentList,
             headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
@@ -251,7 +266,7 @@ class AllDetailsListScreenController extends GetxController {
       TextCellValue('Paid Amount'),
       TextCellValue('Total Amount'),
       TextCellValue('Amount'),
-      TextCellValue('Remark')
+      TextCellValue('Remark'),
     ]);
     for (var item in studentMonthlyStudentListForExel) {
       sheet.appendRow(item);
@@ -267,8 +282,9 @@ class AllDetailsListScreenController extends GetxController {
     await file.writeAsBytes(excelBytes!);
 
     // 5️⃣ Share the file
-    await Share.shareXFiles([XFile(filePath)],
-        text: '📊 Check out this Excel file');
+    await Share.shareXFiles([
+      XFile(filePath),
+    ], text: '📊 Check out this Excel file');
   }
 
   void showDownloadSheet(BuildContext context) {
@@ -294,10 +310,7 @@ class AllDetailsListScreenController extends GetxController {
               ),
               const Text(
                 'Choose Download Option',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 20),
               ListTile(

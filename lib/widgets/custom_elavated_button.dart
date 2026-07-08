@@ -1,8 +1,3 @@
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pg_managment/core/utils/color_constant.dart';
@@ -20,24 +15,25 @@ class AppElevatedButton extends StatefulWidget {
   final bool? isLoading;
   final double? fontSize;
   final bool? showTextIcon;
-   bool? hasGradient=true;
+  bool? hasGradient = true;
   final String? textIcon;
   final Color? borderColor;
 
-   AppElevatedButton(
-      {super.key,
-      required this.buttonName,
-      required this.onPressed,
-      this.textColor,
-      this.textIcon,
-      this.borderColor,
-      this.fontWeight,
-      this.fontSize,
-      this.buttonColor,
-      this.radius,
-      this.showTextIcon,
-      this.hasGradient=true,
-      this.isLoading = false});
+  AppElevatedButton({
+    super.key,
+    required this.buttonName,
+    required this.onPressed,
+    this.textColor,
+    this.textIcon,
+    this.borderColor,
+    this.fontWeight,
+    this.fontSize,
+    this.buttonColor,
+    this.radius,
+    this.showTextIcon,
+    this.hasGradient = true,
+    this.isLoading = false,
+  });
 
   @override
   State<AppElevatedButton> createState() => _AppElevatedButtonState();
@@ -50,16 +46,20 @@ class _AppElevatedButtonState extends State<AppElevatedButton> {
       height: getHeight(40),
       width: double.infinity,
       decoration: BoxDecoration(
-        border:  widget.hasGradient??false? null:Border.all(color: ColorConstant.primary,width: getWidth(1)),
-       color:widget.buttonColor?? ColorConstant.primary,
-        boxShadow: widget.hasGradient??false?[
-          BoxShadow(
-              blurRadius: 10.0,
-              offset: const Offset(4, 8),
-              color: ColorConstant.primary.withOpacity(0.6)),
-        ]:null,
+        border: widget.hasGradient ?? false
+            ? null
+            : Border.all(color: ColorConstant.primary, width: getWidth(1)),
+        color: widget.buttonColor ?? ColorConstant.primary,
+        boxShadow: widget.hasGradient ?? false
+            ? [
+                BoxShadow(
+                  blurRadius: 10.0,
+                  offset: const Offset(4, 8),
+                  color: ColorConstant.primary.withOpacity(0.6),
+                ),
+              ]
+            : null,
         borderRadius: const BorderRadius.all(Radius.circular(8)),
-
       ),
       child: ElevatedButton(
         onPressed: widget.onPressed,
@@ -68,7 +68,8 @@ class _AppElevatedButtonState extends State<AppElevatedButton> {
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12))),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
         ),
         child: !widget.isLoading!
             ? Row(
@@ -86,22 +87,24 @@ class _AppElevatedButtonState extends State<AppElevatedButton> {
                   Text(
                     widget.buttonName.toString(),
                     style: AppStyle.txtGilroyBold.copyWith(
-                        color: widget.textColor ?? ColorConstant.primaryWhite,
-                        fontWeight: widget.fontWeight ?? FontWeight.w400,
-                        fontSize: getFontSize(widget.fontSize ?? 16)),
+                      color: widget.textColor ?? ColorConstant.primaryWhite,
+                      fontWeight: widget.fontWeight ?? FontWeight.w400,
+                      fontSize: getFontSize(widget.fontSize ?? 16),
+                    ),
                   ),
                 ],
               )
             : Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: SizedBox(
+                padding: const EdgeInsets.all(5.0),
+                child: SizedBox(
                   height: getWidth(25),
                   width: getWidth(25),
                   child: const CircularProgressIndicator(
                     color: ColorConstant.primaryWhite,
                     strokeWidth: 2,
-                  )),
-            ),
+                  ),
+                ),
+              ),
       ),
     );
   }

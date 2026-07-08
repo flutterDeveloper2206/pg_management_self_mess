@@ -17,13 +17,9 @@ double getHeight(double px) {
 }
 
 Widget vBox(double h) {
-  return SizedBox(
-    height: h,
-  );
+  return SizedBox(height: h);
 }
 
 Widget hBox(double w) {
-  return SizedBox(
-    width: w,
-  );
+  return SizedBox(width: w);
 }

@@ -21,7 +21,7 @@ class NotificationScreenController extends GetxController {
       // Try to get userId first, then fallback to isStudent
       // var idValue = PrefUtils.getInt(StringConstants.userId);
       // if (idValue == 0) {
-    var    idValue = PrefUtils.getInt(StringConstants.isStudent);
+      var idValue = PrefUtils.getInt(StringConstants.isStudent);
       // }
 
       String url = "${NetworkUrls.getNotificationsUrl}$idValue";
@@ -51,6 +51,7 @@ class NotificationScreenController extends GetxController {
       isLoading.value = false;
     }
   }
+
   /// For all Delete
   // /delete-student-notification/{student_id?} ama student_id pass nai kare to badhi delete thai jase
   Future<void> deleteNotification(int notificationId) async {

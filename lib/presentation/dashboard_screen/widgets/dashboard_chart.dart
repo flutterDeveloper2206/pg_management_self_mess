@@ -46,8 +46,7 @@ class _DashboardChartState extends State<DashboardChart> {
       ? const Color(0xFFCCFBF1)
       : const Color(0xFFFFEDD5);
 
-  int get _periodTotal =>
-      widget.data.fold(0, (sum, d) => sum + _valueFor(d));
+  int get _periodTotal => widget.data.fold(0, (sum, d) => sum + _valueFor(d));
 
   /// Headroom above max value so bars/lines do not touch the top edge.
   double _maxYAxis() {
@@ -94,9 +93,7 @@ class _DashboardChartState extends State<DashboardChart> {
     if (raw == null || raw.isEmpty) return '—';
     final parts = raw.split(RegExp(r'\s+'));
     if (parts.length >= 2) {
-      final mon = parts[0].length > 3
-          ? parts[0].substring(0, 3)
-          : parts[0];
+      final mon = parts[0].length > 3 ? parts[0].substring(0, 3) : parts[0];
       return '$mon\n${parts[1].length > 2 ? parts[1].substring(parts[1].length - 2) : parts[1]}';
     }
     return parts.first.length > 4 ? parts.first.substring(0, 4) : parts.first;
@@ -355,8 +352,7 @@ class _DashboardChartState extends State<DashboardChart> {
                       ),
                     ),
                     TextSpan(
-                      text:
-                          '$_metricLabel  ${_formatTooltipRupee(barSpot.y)}',
+                      text: '$_metricLabel  ${_formatTooltipRupee(barSpot.y)}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
@@ -426,10 +422,12 @@ class _DashboardChartState extends State<DashboardChart> {
               },
             ),
           ),
-          topTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
         ),
         borderData: FlBorderData(show: false),
         lineBarsData: [
@@ -438,10 +436,8 @@ class _DashboardChartState extends State<DashboardChart> {
                 .asMap()
                 .entries
                 .map(
-                  (e) => FlSpot(
-                    e.key.toDouble(),
-                    _valueFor(e.value).toDouble(),
-                  ),
+                  (e) =>
+                      FlSpot(e.key.toDouble(), _valueFor(e.value).toDouble()),
                 )
                 .toList(),
             isCurved: true,
@@ -516,8 +512,7 @@ class _DashboardChartState extends State<DashboardChart> {
                     ),
                   ),
                   TextSpan(
-                    text:
-                        '$_metricLabel  ${_formatTooltipRupee(rod.toY)}',
+                    text: '$_metricLabel  ${_formatTooltipRupee(rod.toY)}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
@@ -576,10 +571,12 @@ class _DashboardChartState extends State<DashboardChart> {
               },
             ),
           ),
-          topTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
         ),
         borderData: FlBorderData(show: false),
         barGroups: widget.data.asMap().entries.map((e) {
@@ -592,10 +589,7 @@ class _DashboardChartState extends State<DashboardChart> {
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [
-                    c.withValues(alpha: 0.85),
-                    c,
-                  ],
+                  colors: [c.withValues(alpha: 0.85), c],
                 ),
                 width: 22,
                 borderRadius: const BorderRadius.only(
@@ -662,8 +656,8 @@ class _DashboardChartState extends State<DashboardChart> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final radius = math.min(constraints.maxWidth, constraints.maxHeight) *
-            0.28;
+        final radius =
+            math.min(constraints.maxWidth, constraints.maxHeight) * 0.28;
         return Stack(
           alignment: Alignment.center,
           children: [
@@ -688,11 +682,7 @@ class _DashboardChartState extends State<DashboardChart> {
                   return PieChartSectionData(
                     value: v,
                     title: '$label\n$t\n${pct.toStringAsFixed(0)}%',
-                    color: Color.lerp(
-                      base,
-                      Colors.white,
-                      (idx % 6) * 0.1,
-                    )!,
+                    color: Color.lerp(base, Colors.white, (idx % 6) * 0.1)!,
                     radius: radius,
                     titleStyle: PMT.appStyle(
                       size: 9,

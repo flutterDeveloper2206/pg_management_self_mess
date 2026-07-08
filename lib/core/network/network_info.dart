@@ -24,9 +24,9 @@ class NetworkInfo implements NetworkInfoI {
     final result = await connectivity.checkConnectivity();
     if (result.contains(ConnectivityResult.mobile)) {
       return true;
-    }else if (result.contains(ConnectivityResult.wifi)) {
+    } else if (result.contains(ConnectivityResult.wifi)) {
       return true;
-    }else if (result.contains(ConnectivityResult.vpn)) {
+    } else if (result.contains(ConnectivityResult.vpn)) {
       return true;
     }
     return false;

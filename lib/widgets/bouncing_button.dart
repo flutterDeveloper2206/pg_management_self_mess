@@ -7,12 +7,12 @@ class Bounce extends StatefulWidget {
 
   // This will get the data from the pages
   // Makes sure child won't be passed as null
-  const Bounce(
-      {
-        required this.child,
-        required this.onTap,
-        this.duration = const Duration(milliseconds: 100),
-        Key? key});
+  const Bounce({
+    required this.child,
+    required this.onTap,
+    this.duration = const Duration(milliseconds: 100),
+    Key? key,
+  });
 
   @override
   BounceState createState() => BounceState();
@@ -34,18 +34,19 @@ class BounceState extends State<Bounce> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     //defining the controller
-    _animate = AnimationController(
-        vsync: this,
-        duration: const Duration(
-            milliseconds: 200), //This is an inital controller duration
-        lowerBound: 0.0,
-        upperBound: 0.2)
-      ..addListener(() {
-        setState(() {});
-      }); // Can do something in the listener, but not required
+    _animate =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(
+            milliseconds: 200,
+          ), //This is an inital controller duration
+          lowerBound: 0.0,
+          upperBound: 0.2,
+        )..addListener(() {
+          setState(() {});
+        }); // Can do something in the listener, but not required
     super.initState();
   }
-
 
   @override
   void dispose() {
@@ -60,11 +61,9 @@ class BounceState extends State<Bounce> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     _scale = 1 - _animate!.value;
     return GestureDetector(
-        onTap: _onTap,
-        child: Transform.scale(
-          scale: _scale,
-          child: widget.child,
-        ));
+      onTap: _onTap,
+      child: Transform.scale(scale: _scale, child: widget.child),
+    );
   }
 
   void _onTap() {

@@ -33,32 +33,33 @@ class DepositDetailsScreenController extends GetxController {
   Future getStudentList() async {
     isLoading.value = true;
 
-    await ApiService().callGetApi(
-        body: {},
-        headerWithToken: true,
-        showLoader: false,
-        url: NetworkUrls.studentListUrl).then((value) async {
-      isLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        studentListModel.value = StudentListModel.fromJson(value.body);
-        if (studentListModel.value.data != null &&
-            studentListModel.value.data!.isNotEmpty) {
-          depositDetailList.value =
-              generateStudentTableList(studentListModel.value) ?? [];
-          studentMonthlyStudentListForExel.value =
-              generateStudentTableListExel(studentListModel.value)
-                      ?.reversed
-                      .toList() ??
+    await ApiService()
+        .callGetApi(
+          body: {},
+          headerWithToken: true,
+          showLoader: false,
+          url: NetworkUrls.studentListUrl,
+        )
+        .then((value) async {
+          isLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            studentListModel.value = StudentListModel.fromJson(value.body);
+            if (studentListModel.value.data != null &&
+                studentListModel.value.data!.isNotEmpty) {
+              depositDetailList.value =
+                  generateStudentTableList(studentListModel.value) ?? [];
+              studentMonthlyStudentListForExel.value =
+                  generateStudentTableListExel(
+                    studentListModel.value,
+                  )?.reversed.toList() ??
                   [];
-          studentListModel.value.data!.forEach(
-            (element) {
-              totalDeposit.value =
-                  totalDeposit.value + element.deposit!.toDouble() ?? 0.0;
-            },
-          );
-        }
-      }
-    });
+              studentListModel.value.data!.forEach((element) {
+                totalDeposit.value =
+                    totalDeposit.value + element.deposit!.toDouble() ?? 0.0;
+              });
+            }
+          }
+        });
   }
 
   List<List<String>>? generateStudentTableList(StudentListModel model) {
@@ -78,8 +79,9 @@ class DepositDetailsScreenController extends GetxController {
     final pdf = pw.Document();
 
     // Load optional image from assets
-    final ByteData logoBytes =
-        await rootBundle.load('assets/images/ic_launcher.png');
+    final ByteData logoBytes = await rootBundle.load(
+      'assets/images/ic_launcher.png',
+    );
     final Uint8List logoUint8List = logoBytes.buffer.asUint8List();
     final image = pw.MemoryImage(logoUint8List);
 
@@ -89,9 +91,10 @@ class DepositDetailsScreenController extends GetxController {
         build: (context) => [
           pw.Center(child: pw.Image(image, width: 100)), // Optional logo
           pw.SizedBox(height: 20),
-          pw.Text('Student Deposit Report',
-              style:
-                  pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold)),
+          pw.Text(
+            'Student Deposit Report',
+            style: pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold),
+          ),
           pw.SizedBox(height: 16),
           pw.Text('Date: ${DateTime.now().toLocal()}'),
           pw.SizedBox(height: 16),
@@ -139,12 +142,14 @@ class DepositDetailsScreenController extends GetxController {
     await file.writeAsBytes(excelBytes!);
 
     // 5️⃣ Share the file
-    await Share.shareXFiles([XFile(filePath)],
-        text: '📊 Check out this Excel file');
+    await Share.shareXFiles([
+      XFile(filePath),
+    ], text: '📊 Check out this Excel file');
   }
 
   List<List<TextCellValue>>? generateStudentTableListExel(
-      StudentListModel model) {
+    StudentListModel model,
+  ) {
     return model.data?.asMap().entries.map((entry) {
           final student = entry.value;
           return [
@@ -180,10 +185,7 @@ class DepositDetailsScreenController extends GetxController {
               ),
               const Text(
                 'Choose Download Option',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 20),
               ListTile(

@@ -104,7 +104,6 @@
 //   }
 // }
 
-
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -121,6 +120,7 @@ class PrefUtils {
     _sharedPreferences ??= await SharedPreferences.getInstance();
     print('SharedPreference Initialized');
   }
+
   // Clear all data
   static Future<void> clearPreferencesData() async {
     await _sharedPreferences?.clear();
@@ -173,7 +173,10 @@ class PrefUtils {
   }
 
   // Get object
-  static T? getObject<T>(String key, T Function(Map<String, dynamic>) fromJson) {
+  static T? getObject<T>(
+    String key,
+    T Function(Map<String, dynamic>) fromJson,
+  ) {
     String? jsonString = _sharedPreferences?.getString(key);
     if (jsonString != null) {
       Map<String, dynamic> jsonMap = json.decode(jsonString);
@@ -189,7 +192,10 @@ class PrefUtils {
   }
 
   // Get list of objects
-  static List<T> getObjectList<T>(String key, T Function(Map<String, dynamic>) fromJson) {
+  static List<T> getObjectList<T>(
+    String key,
+    T Function(Map<String, dynamic>) fromJson,
+  ) {
     List<String>? stringList = _sharedPreferences?.getStringList(key);
     if (stringList != null) {
       return stringList.map((item) => fromJson(json.decode(item))).toList();

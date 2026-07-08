@@ -1,13 +1,9 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:pg_managment/core/utils/app_fonts.dart';
 import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/size_utils.dart';
 
 class CustomAppTextFormField extends StatelessWidget {
-
-
   TextFormFieldShape? shape;
 
   TextFormFieldPadding? padding;
@@ -51,7 +47,8 @@ class CustomAppTextFormField extends StatelessWidget {
   Function()? onTap;
 
   Function(String)? onChanged;
-  CustomAppTextFormField({this.shape,
+  CustomAppTextFormField({
+    this.shape,
     this.padding,
     this.variant = TextFormFieldVariant.White,
     this.fontStyle,
@@ -72,19 +69,18 @@ class CustomAppTextFormField extends StatelessWidget {
     this.readOnly,
     this.onTap,
     this.onChanged,
-    this.validator});
+    this.validator,
+  });
 
   @override
   Widget build(BuildContext context) {
     return alignment != null
         ? Align(
-      alignment: alignment ?? Alignment.center,
-      child: _buildTextFormFieldWidget(),
-    )
+            alignment: alignment ?? Alignment.center,
+            child: _buildTextFormFieldWidget(),
+          )
         : _buildTextFormFieldWidget();
   }
-
-
 
   _buildTextFormFieldWidget() {
     return Container(
@@ -92,11 +88,11 @@ class CustomAppTextFormField extends StatelessWidget {
       margin: margin,
       child: TextFormField(
         controller: controller,
-        readOnly:readOnly??false ,
+        readOnly: readOnly ?? false,
         onTap: onTap,
         onChanged: onChanged,
         focusNode: focusNode,
-        style: fontStyle??PMT.style(14),
+        style: fontStyle ?? PMT.style(14),
         obscureText: isObscureText!,
         textInputAction: textInputAction,
         keyboardType: textInputType,
@@ -107,11 +103,10 @@ class CustomAppTextFormField extends StatelessWidget {
     );
   }
 
-
   _buildDecoration() {
     return InputDecoration(
       hintText: hintText ?? "",
-      hintStyle: fontStyle??PMT.style(14),
+      hintStyle: fontStyle ?? PMT.style(14),
       border: _setBorderStyle(),
       enabledBorder: _setBorderStyle(),
       focusedBorder: _setBorderStyle(),
@@ -127,15 +122,10 @@ class CustomAppTextFormField extends StatelessWidget {
     );
   }
 
-
   _setOutlineBorderRadius() {
     switch (shape) {
       default:
-        return BorderRadius.circular(
-          getWidth(
-            8.00,
-          ),
-        );
+        return BorderRadius.circular(getWidth(8.00));
     }
   }
 
@@ -144,20 +134,14 @@ class CustomAppTextFormField extends StatelessWidget {
       case TextFormFieldVariant.White:
         return OutlineInputBorder(
           borderRadius: _setOutlineBorderRadius(),
-          borderSide: BorderSide(
-            color: ColorConstant.greyBack,
-            width: 1,
-          ),
+          borderSide: BorderSide(color: ColorConstant.greyBack, width: 1),
         );
       case TextFormFieldVariant.None:
         return InputBorder.none;
       default:
         return OutlineInputBorder(
           borderRadius: _setOutlineBorderRadius(),
-          borderSide: BorderSide(
-            color: ColorConstant.primary,
-            width: 1,
-          ),
+          borderSide: BorderSide(color: ColorConstant.primary, width: 1),
         );
     }
   }
@@ -199,31 +183,16 @@ class CustomAppTextFormField extends StatelessWidget {
   //       );
   //   }
   // }
-
-  
-
 }
 
-enum TextFormFieldShape {
-  RoundedBorder12,
-}
+enum TextFormFieldShape { RoundedBorder12 }
 
-enum TextFormFieldPadding {
-  PaddingT14,
-  PaddingT13,
-}
+enum TextFormFieldPadding { PaddingT14, PaddingT13 }
 
-enum TextFormFieldVariant {
-  None,
-  OutlineGray200,
-  White,
-}
+enum TextFormFieldVariant { None, OutlineGray200, White }
 
 enum TextFormFieldFontStyle {
   GilroyMedium16Bluegray40001,
   GilroyMedium16,
-  txtGilroyMedium
+  txtGilroyMedium,
 }
-
-
-

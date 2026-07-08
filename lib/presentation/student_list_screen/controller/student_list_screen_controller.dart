@@ -24,29 +24,37 @@ class StudentListScreenController extends GetxController {
     if (search.isEmpty) {
       studentListSearch.value = studentListModel.value.data ?? [];
     } else {
-      studentListSearch.value = studentListModel.value.data
-              ?.where((element) =>
-                  element.name!.toLowerCase().contains(search) ||
-                  element.id!.toString().contains(search)
-                  //     ||
-                  // element.email!.toLowerCase().contains(search) ||
-                  // element.mobile!.toLowerCase().contains(search) ||
-                  // element.hostelName!.toLowerCase().contains(search) ||
-                  // element.roomNo!.toLowerCase().contains(search)
-                  )
+      studentListSearch.value =
+          studentListModel.value.data
+              ?.where(
+                (element) =>
+                    element.name!.toLowerCase().contains(search) ||
+                    element.id!.toString().contains(search),
+                //     ||
+                // element.email!.toLowerCase().contains(search) ||
+                // element.mobile!.toLowerCase().contains(search) ||
+                // element.hostelName!.toLowerCase().contains(search) ||
+                // element.roomNo!.toLowerCase().contains(search)
+              )
               .toList() ??
           [];
     }
     update();
   }
-  void showDeleteConfirmationDialog(BuildContext context, VoidCallback onYesPressed) {
+
+  void showDeleteConfirmationDialog(
+    BuildContext context,
+    VoidCallback onYesPressed,
+  ) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text("Confirm Delete"),
           content: Text("Are you sure you want to delete this student?"),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           actionsAlignment: MainAxisAlignment.end,
           actions: [
@@ -54,7 +62,7 @@ class StudentListScreenController extends GetxController {
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text("No",style: TextStyle(color: Colors.black),),
+              child: Text("No", style: TextStyle(color: Colors.black)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -64,7 +72,7 @@ class StudentListScreenController extends GetxController {
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorConstant.primary,
               ),
-              child: Text("Yes",style: TextStyle(color: Colors.white),),
+              child: Text("Yes", style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -75,28 +83,34 @@ class StudentListScreenController extends GetxController {
   Future getStudentList() async {
     isLoading.value = true;
 
-    await ApiService().callGetApi(
-        body: {},
-        headerWithToken: true,
-        showLoader: false,
-        url: NetworkUrls.studentListUrl).then((value) async {
-      isLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        studentListModel.value = StudentListModel.fromJson(value.body);
-        studentListSearch.value = studentListModel.value.data ?? [];
-      }
-    });
+    await ApiService()
+        .callGetApi(
+          body: {},
+          headerWithToken: true,
+          showLoader: false,
+          url: NetworkUrls.studentListUrl,
+        )
+        .then((value) async {
+          isLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            studentListModel.value = StudentListModel.fromJson(value.body);
+            studentListSearch.value = studentListModel.value.data ?? [];
+          }
+        });
   }
 
   Future deleteStudent(String id) async {
-    await ApiService().callDeleteApi(
-        body: {},
-        headerWithToken: true,
-        showLoader: true,
-        url: NetworkUrls.studentDeleteUrl + id).then((value) async {
-      if (value != null && value.statusCode == 200) {
-        getStudentList();
-      }
-    });
+    await ApiService()
+        .callDeleteApi(
+          body: {},
+          headerWithToken: true,
+          showLoader: true,
+          url: NetworkUrls.studentDeleteUrl + id,
+        )
+        .then((value) async {
+          if (value != null && value.statusCode == 200) {
+            getStudentList();
+          }
+        });
   }
 }

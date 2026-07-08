@@ -52,30 +52,21 @@ class CustomImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return alignment != null
-        ? Align(
-            alignment: alignment!,
-            child: _buildWidget(),
-          )
+        ? Align(alignment: alignment!, child: _buildWidget())
         : _buildWidget();
   }
 
   Widget _buildWidget() {
     return Padding(
       padding: margin ?? EdgeInsets.zero,
-      child: InkWell(
-        onTap: onTap,
-        child: _buildCircleImage(),
-      ),
+      child: InkWell(onTap: onTap, child: _buildCircleImage()),
     );
   }
 
   ///build the image with border radius
   _buildCircleImage() {
     if (radius != null) {
-      return ClipRRect(
-        borderRadius: radius!,
-        child: _buildImageWithBorder(),
-      );
+      return ClipRRect(borderRadius: radius!, child: _buildImageWithBorder());
     } else {
       return _buildImageWithBorder();
     }
@@ -85,10 +76,7 @@ class CustomImageView extends StatelessWidget {
   _buildImageWithBorder() {
     if (border != null) {
       return Container(
-        decoration: BoxDecoration(
-          border: border,
-          borderRadius: radius,
-        ),
+        decoration: BoxDecoration(border: border, borderRadius: radius),
         child: _buildImageView(),
       );
     } else {

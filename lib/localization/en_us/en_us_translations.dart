@@ -273,5 +273,5 @@ final Map<String, String> enUs = {
   "lbl_view_location": "View location >",
   "lbl_11_am": "11\nam",
   "lbl_hotel_name": "Hotel Name ",
-  "msg_recommended_locations": "Recommended Locations"
+  "msg_recommended_locations": "Recommended Locations",
 };

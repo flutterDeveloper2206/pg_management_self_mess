@@ -4,31 +4,36 @@
 
 import 'dart:convert';
 
-StudentAllDetailsModel studentAllDetailsModelFromJson(String str) => StudentAllDetailsModel.fromJson(json.decode(str));
+StudentAllDetailsModel studentAllDetailsModelFromJson(String str) =>
+    StudentAllDetailsModel.fromJson(json.decode(str));
 
-String studentAllDetailsModelToJson(StudentAllDetailsModel data) => json.encode(data.toJson());
+String studentAllDetailsModelToJson(StudentAllDetailsModel data) =>
+    json.encode(data.toJson());
 
 class StudentAllDetailsModel {
   final int? stateCode;
   final String? message;
   final List<AllData>? data;
 
-  StudentAllDetailsModel({
-    this.stateCode,
-    this.message,
-    this.data,
-  });
+  StudentAllDetailsModel({this.stateCode, this.message, this.data});
 
-  factory StudentAllDetailsModel.fromJson(Map<String, dynamic> json) => StudentAllDetailsModel(
-    stateCode: json["state_code"],
-    message: json["message"],
-    data: json["data"] == null ? [] : List<AllData>.from(json["data"]!.map((x) => AllData.fromJson(x))).reversed.toList(),
-  );
+  factory StudentAllDetailsModel.fromJson(Map<String, dynamic> json) =>
+      StudentAllDetailsModel(
+        stateCode: json["state_code"],
+        message: json["message"],
+        data: json["data"] == null
+            ? []
+            : List<AllData>.from(
+                json["data"]!.map((x) => AllData.fromJson(x)),
+              ).reversed.toList(),
+      );
 
   Map<String, dynamic> toJson() => {
     "state_code": stateCode,
     "message": message,
-    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+    "data": data == null
+        ? []
+        : List<dynamic>.from(data!.map((x) => x.toJson())),
   };
 }
 
@@ -97,11 +102,15 @@ class AllData {
     penaltyAmount: json["penalty_amount"].toDouble(),
     totalAmount: json["total_amount"].toDouble(),
     paidAmount: json["paid_amount"].toDouble(),
-    rate: json["rate"] ,
+    rate: json["rate"],
     remainAmount: json["remain_amount"].toDouble(),
     remark: json["remark"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    createdAt: json["created_at"] == null
+        ? null
+        : DateTime.parse(json["created_at"]),
+    updatedAt: json["updated_at"] == null
+        ? null
+        : DateTime.parse(json["updated_at"]),
     studentName: json["student_name"],
     status: json["status"],
   );

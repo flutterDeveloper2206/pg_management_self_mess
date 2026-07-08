@@ -58,8 +58,9 @@ class ImportDataScreenController extends GetxController {
     final sheet = decoder.tables.values.first;
     if (sheet.rows.isEmpty) return;
 
-    final headers =
-    sheet.rows.first.map((e) => e?.toString().trim() ?? '').toList();
+    final headers = sheet.rows.first
+        .map((e) => e?.toString().trim() ?? '')
+        .toList();
 
     final data = sheet.rows.skip(1).map((row) {
       final values = row.map((e) => e?.toString().trim() ?? '').toList();
@@ -67,27 +68,30 @@ class ImportDataScreenController extends GetxController {
     }).toList();
     jsonData.assignAll(data);
   }
+
   Future<void> sendDataToServer() async {
     isLoading.value = true;
-    await ApiService().callPostApi(
-        body: {
-          "student_details" :jsonData
-        },
-        headerWithToken: true,
-        showLoader: true,
-        url: NetworkUrls.sendBulkData).then((value) async {
-      isLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        isLoading.value = false;
+    await ApiService()
+        .callPostApi(
+          body: {"student_details": jsonData},
+          headerWithToken: true,
+          showLoader: true,
+          url: NetworkUrls.sendBulkData,
+        )
+        .then((value) async {
+          isLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            isLoading.value = false;
 
-        Get.back();
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          AppFlushBars.appCommonFlushBar(
-              context: NavigationService.navigatorKey.currentContext!,
-              message: "Data Send successfully",
-              success: true);
+            Get.back();
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              AppFlushBars.appCommonFlushBar(
+                context: NavigationService.navigatorKey.currentContext!,
+                message: "Data Send successfully",
+                success: true,
+              );
+            });
+          }
         });
-      }
-    });
   }
 }

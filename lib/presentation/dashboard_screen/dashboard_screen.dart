@@ -10,6 +10,7 @@ import 'package:pg_managment/routes/app_routes.dart';
 import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/dashboard_screen_controller.dart';
 import 'widgets/dashboard_chart.dart';
+import 'package:pg_managment/widgets/responsive_layout.dart';
 
 class DashboardScreen extends GetWidget<DashboardScreenController> {
   const DashboardScreen({super.key});
@@ -206,34 +207,37 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
                     ),
                   ],
                 ),
-                child: BottomNavigationBar(
-                  currentIndex: controller.selectedIndex.value,
-                  onTap: controller.changeTabIndex,
-                  elevation: 0,
-                  backgroundColor: Colors.white,
-                  selectedItemColor: ColorConstant.primary,
-                  unselectedItemColor: Colors.grey,
-                  selectedLabelStyle: PMT.appStyle(
-                    fontWeight: FontWeight.w600,
-                    size: 12,
-                  ),
-                  unselectedLabelStyle: PMT.appStyle(
-                    fontWeight: FontWeight.w500,
-                    size: 12,
-                  ),
-                  type: BottomNavigationBarType.fixed,
-                  items: const [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.home_rounded),
-                      activeIcon: Icon(Icons.home_rounded),
-                      label: 'Home',
+                child: ResponsiveWrapper(
+                  maxWidth: 600,
+                  child: BottomNavigationBar(
+                    currentIndex: controller.selectedIndex.value,
+                    onTap: controller.changeTabIndex,
+                    elevation: 0,
+                    backgroundColor: Colors.white,
+                    selectedItemColor: ColorConstant.primary,
+                    unselectedItemColor: Colors.grey,
+                    selectedLabelStyle: PMT.appStyle(
+                      fontWeight: FontWeight.w600,
+                      size: 12,
                     ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.grid_view_rounded),
-                      activeIcon: Icon(Icons.grid_view_rounded),
-                      label: 'Menu',
+                    unselectedLabelStyle: PMT.appStyle(
+                      fontWeight: FontWeight.w500,
+                      size: 12,
                     ),
-                  ],
+                    type: BottomNavigationBarType.fixed,
+                    items: const [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.home_rounded),
+                        activeIcon: Icon(Icons.home_rounded),
+                        label: 'Home',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.grid_view_rounded),
+                        activeIcon: Icon(Icons.grid_view_rounded),
+                        label: 'Menu',
+                      ),
+                    ],
+                  ),
                 ),
               )
             : null,
@@ -250,59 +254,74 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 15),
-            if (CommonConstant.instance.isStudent == 1)
-              _buildAdminStatsSummary(),
-            if (CommonConstant.instance.isStudent == 1)
+        child: ResponsiveWrapper(
+          maxWidth: 1000,
+          child: Column(
+            children: [
+              const SizedBox(height: 15),
+              if (CommonConstant.instance.isStudent == 1)
+                _buildAdminStatsSummary(),
+              if (CommonConstant.instance.isStudent == 1)
+                const SizedBox(height: 20),
+              if (CommonConstant.instance.isStudent == 1)
+                Obx(() {
+                  if (controller.isLoadingChart.value) {
+                    return _buildChartShimmer();
+                  }
+                  if (controller.chartStatsModel.value.data == null ||
+                      controller.chartStatsModel.value.data!.isEmpty) {
+                    return _buildNoDataWidget();
+                  }
+                  final incomeChart = DashboardChart(
+                    data: controller.chartStatsModel.value.data!,
+                    metric: ChartMetric.income,
+                    title: "Monthly Income",
+                    initialType: ChartType.bar,
+                  );
+                  final expenseChart = DashboardChart(
+                    data: controller.chartStatsModel.value.data!,
+                    metric: ChartMetric.expense,
+                    title: "Monthly Expense",
+                    initialType: ChartType.line,
+                  );
+
+                  return ResponsiveLayout.isMobile(context)
+                      ? Column(
+                          children: [
+                            incomeChart,
+                            const SizedBox(height: 30),
+                            expenseChart,
+                          ],
+                        )
+                      : Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(child: incomeChart),
+                            const SizedBox(width: 24),
+                            Expanded(child: expenseChart),
+                          ],
+                        );
+                }),
+              if (CommonConstant.instance.isStudent != 1)
+                _buildMenuTab(
+                  context,
+                  staffSecretary,
+                  adminMenu,
+                  studentMenuItems,
+                ),
+              const SizedBox(height: 30),
+              Text(
+                'V(1.0.4)',
+                textAlign: TextAlign.center,
+                style: PMT.appStyle(
+                  size: 16,
+                  fontWeight: FontWeight.w600,
+                  fontColor: Colors.black45,
+                ),
+              ),
               const SizedBox(height: 20),
-            if (CommonConstant.instance.isStudent == 1)
-              Obx(() {
-                if (controller.isLoadingChart.value) {
-                  return _buildChartShimmer();
-                }
-                if (controller.chartStatsModel.value.data == null ||
-                    controller.chartStatsModel.value.data!.isEmpty) {
-                  return _buildNoDataWidget();
-                }
-                return Column(
-                  children: [
-                    DashboardChart(
-                      data: controller.chartStatsModel.value.data!,
-                      metric: ChartMetric.income,
-                      title: "Monthly Income",
-                      initialType: ChartType.bar,
-                    ),
-                    const SizedBox(height: 30),
-                    DashboardChart(
-                      data: controller.chartStatsModel.value.data!,
-                      metric: ChartMetric.expense,
-                      title: "Monthly Expense",
-                      initialType: ChartType.line,
-                    ),
-                  ],
-                );
-              }),
-            if (CommonConstant.instance.isStudent != 1)
-              _buildMenuTab(
-                context,
-                staffSecretary,
-                adminMenu,
-                studentMenuItems,
-              ),
-            const SizedBox(height: 30),
-            Text(
-              'V(1.0.0)',
-              textAlign: TextAlign.center,
-              style: PMT.appStyle(
-                size: 16,
-                fontWeight: FontWeight.w600,
-                fontColor: Colors.black45,
-              ),
-            ),
-            const SizedBox(height: 20),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -497,78 +516,81 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            // Check if "Impport Data" is already there to avoid duplicates
-            bool hasImport = adminMenu.any(
-              (item) => item['title'] == 'Impport Data',
-            );
-            if (CommonConstant.instance.isStudent == 1 &&
-                !kIsWeb &&
-                !hasImport) {
-              adminMenu.add({
-                'title': 'Impport Data',
-                'icon': 'assets/images/import.png',
-                'route': AppRoutes.importScreenRoute,
-                'color': const Color(0xFF1CA7AF),
-              });
-            }
-            int crossAxisCount = constraints.maxWidth > 800
-                ? 4
-                : constraints.maxWidth > 600
-                ? 3
-                : 2;
-            return GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: CommonConstant.instance.isStudent == 1
-                  ? adminMenu.length
-                  : CommonConstant.instance.isStudent == 2 ||
-                        CommonConstant.instance.isStudent == 3
-                  ? staffSecretary.length
-                  : studentMenuItems.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                childAspectRatio: 1.1,
-              ),
-              itemBuilder: (context, index) {
-                final item = CommonConstant.instance.isStudent == 1
-                    ? adminMenu[index]
+        child: ResponsiveWrapper(
+          maxWidth: 1000,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Check if "Impport Data" is already there to avoid duplicates
+              bool hasImport = adminMenu.any(
+                (item) => item['title'] == 'Impport Data',
+              );
+              if (CommonConstant.instance.isStudent == 1 &&
+                  !kIsWeb &&
+                  !hasImport) {
+                adminMenu.add({
+                  'title': 'Impport Data',
+                  'icon': 'assets/images/import.png',
+                  'route': AppRoutes.importScreenRoute,
+                  'color': const Color(0xFF1CA7AF),
+                });
+              }
+              int crossAxisCount = constraints.maxWidth > 800
+                  ? 4
+                  : constraints.maxWidth > 600
+                  ? 3
+                  : 2;
+              return GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: CommonConstant.instance.isStudent == 1
+                    ? adminMenu.length
                     : CommonConstant.instance.isStudent == 2 ||
                           CommonConstant.instance.isStudent == 3
-                    ? staffSecretary[index]
-                    : studentMenuItems[index];
-                return TweenAnimationBuilder<double>(
-                  duration: Duration(milliseconds: 300 + (index * 50)),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  curve: Curves.easeOutCubic,
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value.clamp(0.0, 1.0),
-                      child: Transform.translate(
-                        offset: Offset(0, 20 * (1 - value)),
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: CleanDashboardTile(
-                    title: item['title'] as String,
-                    icon: item['icon'] as String,
-                    color: item['color'] as Color,
-                    onTap: () {
-                      if (item['route'].toString().isNotEmpty) {
-                        Get.toNamed(item['route'] as String);
-                      } else {
-                        _showLogoutDialog(context);
-                      }
+                    ? staffSecretary.length
+                    : studentMenuItems.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 1.1,
+                ),
+                itemBuilder: (context, index) {
+                  final item = CommonConstant.instance.isStudent == 1
+                      ? adminMenu[index]
+                      : CommonConstant.instance.isStudent == 2 ||
+                            CommonConstant.instance.isStudent == 3
+                      ? staffSecretary[index]
+                      : studentMenuItems[index];
+                  return TweenAnimationBuilder<double>(
+                    duration: Duration(milliseconds: 300 + (index * 50)),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value.clamp(0.0, 1.0),
+                        child: Transform.translate(
+                          offset: Offset(0, 20 * (1 - value)),
+                          child: child,
+                        ),
+                      );
                     },
-                  ),
-                );
-              },
-            );
-          },
+                    child: CleanDashboardTile(
+                      title: item['title'] as String,
+                      icon: item['icon'] as String,
+                      color: item['color'] as Color,
+                      onTap: () {
+                        if (item['route'].toString().isNotEmpty) {
+                          Get.toNamed(item['route'] as String);
+                        } else {
+                          _showLogoutDialog(context);
+                        }
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );

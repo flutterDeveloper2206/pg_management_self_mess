@@ -17,10 +17,7 @@ class SplashScreen extends GetView<SplashScreenController> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              ColorConstant.primary,
-              const Color(0xFF6B4EE6),
-            ],
+            colors: [ColorConstant.primary, const Color(0xFF6B4EE6)],
           ),
         ),
         child: Stack(
@@ -31,10 +28,7 @@ class SplashScreen extends GetView<SplashScreenController> {
               right: -50,
               child: Opacity(
                 opacity: 0.1,
-                child: CircleAvatar(
-                  radius: 100,
-                  backgroundColor: Colors.white,
-                ),
+                child: CircleAvatar(radius: 100, backgroundColor: Colors.white),
               ),
             ),
             Positioned(
@@ -42,10 +36,7 @@ class SplashScreen extends GetView<SplashScreenController> {
               left: -30,
               child: Opacity(
                 opacity: 0.1,
-                child: CircleAvatar(
-                  radius: 80,
-                  backgroundColor: Colors.white,
-                ),
+                child: CircleAvatar(radius: 80, backgroundColor: Colors.white),
               ),
             ),
             Center(
@@ -58,10 +49,7 @@ class SplashScreen extends GetView<SplashScreenController> {
                     tween: Tween(begin: 0.0, end: 1.0),
                     curve: Curves.elasticOut,
                     builder: (context, value, child) {
-                      return Transform.scale(
-                        scale: value,
-                        child: child,
-                      );
+                      return Transform.scale(scale: value, child: child);
                     },
                     child: Container(
                       padding: const EdgeInsets.all(20),
@@ -69,7 +57,9 @@ class SplashScreen extends GetView<SplashScreenController> {
                         color: Colors.white.withOpacity(0.2),
                         shape: BoxShape.circle,
                         border: Border.all(
-                            color: Colors.white.withOpacity(0.3), width: 2),
+                          color: Colors.white.withOpacity(0.3),
+                          width: 2,
+                        ),
                       ),
                       child: const Icon(
                         Icons.restaurant_rounded,

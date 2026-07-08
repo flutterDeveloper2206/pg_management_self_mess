@@ -1,7 +1,5 @@
 import 'package:intl/intl.dart';
 
-
-
 class AppDateFormats {
   static const String DATE_FORMAT_SERVER = "yyyy-MM-DDTHH:mm:ss.SSSSSSZ";
   static const String DATE_FORMAT_YYYY_MM_SS_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
@@ -26,8 +24,6 @@ class AppDateFormats {
   static const String DATE_FORMAT_EE = "EE";
   static const dateFormater_with_th_do_mmmm_yyyy_hh_mm = "do MMM, yyyy";
   static const String APP_PLAN_DATE_FORMAT_EE = "| EE | dd MMM";
-
-
 }
 
 // String dateToAgoFormat(String dateTime, String inputFormat) {
@@ -39,16 +35,14 @@ class AppDateFormats {
 // }
 
 String getCurrentDate() {
-  return DateFormat(AppDateFormats.DATE_FORMAT_YYYY_MM_DD)
-      .format(DateTime.now());
+  return DateFormat(
+    AppDateFormats.DATE_FORMAT_YYYY_MM_DD,
+  ).format(DateTime.now());
 }
 
 String getCurrentTime() {
   return DateFormat(AppDateFormats.DATE_FORMAT_HH_MM).format(DateTime.now());
 }
-
-
-
 
 // String changeDateFormatWithSTRDTH(
 //     String? dates, String inputFormat, String outputFormat) {
@@ -62,11 +56,13 @@ String getCurrentTime() {
 //   return "";
 // }
 
-
 String changeDateFormat(
-    String? dateTime, String inputFormat, String outputFormat) {
+  String? dateTime,
+  String inputFormat,
+  String outputFormat,
+) {
   DateTime inputDate = DateTime.now();
-  if (dateTime!=null && dateTime.isNotEmpty) {
+  if (dateTime != null && dateTime.isNotEmpty) {
     inputDate = DateFormat(inputFormat).parse(dateTime);
   }
   return DateFormat(outputFormat).format(inputDate);
@@ -74,13 +70,15 @@ String changeDateFormat(
 
 bool showTimer(val) {
   return DateTime.now().compareTo(
-      DateFormat(AppDateFormats.DATE_FORMAT_DD_MM_YYYY).parse(val)) ==
+        DateFormat(AppDateFormats.DATE_FORMAT_DD_MM_YYYY).parse(val),
+      ) ==
       -1;
 }
 
 bool checkCurrentDate(val) {
   return DateTime.now().compareTo(
-      DateFormat(AppDateFormats.DATE_FORMAT_DD_MM_YYYY).parse(val)) >
+        DateFormat(AppDateFormats.DATE_FORMAT_DD_MM_YYYY).parse(val),
+      ) >
       0;
 }
 

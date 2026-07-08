@@ -39,7 +39,9 @@ Future<void> main() async {
 
   // Initialize Notifications
   await NotificationService.init();
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  if (!kIsWeb) {
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  }
 
   ErrorWidget.builder = (FlutterErrorDetails details) =>
       AppFlutterErrorScreen(details: details);

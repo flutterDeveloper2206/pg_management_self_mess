@@ -1,5 +1,4 @@
 class ImageConstant {
-
   static String icClose = 'assets/icons/ic_close.svg';
   static String imgCloseGray800 = 'assets/images/ic_close.svg';
   static String icWarning = 'assets/icons/ic_warning.svg';
@@ -18,18 +17,12 @@ class ImageConstant {
   static String icDuplicate = 'assets/icons/ic_duplicate.svg';
   static String icArrowDown = 'assets/icons/ic_arrow_down.svg';
   static String icRight = 'assets/icons/ic_right.svg';
-  static String icDummyNatureImageRectangle = 'assets/images/ic_dummy_nature_image_rectangle.png';
-
-
-
-
-
+  static String icDummyNatureImageRectangle =
+      'assets/images/ic_dummy_nature_image_rectangle.png';
 
   static String icDummyHorse = 'assets/images/ic_dummy_horse.png';
 
   static String icFire = 'assets/images/ic_fire.png';
-
-
 
   static String img14x14 = 'assets/images/img__14x14.png';
 
@@ -47,8 +40,8 @@ class ImageConstant {
 
   static String icCloseBlueGrey = 'assets/icons/ic_close_blue_grey.svg';
 
-
-  static String icArrowLeftBlueGrey = 'assets/icons/ic_arrow_left_blue_grey.svg';
+  static String icArrowLeftBlueGrey =
+      'assets/icons/ic_arrow_left_blue_grey.svg';
 
   static String icArrowDownRounded = 'assets/icons/ic_arrow_down_rounded.svg';
 
@@ -56,13 +49,9 @@ class ImageConstant {
 
   static String imgClose = 'assets/images/img_close.svg';
 
-
-
   static String icOceanWave = 'assets/images/ic_ocean_wave.png';
 
-
-  static String icArrowDownOrange =
-      'assets/images/ic_arrow_down_orange.svg';
+  static String icArrowDownOrange = 'assets/images/ic_arrow_down_orange.svg';
 
   static String icEmojiHome = 'assets/images/ic_emoji_home.png';
 
@@ -72,31 +61,24 @@ class ImageConstant {
 
   static String icPhoneCall = 'assets/images/ic_phone_call.png';
 
-  static String icFirstCircle =
-      'assets/icons/ic_first_circle.svg';
+  static String icFirstCircle = 'assets/icons/ic_first_circle.svg';
 
-  static String icSearchBlueGrey =
-      'assets/icons/ic_search_blue_grey.svg';
-
+  static String icSearchBlueGrey = 'assets/icons/ic_search_blue_grey.svg';
 
   static String icEmojiHandWash = 'assets/images/ic_emoji_hand_wash.png';
 
-  static String icMapBlueGrey =
-      'assets/icons/ic_map_blue_grey.svg';
+  static String icMapBlueGrey = 'assets/icons/ic_map_blue_grey.svg';
 
   static String icGps = 'assets/icons/ic_gps.svg';
 
+  static String icDummyNatureImageWide =
+      'assets/images/ic_dummy_nature_image_wide.png';
 
-
-  static String icDummyNatureImageWide = 'assets/images/ic_dummy_nature_image_wide.png';
-
-  static String icStarBlueGrey =
-      'assets/icons/ic_star_blue_grey.svg';
+  static String icStarBlueGrey = 'assets/icons/ic_star_blue_grey.svg';
 
   static String icMore = 'assets/icons/ic_more.svg';
 
   static String icClock = 'assets/icons/ic_clock.svg';
-
 
   static String icEmojiStar = 'assets/images/ic_emoji_star.png';
 
@@ -108,8 +90,7 @@ class ImageConstant {
 
   static String icLine = 'assets/icons/icLine.svg';
 
-  static String icRightOrange =
-      'assets/icons/ic_right_orange.svg';
+  static String icRightOrange = 'assets/icons/ic_right_orange.svg';
 
   static String icRatingStar = 'assets/icons/ic_rating_star.svg';
 
@@ -119,14 +100,14 @@ class ImageConstant {
 
   static String img6 = 'assets/images/img__6.png';
 
-  static String icDummyBedRoomImage = 'assets/images/ic_dummy_bed_room_image.png';
+  static String icDummyBedRoomImage =
+      'assets/images/ic_dummy_bed_room_image.png';
 
   static String imgItemsWhiteA700 = 'assets/images/img_items_white_a700.svg';
 
   static String imgIcons = 'assets/images/ic_star.svg';
 
-  static String icArrowUp =
-      'assets/icons/ic_arrow_up.svg';
+  static String icArrowUp = 'assets/icons/ic_arrow_up.svg';
 
   static String imgImage761 = 'assets/images/img_image76_1.png';
 
@@ -137,8 +118,6 @@ class ImageConstant {
 
   static String imgMap = 'assets/images/img_map.svg';
 
-
-
   static String imgNotification = 'assets/images/img_notification.svg';
 
   static String imgGroup219 = 'assets/images/img_group219.png';
@@ -148,7 +127,8 @@ class ImageConstant {
 
   static String img12 = 'assets/images/img__12.png';
 
-  static String icArrowUpDownBlueGrey ='assets/icons/ic_arrow_up_down_blue_grey.svg';
+  static String icArrowUpDownBlueGrey =
+      'assets/icons/ic_arrow_up_down_blue_grey.svg';
 
   static String imgImg = 'assets/images/ic_dummy_nature_image.png';
 
@@ -160,13 +140,9 @@ class ImageConstant {
 
   static String icPlay = 'assets/icons/ic_play.svg';
 
-
-
   static String img7 = 'assets/images/img__7.png';
 
   static String imgIconsWhiteA700 = 'assets/images/img_icons_white_a700.svg';
-
-
 
   static String img17x14 = 'assets/images/img__17x14.png';
 
@@ -177,7 +153,6 @@ class ImageConstant {
   static String img4 = 'assets/images/img__4.png';
 
   static String img14 = 'assets/images/img__14.png';
-
 
   static String imgImg264x360 = 'assets/images/img_img_264x360.png';
 
@@ -195,7 +170,6 @@ class ImageConstant {
   static String icArrowLeftUp = 'assets/images/ic_arrow_left_up.svg';
 
   static String imgGroup27 = 'assets/images/img_group27.png';
-
 
   static String imgShareBlueGray40001 =
       'assets/images/img_share_blue_gray_400_01.svg';

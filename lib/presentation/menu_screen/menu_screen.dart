@@ -7,6 +7,7 @@ import 'package:pg_managment/core/utils/commonConstant.dart';
 import 'package:pg_managment/core/utils/size_utils.dart';
 import 'package:pg_managment/widgets/bouncing_button.dart';
 import 'controller/menu_screen_controller.dart';
+import 'package:pg_managment/widgets/responsive_layout.dart';
 
 import 'model/day_meal_model.dart';
 
@@ -30,65 +31,73 @@ class MenuScreen extends GetWidget<MenuScreenController> {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new,
-              color: ColorConstant.primaryBlack, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: ColorConstant.primaryBlack,
+            size: 20,
+          ),
           onPressed: () => Get.back(),
         ),
       ),
-      body: Obx(() {
-        if (controller.isLoading.value && controller.meals.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        MealData? currentMeal = controller.currentDayMeal;
-        return SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTodayMenuCard(),
-              const SizedBox(height: 20),
-              Text(
-                "Select Day",
-                style: PMT.appStyle(
-                  size: 18,
-                  fontWeight: FontWeight.w700,
-                  fontColor: ColorConstant.primaryBlack,
-                ),
+      body: SafeArea(
+        child: ResponsiveWrapper(
+          maxWidth: 700,
+          child: Obx(() {
+            if (controller.isLoading.value && controller.meals.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            MealData? currentMeal = controller.currentDayMeal;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTodayMenuCard(),
+                  const SizedBox(height: 20),
+                  Text(
+                    "Select Day",
+                    style: PMT.appStyle(
+                      size: 18,
+                      fontWeight: FontWeight.w700,
+                      fontColor: ColorConstant.primaryBlack,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  _buildDaySelector(),
+                  const SizedBox(height: 20),
+                  _buildMenuSection(
+                    'Breakfast',
+                    currentMeal?.breakfast ?? 'No menu added',
+                    Icons.wb_sunny_rounded,
+                    const Color(0xFFFFA726),
+                    const Color(0xFFFFF3E0),
+                    0,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildMenuSection(
+                    'Lunch',
+                    currentMeal?.lunch ?? 'No menu added',
+                    Icons.restaurant_menu_rounded,
+                    const Color(0xFFEF5350),
+                    const Color(0xFFFFEBEE),
+                    1,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildMenuSection(
+                    'Dinner',
+                    currentMeal?.dinner ?? 'No menu added',
+                    Icons.nights_stay_rounded,
+                    ColorConstant.primary,
+                    ColorConstant.primary.withOpacity(0.1),
+                    2,
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
-              const SizedBox(height: 10),
-              _buildDaySelector(),
-              const SizedBox(height: 20),
-              _buildMenuSection(
-                'Breakfast',
-                currentMeal?.breakfast ?? 'No menu added',
-                Icons.wb_sunny_rounded,
-                const Color(0xFFFFA726),
-                const Color(0xFFFFF3E0),
-                0,
-              ),
-              const SizedBox(height: 12),
-              _buildMenuSection(
-                'Lunch',
-                currentMeal?.lunch ?? 'No menu added',
-                Icons.restaurant_menu_rounded,
-                const Color(0xFFEF5350),
-                const Color(0xFFFFEBEE),
-                1,
-              ),
-              const SizedBox(height: 12),
-              _buildMenuSection(
-                'Dinner',
-                currentMeal?.dinner ?? 'No menu added',
-                Icons.nights_stay_rounded,
-                ColorConstant.primary,
-                ColorConstant.primary.withOpacity(0.1),
-                2,
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        );
-      }),
+            );
+          }),
+        ),
+      ),
     );
   }
 
@@ -111,10 +120,7 @@ class MenuScreen extends GetWidget<MenuScreenController> {
         builder: (context, value, child) {
           return Transform.translate(
             offset: Offset(0, 20 * (1 - value)),
-            child: Opacity(
-              opacity: value.clamp(0.0, 1.0),
-              child: child,
-            ),
+            child: Opacity(opacity: value.clamp(0.0, 1.0), child: child),
           );
         },
         child: Container(
@@ -140,10 +146,7 @@ class MenuScreen extends GetWidget<MenuScreenController> {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        ColorConstant.primary,
-                        const Color(0xFF6B4EE6),
-                      ],
+                      colors: [ColorConstant.primary, const Color(0xFF6B4EE6)],
                     ),
                   ),
                   child: Column(
@@ -186,8 +189,11 @@ class MenuScreen extends GetWidget<MenuScreenController> {
                                   color: Colors.white.withOpacity(0.2),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.edit_note_rounded,
-                                    color: Colors.white, size: 22),
+                                child: const Icon(
+                                  Icons.edit_note_rounded,
+                                  color: Colors.white,
+                                  size: 22,
+                                ),
                               ),
                             ),
                         ],
@@ -196,12 +202,24 @@ class MenuScreen extends GetWidget<MenuScreenController> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildCompactTodayItem(Icons.wb_sunny_rounded,
-                              displayMeal?.breakfast ?? '...', "Breakfast", 0),
-                          _buildCompactTodayItem(Icons.restaurant_menu_rounded,
-                              displayMeal?.lunch ?? '...', "Lunch", 1),
-                          _buildCompactTodayItem(Icons.nights_stay_rounded,
-                              displayMeal?.dinner ?? '...', "Dinner", 2),
+                          _buildCompactTodayItem(
+                            Icons.wb_sunny_rounded,
+                            displayMeal?.breakfast ?? '...',
+                            "Breakfast",
+                            0,
+                          ),
+                          _buildCompactTodayItem(
+                            Icons.restaurant_menu_rounded,
+                            displayMeal?.lunch ?? '...',
+                            "Lunch",
+                            1,
+                          ),
+                          _buildCompactTodayItem(
+                            Icons.nights_stay_rounded,
+                            displayMeal?.dinner ?? '...',
+                            "Dinner",
+                            2,
+                          ),
                         ],
                       ),
                     ],
@@ -224,7 +242,11 @@ class MenuScreen extends GetWidget<MenuScreenController> {
   }
 
   Widget _buildCompactTodayItem(
-      IconData icon, String menu, String label, int index) {
+    IconData icon,
+    String menu,
+    String label,
+    int index,
+  ) {
     return Expanded(
       child: TweenAnimationBuilder<double>(
         duration: Duration(milliseconds: 600 + (index * 200)),
@@ -233,10 +255,7 @@ class MenuScreen extends GetWidget<MenuScreenController> {
         builder: (context, value, child) {
           return Opacity(
             opacity: value.clamp(0.0, 1.0),
-            child: Transform.scale(
-              scale: 0.9 + (0.1 * value),
-              child: child,
-            ),
+            child: Transform.scale(scale: 0.9 + (0.1 * value), child: child),
           );
         },
         child: Column(
@@ -276,8 +295,6 @@ class MenuScreen extends GetWidget<MenuScreenController> {
     );
   }
 
-
-
   Widget _buildDaySelector() {
     return SizedBox(
       height: 50,
@@ -303,14 +320,14 @@ class MenuScreen extends GetWidget<MenuScreenController> {
                           color: ColorConstant.primary.withOpacity(0.4),
                           blurRadius: 10,
                           offset: const Offset(0, 5),
-                        )
+                        ),
                       ]
                     : [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.1),
                           blurRadius: 5,
                           offset: const Offset(0, 2),
-                        )
+                        ),
                       ],
                 border: Border.all(
                   color: isSelected
@@ -325,8 +342,9 @@ class MenuScreen extends GetWidget<MenuScreenController> {
                   style: PMT.appStyle(
                     size: 15,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                    fontColor:
-                        isSelected ? Colors.white : ColorConstant.textGreyColor,
+                    fontColor: isSelected
+                        ? Colors.white
+                        : ColorConstant.textGreyColor,
                   ),
                 ),
               ),
@@ -337,8 +355,14 @@ class MenuScreen extends GetWidget<MenuScreenController> {
     );
   }
 
-  Widget _buildMenuSection(String title, String menu, IconData icon,
-      Color iconColor, Color bgColor, int index) {
+  Widget _buildMenuSection(
+    String title,
+    String menu,
+    IconData icon,
+    Color iconColor,
+    Color bgColor,
+    int index,
+  ) {
     return TweenAnimationBuilder<double>(
       duration: Duration(milliseconds: 600 + (index * 150)),
       tween: Tween(begin: 0.0, end: 1.0),
@@ -377,9 +401,7 @@ class MenuScreen extends GetWidget<MenuScreenController> {
                     color: bgColor,
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: Center(
-                    child: Icon(icon, color: iconColor, size: 24),
-                  ),
+                  child: Center(child: Icon(icon, color: iconColor, size: 24)),
                 ),
                 const SizedBox(width: 15),
                 Text(
@@ -392,8 +414,11 @@ class MenuScreen extends GetWidget<MenuScreenController> {
                 ),
                 const Spacer(),
                 if (menu.isNotEmpty && menu != 'No menu added')
-                  Icon(Icons.check_circle_rounded,
-                      color: ColorConstant.green.withOpacity(0.7), size: 22),
+                  Icon(
+                    Icons.check_circle_rounded,
+                    color: ColorConstant.green.withOpacity(0.7),
+                    size: 22,
+                  ),
               ],
             ),
             const SizedBox(height: 12),
@@ -504,9 +529,10 @@ class MenuScreen extends GetWidget<MenuScreenController> {
         Text(
           label,
           style: PMT.appStyle(
-              size: 14,
-              fontWeight: FontWeight.w600,
-              fontColor: ColorConstant.textGreyColor),
+            size: 14,
+            fontWeight: FontWeight.w600,
+            fontColor: ColorConstant.textGreyColor,
+          ),
         ),
         const SizedBox(height: 8),
         TextField(
@@ -518,8 +544,10 @@ class MenuScreen extends GetWidget<MenuScreenController> {
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
           ),
         ),
       ],

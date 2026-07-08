@@ -9,7 +9,8 @@ class GlobalLoaderOverlay extends StatefulWidget {
     Key? key,
     this.textDirection = TextDirection.ltr,
     this.overlayWidgetBuilder,
-    @Deprecated('Use `overlayWidgetBuilder == null` instead') this.useDefaultLoading,
+    @Deprecated('Use `overlayWidgetBuilder == null` instead')
+    this.useDefaultLoading,
     this.overlayColor,
     this.disableBackButton = true,
     this.overlayWholeScreen = true,

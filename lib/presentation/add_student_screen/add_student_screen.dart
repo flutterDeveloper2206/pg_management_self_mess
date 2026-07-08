@@ -11,6 +11,7 @@ import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 import 'package:pg_managment/widgets/custom_elavated_button.dart';
 import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/add_student_screen_controller.dart';
+import 'package:pg_managment/widgets/responsive_layout.dart';
 
 class AddStudentScreen extends GetWidget<AddStudentScreenController> {
   AddStudentScreen({super.key});
@@ -53,182 +54,186 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  vBox(20),
-                  Obx(() => _buildProfileImagePicker(context)),
-                  vBox(20),
-                  titleWidget(
-                    readOnly:
-                        controller.readOnly.value ||
-                        controller.isStudentShow.value,
-                    title: 'Name',
-                    hintText: 'Enter Your Name',
-                    controller: controller.nameController,
-                  ),
-                  titleWidget(
-                    readOnly: controller.readOnly.value,
-                    title: 'Name of Hostel',
-                    hintText: 'Enter Your Name of Hostel',
-                    controller: controller.hostelNameController,
-                  ),
-                  titleWidget(
-                    readOnly:
-                        controller.readOnly.value ||
-                        controller.isStudentShow.value,
-                    title: 'Registration Number / Enrollment ID',
-                    hintText: 'Enter Your Registration Number / Enrollment ID',
-                    controller: controller.registrationNumberController,
-                  ),
-                  titleWidget(
-                    readOnly: controller.readOnly.value,
-                    title: 'College Name / Institute Name',
-                    hintText: 'Enter Your College Name / Institute Name',
-                    controller: controller.collageNameController,
-                  ),
-                  titleWidget(
-                    readOnly:
-                        controller.readOnly.value ||
-                        controller.isStudentShow.value,
-                    title: 'Email',
-                    hintText: 'Enter Your Email',
-                    controller: controller.emailController,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: titleWidget(
-                          readOnly: controller.readOnly.value,
-                          title: 'Room No.',
-                          hintText: 'Room No.',
-                          controller: controller.roomController,
+        child: ResponsiveWrapper(
+          maxWidth: 700,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    vBox(20),
+                    Obx(() => _buildProfileImagePicker(context)),
+                    vBox(20),
+                    titleWidget(
+                      readOnly:
+                          controller.readOnly.value ||
+                          controller.isStudentShow.value,
+                      title: 'Name',
+                      hintText: 'Enter Your Name',
+                      controller: controller.nameController,
+                    ),
+                    titleWidget(
+                      readOnly: controller.readOnly.value,
+                      title: 'Name of Hostel',
+                      hintText: 'Enter Your Name of Hostel',
+                      controller: controller.hostelNameController,
+                    ),
+                    titleWidget(
+                      readOnly:
+                          controller.readOnly.value ||
+                          controller.isStudentShow.value,
+                      title: 'Registration Number / Enrollment ID',
+                      hintText:
+                          'Enter Your Registration Number / Enrollment ID',
+                      controller: controller.registrationNumberController,
+                    ),
+                    titleWidget(
+                      readOnly: controller.readOnly.value,
+                      title: 'College Name / Institute Name',
+                      hintText: 'Enter Your College Name / Institute Name',
+                      controller: controller.collageNameController,
+                    ),
+                    titleWidget(
+                      readOnly:
+                          controller.readOnly.value ||
+                          controller.isStudentShow.value,
+                      title: 'Email',
+                      hintText: 'Enter Your Email',
+                      controller: controller.emailController,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: titleWidget(
+                            readOnly: controller.readOnly.value,
+                            title: 'Room No.',
+                            hintText: 'Room No.',
+                            controller: controller.roomController,
+                          ),
                         ),
-                      ),
-                      hBox(20),
-                      Expanded(
-                        child: titleWidget(
-                          readOnly: controller.readOnly.value,
-                          title: 'Blood Group',
-                          hintText: 'Blood Group',
-                          controller: controller.bloodController,
+                        hBox(20),
+                        Expanded(
+                          child: titleWidget(
+                            readOnly: controller.readOnly.value,
+                            title: 'Blood Group',
+                            hintText: 'Blood Group',
+                            controller: controller.bloodController,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  titleWidget(
-                    readOnly:
-                        controller.readOnly.value ||
-                        controller.isStudentShow.value,
-                    title: 'Academic Program (Diploma/UG/PG/Doctoral)',
-                    hintText:
-                        'Enter Your Academic Program (Diploma/UG/PG/Doctoral)',
-                    controller: controller.academicProgramController,
-                  ),
-                  titleWidget(
-                    readOnly: controller.readOnly.value,
-                    title: 'Current Year / Semester',
-                    textInputType: TextInputType.number,
-                    hintText: 'Enter Your Current Year / Semester',
-                    controller: controller.currentlyStudyingYearController,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: titleWidget(
-                          readOnly: true,
-                          title: 'Date Of Mess Enrollment',
-                          onTap: () {
-                            controller.selectDate(context);
-                          },
-                          textInputType: TextInputType.phone,
-                          hintText: 'Date',
-                          controller: controller.dateController,
+                      ],
+                    ),
+                    titleWidget(
+                      readOnly:
+                          controller.readOnly.value ||
+                          controller.isStudentShow.value,
+                      title: 'Academic Program (Diploma/UG/PG/Doctoral)',
+                      hintText:
+                          'Enter Your Academic Program (Diploma/UG/PG/Doctoral)',
+                      controller: controller.academicProgramController,
+                    ),
+                    titleWidget(
+                      readOnly: controller.readOnly.value,
+                      title: 'Current Year / Semester',
+                      textInputType: TextInputType.number,
+                      hintText: 'Enter Your Current Year / Semester',
+                      controller: controller.currentlyStudyingYearController,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: titleWidget(
+                            readOnly: true,
+                            title: 'Date Of Mess Enrollment',
+                            onTap: () {
+                              controller.selectDate(context);
+                            },
+                            textInputType: TextInputType.phone,
+                            hintText: 'Date',
+                            controller: controller.dateController,
+                          ),
                         ),
-                      ),
-                      hBox(20),
-                      Expanded(
-                        child: titleWidget(
-                          readOnly: true,
-                          title: 'Year',
-                          onTap: () {
-                            controller.selectYear(context);
-                          },
-                          textInputType: TextInputType.phone,
-                          hintText: 'Year',
-                          controller: controller.yearController,
+                        hBox(20),
+                        Expanded(
+                          child: titleWidget(
+                            readOnly: true,
+                            title: 'Year',
+                            onTap: () {
+                              controller.selectYear(context);
+                            },
+                            textInputType: TextInputType.phone,
+                            hintText: 'Year',
+                            controller: controller.yearController,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  titleWidget(
-                    readOnly:
-                        controller.readOnly.value ||
-                        controller.isStudentShow.value,
-                    title: 'Mobile Number',
-                    textInputType: TextInputType.phone,
-                    hintText: 'Enter Your Mobile Number',
-                    controller: controller.mobileNumberController,
-                  ),
-                  titleWidget(
-                    readOnly:
-                        controller.readOnly.value ||
-                        controller.isStudentShow.value,
-                    title: 'Alternative Mobile Number',
-                    textInputType: TextInputType.phone,
-                    hintText: 'Enter Your Alternative Mobile Number',
-                    controller: controller.alternativeMobileNumberController,
-                  ),
-                  titleWidget(
-                    readOnly:
-                        controller.readOnly.value ||
-                        controller.isStudentShow.value,
-                    title: 'Account Login Password',
-                    hintText: 'Enter Your Account Login Password ',
-                    controller: controller.passwordController,
-                  ),
-                  titleWidget(
-                    readOnly:
-                        controller.readOnly.value ||
-                        controller.isStudentShow.value,
-                    title: 'Security Deposit (₹) ',
-                    textInputType: TextInputType.number,
-                    hintText: 'Enter Security Deposit ',
-                    controller: controller.depositController,
-                  ),
-                  titleWidget(
-                    readOnly: controller.readOnly.value,
-                    title: 'Address',
-                    hintText: 'Enter Your Address ',
-                    maxLine: 3,
-                    controller: controller.addressController,
-                  ),
-                  titleWidget(
-                    readOnly: controller.readOnly.value,
-                    title: 'Academic Advisor/Guide Name',
-                    hintText: 'Enter Your Academic Advisor/Guide Name ',
-                    maxLine: 3,
-                    controller: controller.guidController,
-                  ),
-                  controller.isAddEdit.value != 2
-                      ? AppElevatedButton(
-                          buttonName: controller.isAddEdit.value == 1
-                              ? 'Update '
-                              : 'Save',
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              controller.updateAddStudent(
-                                id: controller.model.value.id.toString(),
-                              );
-                            }
-                          },
-                        )
-                      : const SizedBox.shrink(),
-                ],
+                      ],
+                    ),
+                    titleWidget(
+                      readOnly:
+                          controller.readOnly.value ||
+                          controller.isStudentShow.value,
+                      title: 'Mobile Number',
+                      textInputType: TextInputType.phone,
+                      hintText: 'Enter Your Mobile Number',
+                      controller: controller.mobileNumberController,
+                    ),
+                    titleWidget(
+                      readOnly:
+                          controller.readOnly.value ||
+                          controller.isStudentShow.value,
+                      title: 'Alternative Mobile Number',
+                      textInputType: TextInputType.phone,
+                      hintText: 'Enter Your Alternative Mobile Number',
+                      controller: controller.alternativeMobileNumberController,
+                    ),
+                    titleWidget(
+                      readOnly:
+                          controller.readOnly.value ||
+                          controller.isStudentShow.value,
+                      title: 'Account Login Password',
+                      hintText: 'Enter Your Account Login Password ',
+                      controller: controller.passwordController,
+                    ),
+                    titleWidget(
+                      readOnly:
+                          controller.readOnly.value ||
+                          controller.isStudentShow.value,
+                      title: 'Security Deposit (₹) ',
+                      textInputType: TextInputType.number,
+                      hintText: 'Enter Security Deposit ',
+                      controller: controller.depositController,
+                    ),
+                    titleWidget(
+                      readOnly: controller.readOnly.value,
+                      title: 'Address',
+                      hintText: 'Enter Your Address ',
+                      maxLine: 3,
+                      controller: controller.addressController,
+                    ),
+                    titleWidget(
+                      readOnly: controller.readOnly.value,
+                      title: 'Academic Advisor/Guide Name',
+                      hintText: 'Enter Your Academic Advisor/Guide Name ',
+                      maxLine: 3,
+                      controller: controller.guidController,
+                    ),
+                    controller.isAddEdit.value != 2
+                        ? AppElevatedButton(
+                            buttonName: controller.isAddEdit.value == 1
+                                ? 'Update '
+                                : 'Save',
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                controller.updateAddStudent(
+                                  id: controller.model.value.id.toString(),
+                                );
+                              }
+                            },
+                          )
+                        : const SizedBox.shrink(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -320,18 +325,18 @@ class AddStudentScreen extends GetWidget<AddStudentScreenController> {
               ),
             ),
             // if (controller.isStudentShow.value)
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: ColorConstant.primary,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.edit, color: Colors.white, size: 16),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: ColorConstant.primary,
+                  shape: BoxShape.circle,
                 ),
+                child: const Icon(Icons.edit, color: Colors.white, size: 16),
               ),
+            ),
           ],
         ),
       ),

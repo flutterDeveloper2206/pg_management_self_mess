@@ -11,11 +11,7 @@ class ChartStatsModel {
   String? message;
   List<ChartData>? data;
 
-  ChartStatsModel({
-    this.stateCode,
-    this.message,
-    this.data,
-  });
+  ChartStatsModel({this.stateCode, this.message, this.data});
 
   factory ChartStatsModel.fromJson(Map<String, dynamic> json) =>
       ChartStatsModel(
@@ -24,16 +20,17 @@ class ChartStatsModel {
         data: json["data"] == null
             ? []
             : List<ChartData>.from(
-                json["data"]!.map((x) => ChartData.fromJson(x))),
+                json["data"]!.map((x) => ChartData.fromJson(x)),
+              ),
       );
 
   Map<String, dynamic> toJson() => {
-        "state_code": stateCode,
-        "message": message,
-        "data": data == null
-            ? []
-            : List<dynamic>.from(data!.map((x) => x.toJson())),
-      };
+    "state_code": stateCode,
+    "message": message,
+    "data": data == null
+        ? []
+        : List<dynamic>.from(data!.map((x) => x.toJson())),
+  };
 }
 
 class ChartData {
@@ -42,24 +39,19 @@ class ChartData {
   int? income;
   int? profit;
 
-  ChartData({
-    this.monthName,
-    this.expense,
-    this.income,
-    this.profit,
-  });
+  ChartData({this.monthName, this.expense, this.income, this.profit});
 
   factory ChartData.fromJson(Map<String, dynamic> json) => ChartData(
-        monthName: json["month_name"],
-        expense: json["expense"],
-        income: json["income"],
-        profit: json["profit"],
-      );
+    monthName: json["month_name"],
+    expense: json["expense"],
+    income: json["income"],
+    profit: json["profit"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "month_name": monthName,
-        "expense": expense,
-        "income": income,
-        "profit": profit,
-      };
+    "month_name": monthName,
+    "expense": expense,
+    "income": income,
+    "profit": profit,
+  };
 }

@@ -1,5 +1,3 @@
-
-
 class CommonConstant {
   CommonConstant._();
 
@@ -7,10 +5,5 @@ class CommonConstant {
 
   static final instance = CommonConstant._();
 
-
-
-
-int isStudent = 1;
-
-
+  int isStudent = 1;
 }

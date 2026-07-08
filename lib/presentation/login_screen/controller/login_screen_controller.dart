@@ -24,9 +24,10 @@ class LoginScreenController extends GetxController {
 
     if (email.isEmpty) {
       return AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Please enter Your Email',
-          success: false);
+        context: NavigationService.navigatorKey.currentContext!,
+        message: 'Please enter Your Email',
+        success: false,
+      );
     }
 
     // if (!RegExp(
@@ -40,42 +41,53 @@ class LoginScreenController extends GetxController {
 
     if (password.isEmpty) {
       return AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Please enter Your Password',
-          success: false);
+        context: NavigationService.navigatorKey.currentContext!,
+        message: 'Please enter Your Password',
+        success: false,
+      );
     }
 
-    await ApiService().callPostApi(
-        body: {
-          'email': email,
-          'password': password,
-        },
-        headerWithToken: false,
-        showLoader: true,
-        url: NetworkUrls.loginUrl).then((value) async {
-      isLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        loginModel.value = LoginModel.fromJson(value.body);
-        PrefUtils.setString(StringConstants.authToken,
-            loginModel.value.data?.accessToken ?? '');
-        if (loginModel.value.data?.user?.studentId != null) {
-          CommonConstant.instance.isStudent =
-              loginModel.value.data?.user?.studentId ?? 4;
-          PrefUtils.setString(StringConstants.studentId,
-              '${loginModel.value.data?.user?.studentId ?? ' '}');
-          PrefUtils.setInt(StringConstants.isStudent,
-              loginModel.value.data?.user?.studentId ?? 0);
-        } else {
-          CommonConstant.instance.isStudent =
-              loginModel.value.data?.user?.id ?? 0;
-          PrefUtils.setInt(
-              StringConstants.isStudent, loginModel.value.data?.user?.id ?? 0);
-        }
-        PrefUtils.setInt(
-            StringConstants.userId, loginModel.value.data?.user?.id ?? 0);
-        NotificationService.updateFcmToken();
-        Get.offNamed(AppRoutes.dashboardScreenRoute);
-      }
-    });
+    await ApiService()
+        .callPostApi(
+          body: {'email': email, 'password': password},
+          headerWithToken: false,
+          showLoader: true,
+          url: NetworkUrls.loginUrl,
+        )
+        .then((value) async {
+          isLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            loginModel.value = LoginModel.fromJson(value.body);
+            PrefUtils.setString(
+              StringConstants.authToken,
+              loginModel.value.data?.accessToken ?? '',
+            );
+            if (loginModel.value.data?.user?.studentId != null) {
+              CommonConstant.instance.isStudent =
+                  loginModel.value.data?.user?.studentId ?? 4;
+              PrefUtils.setString(
+                StringConstants.studentId,
+                '${loginModel.value.data?.user?.studentId ?? ' '}',
+              );
+              PrefUtils.setInt(
+                StringConstants.isStudent,
+                loginModel.value.data?.user?.studentId ?? 0,
+              );
+            } else {
+              CommonConstant.instance.isStudent =
+                  loginModel.value.data?.user?.id ?? 0;
+              PrefUtils.setInt(
+                StringConstants.isStudent,
+                loginModel.value.data?.user?.id ?? 0,
+              );
+            }
+            PrefUtils.setInt(
+              StringConstants.userId,
+              loginModel.value.data?.user?.id ?? 0,
+            );
+            NotificationService.updateFcmToken();
+            Get.offNamed(AppRoutes.dashboardScreenRoute);
+          }
+        });
   }
 }

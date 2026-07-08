@@ -4,26 +4,25 @@
 
 import 'dart:convert';
 
-MonthlyTransactionModel monthlyTransactionModelFromJson(String str) => MonthlyTransactionModel.fromJson(json.decode(str));
+MonthlyTransactionModel monthlyTransactionModelFromJson(String str) =>
+    MonthlyTransactionModel.fromJson(json.decode(str));
 
-String monthlyTransactionModelToJson(MonthlyTransactionModel data) => json.encode(data.toJson());
+String monthlyTransactionModelToJson(MonthlyTransactionModel data) =>
+    json.encode(data.toJson());
 
 class MonthlyTransactionModel {
   final int? stateCode;
   final String? message;
   final Data? data;
 
-  MonthlyTransactionModel({
-    this.stateCode,
-    this.message,
-    this.data,
-  });
+  MonthlyTransactionModel({this.stateCode, this.message, this.data});
 
-  factory MonthlyTransactionModel.fromJson(Map<String, dynamic> json) => MonthlyTransactionModel(
-    stateCode: json["state_code"],
-    message: json["message"],
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
-  );
+  factory MonthlyTransactionModel.fromJson(Map<String, dynamic> json) =>
+      MonthlyTransactionModel(
+        stateCode: json["state_code"],
+        message: json["message"],
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+      );
 
   Map<String, dynamic> toJson() => {
     "state_code": stateCode,
@@ -79,7 +78,9 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     id: json["id"],
-    billDate: json["bill_date"] == null ? null : DateTime.parse(json["bill_date"]),
+    billDate: json["bill_date"] == null
+        ? null
+        : DateTime.parse(json["bill_date"]),
     year: json["year"],
     month: json["month"],
     currentMonthExpense: json["current_month_expense"],
@@ -93,11 +94,16 @@ class Data {
     currentMonthTotalDay: json["current_month_total_day"],
     currentMonthProfit: json["current_month_profit"],
     lastMonthTotalCollection: json["last_month_total_collection"],
-    lastMonthTotalCaseOnHand: json["last_month_total_case_on_hand"], // Note: key might be 'case' or 'cash'
-    lastMonthTotalCashGuestAmount:json["last_month_total_cash_guest_amount"],
+    lastMonthTotalCaseOnHand:
+        json["last_month_total_case_on_hand"], // Note: key might be 'case' or 'cash'
+    lastMonthTotalCashGuestAmount: json["last_month_total_cash_guest_amount"],
     lastMonthTotalAmount: json["last_month_total_amount"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    createdAt: json["created_at"] == null
+        ? null
+        : DateTime.parse(json["created_at"]),
+    updatedAt: json["updated_at"] == null
+        ? null
+        : DateTime.parse(json["updated_at"]),
   );
 
   Map<String, dynamic> toJson() => {

@@ -8,6 +8,7 @@ import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 import 'package:pg_managment/widgets/custom_image_view.dart';
 import '../../widgets/custom_elavated_button.dart';
 import 'controller/config_screen_controller.dart';
+import 'package:pg_managment/widgets/responsive_layout.dart';
 
 class ConfigScreen extends GetWidget<ConfigScreenController> {
   const ConfigScreen({super.key});
@@ -15,87 +16,103 @@ class ConfigScreen extends GetWidget<ConfigScreenController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorConstant.primaryWhite,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: ColorConstant.primary,
-          leading: IconButton(
-              onPressed: () {
-                Get.back();
-              },
-              icon: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomImageView(
-                    height: 40,
-                    width: 40,
-                    imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
-              ),),
-          title: Text(
-            'Config',
-            style: PMT.appStyle(
-                size: 20,
-                // fontWeight: FontWeight.w600,
-                fontColor: ColorConstant.primaryWhite),
+      backgroundColor: ColorConstant.primaryWhite,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: ColorConstant.primary,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomImageView(
+              height: 40,
+              width: 40,
+              imagePath: 'assets/images/left-arrow.png',
+              color: ColorConstant.primaryWhite,
+            ),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                vBox(20),
-                titleWidget(
+        title: Text(
+          'Config',
+          style: PMT.appStyle(
+            size: 20,
+            // fontWeight: FontWeight.w600,
+            fontColor: ColorConstant.primaryWhite,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: ResponsiveWrapper(
+          maxWidth: 700,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  vBox(20),
+                  titleWidget(
                     title: 'Total Days',
                     hintText: 'Total Days',
                     textInputType: TextInputType.number,
 
-                    controller: controller.totalDaysController),
-  titleWidget(
+                    controller: controller.totalDaysController,
+                  ),
+                  titleWidget(
                     title: 'Eaten Days',
                     hintText: 'Eaten Days',
                     textInputType: TextInputType.number,
 
-                    controller: controller.eatenDaysController),
+                    controller: controller.eatenDaysController,
+                  ),
 
-                titleWidget(
+                  titleWidget(
                     title: 'Simple Guest Amount',
                     textInputType: TextInputType.number,
                     hintText: 'Simple Guest Amount',
-                    controller: controller.simpleGuestAmountController),
-                titleWidget(
+                    controller: controller.simpleGuestAmountController,
+                  ),
+                  titleWidget(
                     title: 'Feast Guest Amount',
                     hintText: 'Feast Guest Amount',
                     textInputType: TextInputType.number,
-                    controller: controller.feastGuestAmountController),
-               AppElevatedButton(
-                  buttonName: 'Save',
-                  onPressed: () {
-                    controller.save();
-                  },
-                )
-
-              ],
+                    controller: controller.feastGuestAmountController,
+                  ),
+                  AppElevatedButton(
+                    buttonName: 'Save',
+                    onPressed: () {
+                      controller.save();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
-        ),);
+        ),
+      ),
+    );
   }
-  Widget titleWidget(
-      {required String title,
-        required String hintText,
-        required TextEditingController controller,
-        TextInputType? textInputType,
-        bool? readOnly,
-        int? maxLine,
-        Function()? onTap}) {
+
+  Widget titleWidget({
+    required String title,
+    required String hintText,
+    required TextEditingController controller,
+    TextInputType? textInputType,
+    bool? readOnly,
+    int? maxLine,
+    Function()? onTap,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
           style: PMT.appStyle(
-              size: 14,
-              fontWeight: FontWeight.w600,
-              fontColor: ColorConstant.primary),
+            size: 14,
+            fontWeight: FontWeight.w600,
+            fontColor: ColorConstant.primary,
+          ),
         ),
         vBox(5),
         CustomAppTextFormField(

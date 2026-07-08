@@ -23,13 +23,17 @@ class ExpenseListScreenController extends GetxController {
     month.text = DateTime.now().month.toString().padLeft(2, '0');
     year.text = DateTime.now().year.toString();
     getExpenseList(
-        month: '${DateTime.now().month}', year: '${DateTime.now().year}');
+      month: '${DateTime.now().month}',
+      year: '${DateTime.now().year}',
+    );
     super.onInit();
   }
 
   Future<void> selectMonth(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context,
-        initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
+    final DateTime? picked = await MonthYearPicker.show(
+      context,
+      initialDate: DateTime(int.parse(year.text), int.parse(month.text)),
+    );
 
     if (picked != null) {
       month.text = picked.month.toString().padLeft(2, '0');
@@ -39,8 +43,10 @@ class ExpenseListScreenController extends GetxController {
   }
 
   Future<void> selectYear(BuildContext context) async {
-    final DateTime? picked = await MonthYearPicker.show(context,
-        initialDate: DateTime(int.parse(year.text), int.parse(month.text)));
+    final DateTime? picked = await MonthYearPicker.show(
+      context,
+      initialDate: DateTime(int.parse(year.text), int.parse(month.text)),
+    );
 
     if (picked != null) {
       month.text = picked.month.toString().padLeft(2, '0');
@@ -52,57 +58,66 @@ class ExpenseListScreenController extends GetxController {
   getExpenseList({String? month, String? year}) async {
     isLoading.value = true;
 
-    await ApiService().callGetApi(
-        body: {},
-        headerWithToken: true,
-        showLoader: false,
-        url:
-            '${NetworkUrls.expenseListUrl}month=$month&year=$year').then(
-        (value) async {
-      isLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        expenseListModel.value = ExpenseListModel.fromJson(value.body);
-        totalExpanse.value = 0.0;
-        if (expenseListModel.value.data != null &&
-            expenseListModel.value.data!.isNotEmpty) {
-          expanseDetailList.value =
-              generateStudentTableList(expenseListModel.value) ?? [];
+    await ApiService()
+        .callGetApi(
+          body: {},
+          headerWithToken: true,
+          showLoader: false,
+          url: '${NetworkUrls.expenseListUrl}month=$month&year=$year',
+        )
+        .then((value) async {
+          isLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            expenseListModel.value = ExpenseListModel.fromJson(value.body);
+            totalExpanse.value = 0.0;
+            if (expenseListModel.value.data != null &&
+                expenseListModel.value.data!.isNotEmpty) {
+              expanseDetailList.value =
+                  generateStudentTableList(expenseListModel.value) ?? [];
 
-          for (var expense in expenseListModel.value.data!) {
-            totalExpanse.value += expense?.amount ?? 0;
+              for (var expense in expenseListModel.value.data!) {
+                totalExpanse.value += expense?.amount ?? 0;
+              }
+            }
           }
-        }
-      }
-    });
+        });
   }
 
   Future<void> deleteExpense({String? id}) async {
     isLoading.value = true;
 
-    await ApiService().callDeleteApi(
-        body: {},
-        headerWithToken: true,
-        showLoader: false,
-        url: NetworkUrls.expenseDeleteUrl + id.toString()).then((value) async {
-      isLoading.value = false;
+    await ApiService()
+        .callDeleteApi(
+          body: {},
+          headerWithToken: true,
+          showLoader: false,
+          url: NetworkUrls.expenseDeleteUrl + id.toString(),
+        )
+        .then((value) async {
+          isLoading.value = false;
 
-      if (value != null && value.statusCode == 200) {
-        getExpenseList(
-            month: '${DateTime.now().month}', year: '${DateTime.now().year}');
-      }
-    });
+          if (value != null && value.statusCode == 200) {
+            getExpenseList(
+              month: '${DateTime.now().month}',
+              year: '${DateTime.now().year}',
+            );
+          }
+        });
   }
 
   void showDeleteConfirmationDialog(
-      BuildContext context, VoidCallback onYesPressed) {
+    BuildContext context,
+    VoidCallback onYesPressed,
+  ) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text("Confirm Delete"),
           content: Text("Are you sure you want to delete this expanse?"),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           actionsAlignment: MainAxisAlignment.end,
           actions: [
@@ -110,10 +125,7 @@ class ExpenseListScreenController extends GetxController {
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text(
-                "No",
-                style: TextStyle(color: Colors.black),
-              ),
+              child: Text("No", style: TextStyle(color: Colors.black)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -123,10 +135,7 @@ class ExpenseListScreenController extends GetxController {
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorConstant.primary,
               ),
-              child: Text(
-                "Yes",
-                style: TextStyle(color: Colors.white),
-              ),
+              child: Text("Yes", style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -151,8 +160,9 @@ class ExpenseListScreenController extends GetxController {
     final pdf = pw.Document();
 
     // Load optional image from assets
-    final ByteData logoBytes =
-        await rootBundle.load('assets/images/ic_launcher.png');
+    final ByteData logoBytes = await rootBundle.load(
+      'assets/images/ic_launcher.png',
+    );
     final Uint8List logoUint8List = logoBytes.buffer.asUint8List();
     final image = pw.MemoryImage(logoUint8List);
 
@@ -162,9 +172,10 @@ class ExpenseListScreenController extends GetxController {
         build: (context) => [
           pw.Center(child: pw.Image(image, width: 100)), // Optional logo
           pw.SizedBox(height: 20),
-          pw.Text('Expense Report',
-              style:
-                  pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold)),
+          pw.Text(
+            'Expense Report',
+            style: pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold),
+          ),
           pw.SizedBox(height: 16),
           pw.Text('Date: ${DateTime.now().toLocal()}'),
           pw.SizedBox(height: 16),

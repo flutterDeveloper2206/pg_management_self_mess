@@ -112,6 +112,7 @@ import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 import 'package:pg_managment/widgets/custom_elavated_button.dart';
 import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/login_screen_controller.dart';
+import 'package:pg_managment/widgets/responsive_layout.dart';
 
 class LoginScreen extends GetWidget<LoginScreenController> {
   const LoginScreen({super.key});
@@ -121,18 +122,23 @@ class LoginScreen extends GetWidget<LoginScreenController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              // Logo Section
-              _buildLogoSection(),
-              const SizedBox(height: 30),
-              // Login Form
-              _buildLoginForm(),
-              const SizedBox(height: 30),
-            ],
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: ResponsiveWrapper(
+              maxWidth: 450,
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  // Logo Section
+                  _buildLogoSection(),
+                  const SizedBox(height: 30),
+                  // Login Form
+                  _buildLoginForm(),
+                  const SizedBox(height: 30),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -175,11 +181,7 @@ class LoginScreen extends GetWidget<LoginScreenController> {
                 width: 2,
               ),
             ),
-            child: const Icon(
-              Icons.home_work,
-              size: 40,
-              color: Colors.white,
-            ),
+            child: const Icon(Icons.home_work, size: 40, color: Colors.white),
           ),
           const SizedBox(height: 16),
           Text(
@@ -234,10 +236,7 @@ class LoginScreen extends GetWidget<LoginScreenController> {
           const SizedBox(height: 8),
           Text(
             'Enter your credentials to access your account',
-            style: PMT.appStyle(
-              size: 14,
-              fontColor: Colors.grey[600]!,
-            ),
+            style: PMT.appStyle(size: 14, fontColor: Colors.grey[600]!),
           ),
           const SizedBox(height: 32),
           // Email Field
@@ -295,10 +294,7 @@ class LoginScreen extends GetWidget<LoginScreenController> {
           Center(
             child: Text(
               '© 2025 SELFMESS Management System',
-              style: PMT.appStyle(
-                size: 12,
-                fontColor: Colors.grey[500]!,
-              ),
+              style: PMT.appStyle(size: 12, fontColor: Colors.grey[500]!),
             ),
           ),
         ],
@@ -329,24 +325,15 @@ class LoginScreen extends GetWidget<LoginScreenController> {
           decoration: BoxDecoration(
             color: const Color(0xFFF8F9FA),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.grey.withOpacity(0.2),
-            ),
+            border: Border.all(color: Colors.grey.withOpacity(0.2)),
           ),
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: PMT.appStyle(
-                size: 14,
-                fontColor: Colors.grey[500]!,
-              ),
-              prefixIcon: Icon(
-                prefixIcon,
-                color: Colors.grey[600],
-                size: 20,
-              ),
+              hintStyle: PMT.appStyle(size: 14, fontColor: Colors.grey[500]!),
+              prefixIcon: Icon(prefixIcon, color: Colors.grey[600], size: 20),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -382,19 +369,14 @@ class LoginScreen extends GetWidget<LoginScreenController> {
           decoration: BoxDecoration(
             color: const Color(0xFFF8F9FA),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.grey.withOpacity(0.2),
-            ),
+            border: Border.all(color: Colors.grey.withOpacity(0.2)),
           ),
           child: TextField(
             controller: controller,
             obscureText: isObscure,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: PMT.appStyle(
-                size: 14,
-                fontColor: Colors.grey[500]!,
-              ),
+              hintStyle: PMT.appStyle(size: 14, fontColor: Colors.grey[500]!),
               prefixIcon: Icon(
                 Icons.lock_outline,
                 color: Colors.grey[600],

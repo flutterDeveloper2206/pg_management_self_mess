@@ -5,10 +5,8 @@ import 'package:pg_managment/core/utils/size_utils.dart';
 /// Screen For replacement of flutter red error Screen
 class AppFlutterErrorScreen extends StatelessWidget {
   final FlutterErrorDetails details;
-  const AppFlutterErrorScreen({
-    Key? key,
-    required this.details,
-  }) : super(key: key);
+  const AppFlutterErrorScreen({Key? key, required this.details})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +21,18 @@ class AppFlutterErrorScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                    height: getHeight(150),
-                    child: Lottie.asset(
-                        'assets/animation/error_cat_animation.json')),
+                  height: getHeight(150),
+                  child: Lottie.asset(
+                    'assets/animation/error_cat_animation.json',
+                  ),
+                ),
                 const SizedBox(height: 20),
                 Text(
                   details.exceptionAsString(),
                   // style: AppStyle.txtGilroySemiBold,
                   textAlign: TextAlign.center,
                   textDirection: TextDirection.ltr,
-                )
+                ),
               ],
             ),
           ),

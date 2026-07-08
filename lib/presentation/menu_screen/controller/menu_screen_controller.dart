@@ -16,7 +16,7 @@ class MenuScreenController extends GetxController {
     'thursday',
     'friday',
     'saturday',
-    'sunday'
+    'sunday',
   ];
 
   RxList<MealData> meals = <MealData>[].obs;
@@ -94,41 +94,41 @@ class MenuScreenController extends GetxController {
 
   Future<void> getMeals() async {
     isLoading.value = true;
-    await ApiService().callGetApi(
-      body: {},
-      url: NetworkUrls.dayMealsUrl,
-      showLoader: false,
-    ).then((value) {
-      isLoading.value = false;
-      if (value != null && value.statusCode == 200) {
-        DayMealModel model = DayMealModel.fromJson(value.body);
-        meals.assignAll(model.data ?? []);
-        // Trigger scroll after data is loaded and UI is updated
-        scrollToSelectedDay();
-      }
-    });
+    await ApiService()
+        .callGetApi(body: {}, url: NetworkUrls.dayMealsUrl, showLoader: false)
+        .then((value) {
+          isLoading.value = false;
+          if (value != null && value.statusCode == 200) {
+            DayMealModel model = DayMealModel.fromJson(value.body);
+            meals.assignAll(model.data ?? []);
+            // Trigger scroll after data is loaded and UI is updated
+            scrollToSelectedDay();
+          }
+        });
   }
 
   Future<void> updateMeal(
-      int id, String breakfast, String lunch, String dinner) async {
-    await ApiService().callPutApi(
-      body: {
-        'breakfast': breakfast,
-        'lunch': lunch,
-        'dinner': dinner,
-      },
-      url: "${NetworkUrls.dayMealsUrl}/$id",
-      showLoader: true,
-    ).then((value) {
-      if (value != null && value.statusCode == 200) {
-        getMeals(); // Refresh list after update
-        AppFlushBars.appCommonFlushBar(
-          context: NavigationService.navigatorKey.currentContext!,
-          message: 'Meal updated successfully',
-          success: true,
-        );
-      }
-    });
+    int id,
+    String breakfast,
+    String lunch,
+    String dinner,
+  ) async {
+    await ApiService()
+        .callPutApi(
+          body: {'breakfast': breakfast, 'lunch': lunch, 'dinner': dinner},
+          url: "${NetworkUrls.dayMealsUrl}/$id",
+          showLoader: true,
+        )
+        .then((value) {
+          if (value != null && value.statusCode == 200) {
+            getMeals(); // Refresh list after update
+            AppFlushBars.appCommonFlushBar(
+              context: NavigationService.navigatorKey.currentContext!,
+              message: 'Meal updated successfully',
+              success: true,
+            );
+          }
+        });
   }
 
   void selectDay(String day) {
@@ -138,8 +138,10 @@ class MenuScreenController extends GetxController {
 
   MealData? get currentDayMeal {
     try {
-      return meals.firstWhere((element) =>
-          element.day?.toLowerCase() == selectedDay.value.toLowerCase());
+      return meals.firstWhere(
+        (element) =>
+            element.day?.toLowerCase() == selectedDay.value.toLowerCase(),
+      );
     } catch (e) {
       return null;
     }
@@ -149,16 +151,16 @@ class MenuScreenController extends GetxController {
     String today = DateTime.now().weekday == 1
         ? 'monday'
         : DateTime.now().weekday == 2
-            ? 'tuesday'
-            : DateTime.now().weekday == 3
-                ? 'wednesday'
-                : DateTime.now().weekday == 4
-                    ? 'thursday'
-                    : DateTime.now().weekday == 5
-                        ? 'friday'
-                        : DateTime.now().weekday == 6
-                            ? 'saturday'
-                            : 'sunday';
+        ? 'tuesday'
+        : DateTime.now().weekday == 3
+        ? 'wednesday'
+        : DateTime.now().weekday == 4
+        ? 'thursday'
+        : DateTime.now().weekday == 5
+        ? 'friday'
+        : DateTime.now().weekday == 6
+        ? 'saturday'
+        : 'sunday';
     try {
       return meals.firstWhere((element) => element.day?.toLowerCase() == today);
     } catch (e) {

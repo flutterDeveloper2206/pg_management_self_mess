@@ -202,15 +202,13 @@ class AddStudentScreenController extends GetxController {
         "currently_studying_year": currentlyStudyingYearController.text,
         "date": dateController.text,
         "year": yearController.text,
-        "mobile":mobileNumberController.text,
+        "mobile": mobileNumberController.text,
         "alternative_mobile": alternativeMobileNumberController.text,
         "advisor_guide": guidController.text,
         "blood_group": bloodController.text,
         "deposit": depositController.text,
         "password": passwordController.text,
       };
-
-
 
       if (selectedImage.value != null) {
         bodyMap["profile_image"] = MultipartFile(

@@ -7,6 +7,7 @@ import 'package:pg_managment/widgets/custom_app_text_form_field.dart';
 import 'package:pg_managment/widgets/custom_elavated_button.dart';
 import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'controller/send_notification_screen_controller.dart';
+import 'package:pg_managment/widgets/responsive_layout.dart';
 
 class SendNotificationScreen
     extends GetWidget<SendNotificationScreenController> {
@@ -35,39 +36,39 @@ class SendNotificationScreen
         ),
         title: Text(
           'Send Notification',
-          style: PMT.appStyle(
-            size: 20,
-            fontColor: ColorConstant.primaryWhite,
-          ),
+          style: PMT.appStyle(size: 20, fontColor: ColorConstant.primaryWhite),
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  vBox(20),
-                  _buildLabel('Notification Title'),
-                  vBox(8),
-                  CustomAppTextFormField(
-                    controller: controller.titleController,
-                    hintText: 'Enter title (e.g., Dinner Time!)',
-                    variant: TextFormFieldVariant.OutlineGray200,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Title is required';
-                      }
-                      return null;
-                    },
-                  ),
-                  vBox(24),
-                  _buildLabel('Notification Type'),
-                  vBox(8),
-                  Obx(() => Container(
+        child: ResponsiveWrapper(
+          maxWidth: 700,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    vBox(20),
+                    _buildLabel('Notification Title'),
+                    vBox(8),
+                    CustomAppTextFormField(
+                      controller: controller.titleController,
+                      hintText: 'Enter title (e.g., Dinner Time!)',
+                      variant: TextFormFieldVariant.OutlineGray200,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Title is required';
+                        }
+                        return null;
+                      },
+                    ),
+                    vBox(24),
+                    _buildLabel('Notification Type'),
+                    vBox(8),
+                    Obx(
+                      () => Container(
                         padding: EdgeInsets.symmetric(horizontal: 12),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -77,11 +78,9 @@ class SendNotificationScreen
                           child: DropdownButton<String>(
                             value: controller.selectedType.value,
                             isExpanded: true,
-                            items: [
-                              'announcement',
-                              'alert',
-                              'reminder',
-                            ].map((String value) {
+                            items: ['announcement', 'alert', 'reminder'].map((
+                              String value,
+                            ) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Text(value),
@@ -94,44 +93,46 @@ class SendNotificationScreen
                             },
                           ),
                         ),
-                      )),
-                  vBox(24),
-                  // _buildLabel('Payload Date'),
-                  // vBox(8),
-                  // CustomAppTextFormField(
-                  //   controller: controller.dateController,
-                  //   hintText: 'Select Date',
-                  //   readOnly: true,
-                  //   onTap: () => controller.selectDate(context),
-                  //   variant: TextFormFieldVariant.OutlineGray200,
-                  // ),
-                  // vBox(24),
-                  _buildLabel('Notification Message'),
-                  vBox(8),
-                  CustomAppTextFormField(
-                    controller: controller.bodyController,
-                    hintText: 'Enter message body',
-                    maxLines: 5,
-                    variant: TextFormFieldVariant.OutlineGray200,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Message body is required';
-                      }
-                      return null;
-                    },
-                  ),
-                  vBox(40),
-                  AppElevatedButton(
-                    buttonName: 'Send To All Students',
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        controller.sendNotification();
-                      }
-                    },
-                  ),
-                  vBox(20),
-                  _buildNote(),
-                ],
+                      ),
+                    ),
+                    vBox(24),
+                    // _buildLabel('Payload Date'),
+                    // vBox(8),
+                    // CustomAppTextFormField(
+                    //   controller: controller.dateController,
+                    //   hintText: 'Select Date',
+                    //   readOnly: true,
+                    //   onTap: () => controller.selectDate(context),
+                    //   variant: TextFormFieldVariant.OutlineGray200,
+                    // ),
+                    // vBox(24),
+                    _buildLabel('Notification Message'),
+                    vBox(8),
+                    CustomAppTextFormField(
+                      controller: controller.bodyController,
+                      hintText: 'Enter message body',
+                      maxLines: 5,
+                      variant: TextFormFieldVariant.OutlineGray200,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Message body is required';
+                        }
+                        return null;
+                      },
+                    ),
+                    vBox(40),
+                    AppElevatedButton(
+                      buttonName: 'Send To All Students',
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          controller.sendNotification();
+                        }
+                      },
+                    ),
+                    vBox(20),
+                    _buildNote(),
+                  ],
+                ),
               ),
             ),
           ),

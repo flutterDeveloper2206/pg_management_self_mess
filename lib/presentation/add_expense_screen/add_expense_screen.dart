@@ -9,6 +9,7 @@ import 'package:pg_managment/widgets/custom_elavated_button.dart';
 import 'package:pg_managment/widgets/custom_image_view.dart';
 import '../../widgets/custom_app_text_form_field.dart';
 import 'controller/add_expense_screen_controller.dart';
+import 'package:pg_managment/widgets/responsive_layout.dart';
 
 class AddExpenseScreen extends GetWidget<AddExpenseScreenController> {
   const AddExpenseScreen({super.key});
@@ -16,36 +17,42 @@ class AddExpenseScreen extends GetWidget<AddExpenseScreenController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorConstant.primaryWhite,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: ColorConstant.primary,
-          leading: IconButton(
-              onPressed: () {
-                Get.back();
-              },
-              icon: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomImageView(
-                    height: 40,
-                    width: 40,
-                    imagePath:  'assets/images/left-arrow.png' ,color: ColorConstant.primaryWhite),
-              ),),
-          title: Obx(
-            () => Text(
-              controller.isAddEdit.value == 2
-                  ? 'View Expense'
-                  : controller.isAddEdit.value == 1
-                      ? 'Edit Expense'
-                      : 'Add Expense',
-              style: PMT.appStyle(
-                  size: 20,
-                  // fontWeight: FontWeight.w600,
-                  fontColor: ColorConstant.primaryWhite),
+      backgroundColor: ColorConstant.primaryWhite,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: ColorConstant.primary,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomImageView(
+              height: 40,
+              width: 40,
+              imagePath: 'assets/images/left-arrow.png',
+              color: ColorConstant.primaryWhite,
             ),
           ),
         ),
-        body: SafeArea(
+        title: Obx(
+          () => Text(
+            controller.isAddEdit.value == 2
+                ? 'View Expense'
+                : controller.isAddEdit.value == 1
+                ? 'Edit Expense'
+                : 'Add Expense',
+            style: PMT.appStyle(
+              size: 20,
+              // fontWeight: FontWeight.w600,
+              fontColor: ColorConstant.primaryWhite,
+            ),
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: ResponsiveWrapper(
+          maxWidth: 700,
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -53,31 +60,35 @@ class AddExpenseScreen extends GetWidget<AddExpenseScreenController> {
                 children: [
                   vBox(20),
                   titleWidget(
-                      readOnly: controller.readOnly.value,
-                      title: 'Item',
-                      hintText: 'Enter Your Item',
-                      controller: controller.itemController),
+                    readOnly: controller.readOnly.value,
+                    title: 'Item',
+                    hintText: 'Enter Your Item',
+                    controller: controller.itemController,
+                  ),
                   titleWidget(
-                      readOnly: true,
-                      title: 'Date',
-                      textInputType: TextInputType.phone,
-                      hintText: 'Date',
-                      controller: controller.dateController,
-                      onTap: () {
-                        controller.selectDate(context);
-                      }),
+                    readOnly: true,
+                    title: 'Date',
+                    textInputType: TextInputType.phone,
+                    hintText: 'Date',
+                    controller: controller.dateController,
+                    onTap: () {
+                      controller.selectDate(context);
+                    },
+                  ),
                   titleWidget(
-                      readOnly: controller.readOnly.value,
-                      title: 'Amount',
-                      textInputType: TextInputType.number,
-                      hintText: 'Enter Amount ',
-                      controller: controller.amountController),
+                    readOnly: controller.readOnly.value,
+                    title: 'Amount',
+                    textInputType: TextInputType.number,
+                    hintText: 'Enter Amount ',
+                    controller: controller.amountController,
+                  ),
                   titleWidget(
-                      readOnly: controller.readOnly.value,
-                      title: 'Remark',
-                      hintText: 'Enter Your Remark',
-                      maxLine: 3,
-                      controller: controller.remarkController),
+                    readOnly: controller.readOnly.value,
+                    title: 'Remark',
+                    hintText: 'Enter Your Remark',
+                    maxLine: 3,
+                    controller: controller.remarkController,
+                  ),
                   controller.isAddEdit.value != 2
                       ? AppElevatedButton(
                           buttonName: controller.isAddEdit.value == 1
@@ -87,31 +98,35 @@ class AddExpenseScreen extends GetWidget<AddExpenseScreenController> {
                             controller.addExpense();
                           },
                         )
-                      : SizedBox.shrink()
+                      : SizedBox.shrink(),
                 ],
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
-  Widget titleWidget(
-      {required String title,
-      required String hintText,
-      required TextEditingController controller,
-      TextInputType? textInputType,
-      bool? readOnly,
-      int? maxLine,
-      Function()? onTap}) {
+  Widget titleWidget({
+    required String title,
+    required String hintText,
+    required TextEditingController controller,
+    TextInputType? textInputType,
+    bool? readOnly,
+    int? maxLine,
+    Function()? onTap,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
           style: PMT.appStyle(
-              size: 14,
-              fontWeight: FontWeight.w600,
-              fontColor: ColorConstant.primary),
+            size: 14,
+            fontWeight: FontWeight.w600,
+            fontColor: ColorConstant.primary,
+          ),
         ),
         vBox(5),
         CustomAppTextFormField(

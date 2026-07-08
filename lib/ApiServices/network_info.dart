@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:pg_managment/core/utils/color_constant.dart';
 import 'package:pg_managment/core/utils/progress_dialog_utils.dart';
 
-
 // For checking internet connectivity
 abstract class NetworkInfo {
   static Future<bool> checkNetwork() async {
@@ -17,17 +16,17 @@ abstract class NetworkInfo {
       return true;
     } else {
       if (connectivityResult.contains(ConnectivityResult.none)) {
-        ProgressDialogUtils.hideProgressDialog() ;
+        ProgressDialogUtils.hideProgressDialog();
         Get.closeAllSnackbars();
 
         AppFlushBars.appCommonFlushBar(
-            context: NavigationService.navigatorKey.currentState!.context,
-            message: 'NO INTERNET CONNECTION',
-            success: false);
-Future.delayed(Duration(seconds: 2),() {
-
-        checkNetwork();
-},);
+          context: NavigationService.navigatorKey.currentState!.context,
+          message: 'NO INTERNET CONNECTION',
+          success: false,
+        );
+        Future.delayed(Duration(seconds: 2), () {
+          checkNetwork();
+        });
         return false;
       } else {
         return true;

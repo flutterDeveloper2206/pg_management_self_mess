@@ -35,14 +35,18 @@ class NotificationScreen extends GetWidget<NotificationScreenController> {
           ),
         ),
         actions: [
-          Obx(() => controller.notifications.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.delete_sweep_outlined,
-                      color: Colors.white),
-                  onPressed: () => _showClearAllDialog(context),
-                  tooltip: "Clear All",
-                )
-              : const SizedBox()),
+          Obx(
+            () => controller.notifications.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.delete_sweep_outlined,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => _showClearAllDialog(context),
+                    tooltip: "Clear All",
+                  )
+                : const SizedBox(),
+          ),
         ],
       ),
       body: Obx(() {
@@ -144,8 +148,9 @@ class NotificationScreen extends GetWidget<NotificationScreenController> {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                          color: _getColorForType(notification.type)
-                              .withOpacity(0.1),
+                          color: _getColorForType(
+                            notification.type,
+                          ).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Center(
@@ -196,13 +201,18 @@ class NotificationScreen extends GetWidget<NotificationScreenController> {
                             const SizedBox(height: 12),
                             Row(
                               children: [
-                                const Icon(Icons.access_time,
-                                    size: 14, color: Colors.grey),
+                                const Icon(
+                                  Icons.access_time,
+                                  size: 14,
+                                  color: Colors.grey,
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   _formatDateTime(notification.createdAt),
                                   style: PMT.appStyle(
-                                      size: 12, fontColor: Colors.grey),
+                                    size: 12,
+                                    fontColor: Colors.grey,
+                                  ),
                                 ),
                               ],
                             ),
@@ -341,8 +351,9 @@ class _ExpandableTextState extends State<ExpandableText> {
                 widget.text,
                 style: widget.style,
                 maxLines: isExpanded ? null : widget.maxLines,
-                overflow:
-                    isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                overflow: isExpanded
+                    ? TextOverflow.visible
+                    : TextOverflow.ellipsis,
               ),
               GestureDetector(
                 onTap: () => setState(() => isExpanded = !isExpanded),

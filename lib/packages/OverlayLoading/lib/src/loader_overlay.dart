@@ -19,7 +19,8 @@ class LoaderOverlay extends StatefulWidget {
   const LoaderOverlay({
     Key? key,
     this.overlayWidgetBuilder,
-    @Deprecated('Use `overlayWidgetBuilder == null` instead') this.useDefaultLoading,
+    @Deprecated('Use `overlayWidgetBuilder == null` instead')
+    this.useDefaultLoading,
     this.overlayColor,
     this.disableBackButton = true,
     this.overlayWholeScreen = true,
@@ -92,7 +93,9 @@ class LoaderOverlay extends StatefulWidget {
 
   static Color defaultOverlayColor = Colors.grey.withAlpha(4);
 
-  static const containerForOverlayColorKey = Key('$_prefix/container-for-overlay-color');
+  static const containerForOverlayColorKey = Key(
+    '$_prefix/container-for-overlay-color',
+  );
 
   @override
   State<LoaderOverlay> createState() => _LoaderOverlayState();
@@ -140,9 +143,12 @@ class _LoaderOverlayState extends State<LoaderOverlay> {
           },
           builder: (_, snapshot) {
             // ignore: unused_local_variable
-            final visibilityStream = innerContext.loaderOverlay.overlayController.visibilityStream;
+            final visibilityStream =
+                innerContext.loaderOverlay.overlayController.visibilityStream;
             final isLoading = snapshot.data![cLoading] as bool;
-            final widgetOverlayBuilder = snapshot.data![cWidgetBuilder] as Widget Function(dynamic progress)?;
+            final widgetOverlayBuilder =
+                snapshot.data![cWidgetBuilder]
+                    as Widget Function(dynamic progress)?;
             final progress = snapshot.data![cProgress] as dynamic;
             final showOverlay = snapshot.data![cShowOverlay] as bool;
 
@@ -188,48 +194,45 @@ class _LoaderOverlayState extends State<LoaderOverlay> {
     Widget Function(dynamic progress)? widgetOverlayBuilder,
     dynamic progress,
     bool showOverlay = true,
-  }) =>
-      [
-        PopScope(
-          canPop: !widget.disableBackButton,
-          child: showOverlay
-              ? widget.overlayWholeScreen
-                  ? SizedBox.expand(
+  }) => [
+    PopScope(
+      canPop: !widget.disableBackButton,
+      child: showOverlay
+          ? widget.overlayWholeScreen
+                ? SizedBox.expand(
+                    child: ColoredBox(
+                      key: LoaderOverlay.containerForOverlayColorKey,
+                      color:
+                          widget.overlayColor ??
+                          LoaderOverlay.defaultOverlayColor,
+                    ),
+                  )
+                : Center(
+                    child: SizedBox(
+                      height: widget.overlayHeight,
+                      width: widget.overlayWidth,
                       child: ColoredBox(
                         key: LoaderOverlay.containerForOverlayColorKey,
-                        color: widget.overlayColor ?? LoaderOverlay.defaultOverlayColor,
+                        color:
+                            widget.overlayColor ??
+                            LoaderOverlay.defaultOverlayColor,
                       ),
-                    )
-                  : Center(
-                      child: SizedBox(
-                        height: widget.overlayHeight,
-                        width: widget.overlayWidth,
-                        child: ColoredBox(
-                          key: LoaderOverlay.containerForOverlayColorKey,
-                          color: widget.overlayColor ?? LoaderOverlay.defaultOverlayColor,
-                        ),
-                      ),
-                    )
-              : const SizedBox(),
-        ),
-        if (widgetOverlayBuilder != null)
-          _OverlayWidgetBuilder(
-            child: widgetOverlayBuilder(progress),
-          )
-        else if (widget.overlayWidgetBuilder != null)
-          _OverlayWidgetBuilder(
-            child: widget.overlayWidgetBuilder!(progress),
-          )
-        else
-          const _DefaultOverlayWidget(),
-      ];
+                    ),
+                  )
+          : const SizedBox(),
+    ),
+    if (widgetOverlayBuilder != null)
+      _OverlayWidgetBuilder(child: widgetOverlayBuilder(progress))
+    else if (widget.overlayWidgetBuilder != null)
+      _OverlayWidgetBuilder(child: widget.overlayWidgetBuilder!(progress))
+    else
+      const _DefaultOverlayWidget(),
+  ];
 }
 
 class _OverlayWidgetBuilder extends StatelessWidget {
-  const _OverlayWidgetBuilder({
-    required this.child,
-    Key? key,
-  }) : super(key: key);
+  const _OverlayWidgetBuilder({required this.child, Key? key})
+    : super(key: key);
 
   final Widget child;
 
@@ -238,10 +241,7 @@ class _OverlayWidgetBuilder extends StatelessWidget {
     return SizedBox(
       height: double.infinity,
       width: double.infinity,
-      child: Material(
-        color: Colors.transparent,
-        child: child,
-      ),
+      child: Material(color: Colors.transparent, child: child),
     );
   }
 }

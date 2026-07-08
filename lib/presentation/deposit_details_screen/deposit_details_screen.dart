@@ -11,6 +11,7 @@ import 'package:pg_managment/widgets/custom_image_view.dart';
 import 'package:printing/printing.dart';
 
 import '../student_list_screen/student_list_model.dart';
+import 'package:pg_managment/widgets/responsive_layout.dart';
 
 class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
   const DepositDetailsScreen({super.key});
@@ -18,32 +19,36 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorConstant.primaryWhite,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: ColorConstant.primary,
-          leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CustomImageView(
-                  height: 40,
-                  width: 40,
-                  imagePath: 'assets/images/left-arrow.png',
-                  color: ColorConstant.primaryWhite),
+      backgroundColor: ColorConstant.primaryWhite,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: ColorConstant.primary,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomImageView(
+              height: 40,
+              width: 40,
+              imagePath: 'assets/images/left-arrow.png',
+              color: ColorConstant.primaryWhite,
             ),
           ),
-          title: Text(
-            'Deposit Details',
-            style: PMT.appStyle(
-                size: 20,
-                // fontWeight: FontWeight.w600,
-                fontColor: ColorConstant.primaryWhite),
+        ),
+        title: Text(
+          'Deposit Details',
+          style: PMT.appStyle(
+            size: 20,
+            // fontWeight: FontWeight.w600,
+            fontColor: ColorConstant.primaryWhite,
           ),
         ),
-        body: SafeArea(
+      ),
+      body: SafeArea(
+        child: ResponsiveWrapper(
+          maxWidth: 1000,
           child: Obx(
             () => controller.isLoading.value
                 ? const Center(
@@ -52,117 +57,133 @@ class DepositDetailsScreen extends GetWidget<DepositDetailsScreenController> {
                     ),
                   )
                 : controller.studentListModel.value.data != null &&
-                        controller.studentListModel.value.data!.isEmpty
-                    ? const Center(
-                        child: Text('No data found'),
-                      )
-                    : Stack(
-                        clipBehavior: Clip.none,
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16),
-                            child: Column(
+                      controller.studentListModel.value.data!.isEmpty
+                ? const Center(child: Text('No data found'))
+                : Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                        width: getWidth(120),
-                                        child: Text('Total Deposit :',
-                                            style: PMT.appStyle(
-                                                size: 14,
-                                                fontColor:
-                                                    Colors.grey.shade700))),
-                                    Expanded(
-                                      child: Text(
-                                        '${controller.totalDeposit.value}' ??
-                                            'N/A',
-                                        // '20000.00',
-                                        style: PMT.appStyle(
-                                            size: 14,
-                                            fontColor: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                                 SizedBox(
-                                  height: 20,
-                                ),
-                                Expanded(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: controller.studentListModel.value
-                                            .data?.length ??
-                                        0,
-                                    // 3,
-                                    itemBuilder: (context, index) {
-                                      Data? data = controller
-                                          .studentListModel.value.data?[index];
-
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            border: Border.all(
-                                                color: ColorConstant.primary)),
-                                        padding: const EdgeInsets.all(8),
-                                        margin:
-                                            const EdgeInsets.only(bottom: 10),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            AppRichText(
-                                                title: 'Student Name : ',
-                                                value: data?.name ?? ''),
-                                            vBox(5),
-                                            AppRichText(
-                                                title: 'Student ID : ',
-                                                value: '${data?.id ?? ' '}'),
-                                            vBox(5),
-                                            Row(
-                                              children: [
-                                                Expanded(
-                                                  child: AppRichText(
-                                                      title: 'Deposit : ',
-                                                      value:
-                                                          '${data?.deposit ?? ' '}'),
-                                                ),
-                                                Expanded(
-                                                  child: AppRichText(
-                                                      title: 'Date : ',
-                                                      value: data?.date ?? ''),
-                                                ),
-                                              ],
-                                            ),
-                                            vBox(5),
-                                          ],
-                                        ),
-                                      );
-                                    },
+                                  width: getWidth(120),
+                                  child: Text(
+                                    'Total Deposit :',
+                                    style: PMT.appStyle(
+                                      size: 14,
+                                      fontColor: Colors.grey.shade700,
+                                    ),
                                   ),
                                 ),
-                                vBox(50)
+                                Expanded(
+                                  child: Text(
+                                    '${controller.totalDeposit.value}' ?? 'N/A',
+                                    // '20000.00',
+                                    style: PMT.appStyle(
+                                      size: 14,
+                                      fontColor: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 16, right: 16, bottom: 10),
-                            child: AppElevatedButton(
-                              buttonName: 'Download',
-                              onPressed: () async {
-                                controller.showDownloadSheet(context);
-                              },
+                            SizedBox(height: 20),
+                            Expanded(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount:
+                                    controller
+                                        .studentListModel
+                                        .value
+                                        .data
+                                        ?.length ??
+                                    0,
+                                // 3,
+                                itemBuilder: (context, index) {
+                                  Data? data = controller
+                                      .studentListModel
+                                      .value
+                                      .data?[index];
+
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: ColorConstant.primary,
+                                      ),
+                                    ),
+                                    padding: const EdgeInsets.all(8),
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        AppRichText(
+                                          title: 'Student Name : ',
+                                          value: data?.name ?? '',
+                                        ),
+                                        vBox(5),
+                                        AppRichText(
+                                          title: 'Student ID : ',
+                                          value: '${data?.id ?? ' '}',
+                                        ),
+                                        vBox(5),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: AppRichText(
+                                                title: 'Deposit : ',
+                                                value:
+                                                    '${data?.deposit ?? ' '}',
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: AppRichText(
+                                                title: 'Date : ',
+                                                value: data?.date ?? '',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        vBox(5),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                            vBox(50),
+                          ],
+                        ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          bottom: 10,
+                        ),
+                        child: AppElevatedButton(
+                          buttonName: 'Download',
+                          onPressed: () async {
+                            controller.showDownloadSheet(context);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
