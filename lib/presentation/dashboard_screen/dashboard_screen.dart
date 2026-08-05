@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -524,9 +523,7 @@ class DashboardScreen extends GetWidget<DashboardScreenController> {
               bool hasImport = adminMenu.any(
                 (item) => item['title'] == 'Impport Data',
               );
-              if (CommonConstant.instance.isStudent == 1 &&
-                  !kIsWeb &&
-                  !hasImport) {
+              if (CommonConstant.instance.isStudent == 1 && !hasImport) {
                 adminMenu.add({
                   'title': 'Impport Data',
                   'icon': 'assets/images/import.png',

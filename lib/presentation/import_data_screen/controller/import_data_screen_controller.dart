@@ -1,4 +1,6 @@
-import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,18 +20,26 @@ class ImportDataScreenController extends GetxController {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['csv', 'xlsx', 'xls'],
+        withData: true,
       );
 
-      if (result != null) {
-        fileName.value = result.files.single.name;
-        isLoading.value = true;
+      if (result == null) return;
 
-        final filePath = result.files.single.path!;
-        if (filePath.endsWith('.csv')) {
-          await _parseCsv(filePath);
-        } else {
-          await _parseExcel(filePath);
-        }
+      final file = result.files.single;
+      final bytes = file.bytes;
+      if (bytes == null || bytes.isEmpty) {
+        Get.snackbar('Error', 'Could not read file bytes. Please try again.');
+        return;
+      }
+
+      fileName.value = file.name;
+      isLoading.value = true;
+
+      final lowerName = file.name.toLowerCase();
+      if (lowerName.endsWith('.csv')) {
+        _parseCsv(bytes);
+      } else {
+        _parseExcel(bytes);
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to read file: $e');
@@ -38,9 +48,9 @@ class ImportDataScreenController extends GetxController {
     }
   }
 
-  Future<void> _parseCsv(String path) async {
-    final file = File(path);
-    final lines = await file.readAsLines();
+  void _parseCsv(Uint8List bytes) {
+    final content = utf8.decode(bytes);
+    final lines = const LineSplitter().convert(content);
     if (lines.isEmpty) return;
 
     final headers = lines.first.split(',').map((e) => e.trim()).toList();
@@ -52,15 +62,13 @@ class ImportDataScreenController extends GetxController {
     jsonData.assignAll(data);
   }
 
-  Future<void> _parseExcel(String path) async {
-    final bytes = File(path).readAsBytesSync();
+  void _parseExcel(Uint8List bytes) {
     final decoder = SpreadsheetDecoder.decodeBytes(bytes, update: false);
     final sheet = decoder.tables.values.first;
     if (sheet.rows.isEmpty) return;
 
-    final headers = sheet.rows.first
-        .map((e) => e?.toString().trim() ?? '')
-        .toList();
+    final headers =
+        sheet.rows.first.map((e) => e?.toString().trim() ?? '').toList();
 
     final data = sheet.rows.skip(1).map((row) {
       final values = row.map((e) => e?.toString().trim() ?? '').toList();
@@ -71,27 +79,28 @@ class ImportDataScreenController extends GetxController {
 
   Future<void> sendDataToServer() async {
     isLoading.value = true;
-    await ApiService()
-        .callPostApi(
-          body: {"student_details": jsonData},
-          headerWithToken: true,
-          showLoader: true,
-          url: NetworkUrls.sendBulkData,
-        )
-        .then((value) async {
-          isLoading.value = false;
-          if (value != null && value.statusCode == 200) {
-            isLoading.value = false;
-
-            Get.back();
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              AppFlushBars.appCommonFlushBar(
-                context: NavigationService.navigatorKey.currentContext!,
-                message: "Data Send successfully",
-                success: true,
-              );
-            });
-          }
-        });
+    print(jsonData.toJson().toString());
+    // await ApiService()
+    //     .callPostApi(
+    //       body: {"student_details": jsonData},
+    //       headerWithToken: true,
+    //       showLoader: true,
+    //       url: NetworkUrls.sendBulkData,
+    //     )
+    //     .then((value) async {
+    //       isLoading.value = false;
+    //       if (value != null && value.statusCode == 200) {
+    //         isLoading.value = false;
+    //
+    //         Get.back();
+    //         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //           AppFlushBars.appCommonFlushBar(
+    //             context: NavigationService.navigatorKey.currentContext!,
+    //             message: "Data Send successfully",
+    //             success: true,
+    //           );
+    //         });
+    //       }
+    //     });
   }
 }
